@@ -1,0 +1,22 @@
+dependencies: \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/ios/Runner/GeneratedPluginRegistrant.m \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/ios/Runner/GeneratedPluginRegistrant.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Modules/module.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.5.sdk/usr/include/mach-o/compact_unwind_encoding.modulemap \
+  /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator14.5.sdk/usr/include/mach-o/dyld.modulemap \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterViewController.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPluginAppLifeCycleDelegate.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterHeadlessDartRunner.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterEngineGroup.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterEngine.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterDartProject.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterCallbackCache.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterTexture.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPlatformViews.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterCodecs.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterChannels.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterBinaryMessenger.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterPlugin.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterMacros.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/FlutterAppDelegate.h \
+  /Users/andru/Desktop/contact-tracing-he/phone-app/build/ios/Debug-iphonesimulator/Flutter.framework/Headers/Flutter.h
