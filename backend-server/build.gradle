@@ -1,0 +1,66 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.5'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'cpp'
+}
+
+group = 'dissertation'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootRun {
+	systemProperty "java.library.path", file("${buildDir}/libs/bridge/shared").absolutePath
+}
+
+compileJava {
+	options.compilerArgs += ["-h", file("../he-component/jni-bridge")]
+}
+
+model {
+	platforms {
+		x64 {
+			architecture "x64"
+		}
+	}
+
+	components {
+		bridge(NativeLibrarySpec) {
+			sources {
+				cpp {
+					source {
+						srcDir "../he-component/jni-bridge"
+						include "*.cpp"
+					}
+				}
+			}
+			binaries.all {
+				cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+				if (System.properties['os.name'].equals('Mac OS X')) {
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+				} else {
+					cppCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/linux"
+				}
+				cppCompiler.args '-fPIC'
+			}
+
+		}
+	}
+}
+
+bootRun.dependsOn 'bridgeSharedLibrary'
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	runtimeOnly 'com.h2database:h2'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
