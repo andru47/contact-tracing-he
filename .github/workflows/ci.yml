@@ -14,9 +14,9 @@ jobs:
       - uses: subosito/flutter-action
         with:
           channel: "stable"
-      - run: flutter pub get
-      - run: flutter analyze
-      - run: flutter test
+      - run: cd phone-app/ && flutter pub get
+      - run: cd phone-app/ && flutter analyze
+      - run: cd phone-app/ && flutter test
   flutter_build_ios:
     name: Build iOS
     runs-on: macos-latest
@@ -28,9 +28,9 @@ jobs:
       - uses: subosito/flutter-action
         with:
           channel: "stable"
-      - run: flutter pub get
-      - run: flutter clean
-      - run: flutter build ios --no-codesign
+      - run: cd phone-app/ && flutter pub get
+      - run: cd phone-app/ && flutter clean
+      - run: cd phone-app/ && flutter build ios --no-codesign
   flutter_build_ios:
     name: Build Android
     runs-on: macos-latest
@@ -42,6 +42,6 @@ jobs:
       - uses: subosito/flutter-action
         with:
           channel: "stable"
-      - run: flutter pub get
-      - run: flutter clean
-      - run: flutter build appbundle
+      - run: cd phone-app/ && flutter pub get
+      - run: cd phone-app/ && flutter clean
+      - run: cd phone-app/ && flutter build appbundle
