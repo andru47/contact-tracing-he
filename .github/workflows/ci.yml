@@ -31,7 +31,7 @@ jobs:
       - run: cd phone-app/ && flutter pub get
       - run: cd phone-app/ && flutter clean
       - run: cd phone-app/ && flutter build ios --no-codesign
-  flutter_build_ios:
+  flutter_build_android:
     name: Build Android
     runs-on: macos-latest
     steps:
