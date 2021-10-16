@@ -54,9 +54,9 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String _greetingMessage = "";
 
-  Future<void> getGreeting(String name) async {
+  Future<void> getGreeting(String name, String hostName) async {
     String receivedGreeting = await ConnectionService.getSimpleMessage(
-        "http://127.0.0.1:8080/hello/$name");
+        "$hostName$name");
     setState(() {
       _greetingMessage = receivedGreeting;
     });
@@ -64,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final String URL = Theme.of(context).platform == TargetPlatform.android ? "http://10.0.2.2:8080/hello/" : "http://127.0.0.1:8080/hello/";
     final formKey = new GlobalKey<FormState>();
     TextEditingController nameFieldController = TextEditingController();
 
@@ -86,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!formKey.currentState!.validate()) {
         return;
       }
-      getGreeting(nameFieldController.value.text);
+      getGreeting(nameFieldController.value.text, URL);
     }
 
     return Scaffold(
