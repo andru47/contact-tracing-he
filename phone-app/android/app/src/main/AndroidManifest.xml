@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.he_contact_tracing">
+    package="com.example.phone_app">
    <application
-        android:label="he_contact_tracing"
+        android:label="phone_app"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
