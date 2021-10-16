@@ -1,5 +1,0 @@
-version: "Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)"
-options: "d541207c688578ef9329882446ddd5a0"
-build_time: [1634157084, 271623000]
-inputs:
-  "/Users/andru/Desktop/contact-tracing-he/phone-app/ios/Runner/AppDelegate.swift": [1633963877, 817831717]
