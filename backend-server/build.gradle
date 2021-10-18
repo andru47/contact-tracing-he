@@ -21,10 +21,6 @@ bootRun {
 	systemProperty "java.library.path", file("${buildDir}/libs/bridge/shared").absolutePath
 }
 
-compileJava {
-	options.compilerArgs += ["-h", file("../he-component/jni-bridge")]
-}
-
 model {
 	platforms {
 		x64 {
@@ -37,7 +33,7 @@ model {
 			sources {
 				cpp {
 					source {
-						srcDir "../he-component/jni-bridge"
+						srcDir "../he-component/bridge/jni"
 						include "*.cpp"
 					}
 				}

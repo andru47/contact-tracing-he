@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import './util/connection_service.dart';
 
 void main() {
@@ -53,10 +54,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String _greetingMessage = "";
+  static const platform = MethodChannel('BRIDGE');
 
   Future<void> getGreeting(String name, String hostName) async {
     String receivedGreeting = await ConnectionService.getSimpleMessage(
         "$hostName$name");
+    setState(() {
+      _greetingMessage = receivedGreeting;
+    });
+  }
+
+  Future<void> getGreetingChannel(String name) async {
+    String receivedGreeting = await platform.invokeMethod("hello", <String, String>{"name": name});
     setState(() {
       _greetingMessage = receivedGreeting;
     });
@@ -87,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!formKey.currentState!.validate()) {
         return;
       }
-      getGreeting(nameFieldController.value.text, URL);
+      getGreetingChannel(nameFieldController.value.text);
     }
 
     return Scaffold(
