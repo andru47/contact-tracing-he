@@ -28,13 +28,20 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v2
       - name: Install seal
         run: |
           git clone https://github.com/microsoft/SEAL.git
-          cd SEAL/
-          cmake -S . -B build
-          cmake --build build
-          sudo cmake --install build
+      - name: Install ndk
+        run: |
+          echo Android home $ANDROID_SDK_ROOT
+          $ANDROID_SDK_ROOT/tools/bin/sdkmanager --install ndk;22.1.7171670
+      - name: Run android
+        run: |
+          cd SEAL/android
+          chmod +x gradlew
+          ./gradlew --no-daemon --stacktrace --no-parallel compileReleaseSources
       - run: cd phone-app/ && flutter pub get
       - run: cd phone-app/ && flutter clean
       - run: cd phone-app/ && flutter build appbundle
