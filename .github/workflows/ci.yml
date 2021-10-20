@@ -28,6 +28,13 @@ jobs:
       - uses: subosito/flutter-action@v1
         with:
           channel: "stable"
+      - name: Install seal
+        run: |
+          git clone https://github.com/microsoft/SEAL.git
+          cd SEAL/
+          cmake -S . -B build
+          cmake --build build
+          sudo cmake --install build
       - run: cd phone-app/ && flutter pub get
       - run: cd phone-app/ && flutter clean
       - run: cd phone-app/ && flutter build appbundle
