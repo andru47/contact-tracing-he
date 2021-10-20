@@ -33,10 +33,6 @@ jobs:
       - name: Install seal
         run: |
           git clone https://github.com/microsoft/SEAL.git
-      - name: Install ndk
-        run: |
-          echo Android home $ANDROID_SDK_ROOT
-          $ANDROID_SDK_ROOT/tools/bin/sdkmanager --install ndk;22.1.7171670
       - name: Run android
         run: |
           cd SEAL/android
