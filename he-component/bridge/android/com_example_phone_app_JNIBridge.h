@@ -9,11 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     com_example_phone_app_JNIBridge
- * Method:    getNativeGreetingMessage
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ * Method:    encrypt
+ * Signature: (Ljava/lang/String;)[C
  */
-JNIEXPORT jstring JNICALL Java_com_example_phone_1app_JNIBridge_getNativeGreetingMessage
+JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_encrypt
   (JNIEnv *, jobject, jstring);
+
+/*
+ * Class:     com_example_phone_app_JNIBridge
+ * Method:    decrypt
+ * Signature: ([C)Ljava/lang/String;
+ */
+JNIEXPORT jstring JNICALL Java_com_example_phone_1app_JNIBridge_decrypt
+  (JNIEnv *, jobject, jcharArray);
 
 #ifdef __cplusplus
 }
