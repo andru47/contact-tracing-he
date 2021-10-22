@@ -1,17 +1,16 @@
 package dissertation.backend;
 
+import java.io.File;
+
 public class JNIBridge {
   static {
     try {
-      System.loadLibrary("bridge");
+      File libraryFile = new File(System.getProperty("user.dir") + "/../he-component/bridge/jni/" + System.mapLibraryName("HELib"));
+      System.load(libraryFile.getAbsolutePath());
     } catch (Error | Exception e) {
       e.printStackTrace();
     }
   }
 
-  public String getGreetingMessage(String name) {
-    return getNativeGreetingMessage(name);
-  }
-
-  private native String getNativeGreetingMessage(String name);
+  public native char[] computeSimplePoly(char[] givenCipher);
 }
