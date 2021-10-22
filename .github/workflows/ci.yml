@@ -27,8 +27,8 @@ jobs:
           java-version: "11.x"
       - name: Install SEAL
         run: |
-           chmod +x scripts/install.sh
-           ./scripts/install.sh
+           chmod +x scripts/install_seal.sh
+           ./scripts/install_seal.sh
       - name: Build HE-Backend server
         run: |
            chmod +x scripts/build.sh
