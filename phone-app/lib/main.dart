@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import './util/connection_service.dart';
 
 void main() {
@@ -53,27 +54,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _greetingMessage = "";
+  String _computedResult = "";
   static const platform = MethodChannel('BRIDGE');
 
-  Future<void> getGreeting(String name, String hostName) async {
-    String receivedGreeting = await ConnectionService.getSimpleMessage(
-        "$hostName$name");
+  Future<void> computeResult(String hostName, String number) async {
+    String cipherText = await platform.invokeMethod("encrypt", <String, String>{"plain": number});
+    String cipherTextComputed = await ConnectionService.getSimpleResult(hostName, cipherText);
+    String newNumber = await platform.invokeMethod("decrypt", <String, String>{"cipher": cipherTextComputed});
     setState(() {
-      _greetingMessage = receivedGreeting;
-    });
-  }
-
-  Future<void> getGreetingChannel(String name) async {
-    String receivedGreeting = await platform.invokeMethod("hello", <String, String>{"name": name});
-    setState(() {
-      _greetingMessage = receivedGreeting;
+      _computedResult = newNumber;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final String URL = Theme.of(context).platform == TargetPlatform.android ? "http://10.0.2.2:8080/hello/" : "http://127.0.0.1:8080/hello/";
+    final String URL = Theme.of(context).platform == TargetPlatform.android ? "http://10.0.2.2:8080/compute-simple" : "http://127.0.0.1:8080/compute-simple";
     final formKey = new GlobalKey<FormState>();
     TextEditingController nameFieldController = TextEditingController();
 
@@ -81,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         controller: nameFieldController,
         validator: (name) {
           if (name == null || name.isEmpty) {
-            return 'Please input at least one character';
+            return 'Please input at least one digit';
           }
 
           return null;
@@ -89,14 +84,14 @@ class _MyHomePageState extends State<MyHomePage> {
         autocorrect: false,
         enableSuggestions: false,
         decoration: const InputDecoration(
-            hintText: "Enter your name", errorMaxLines: 3));
+            hintText: "Enter a number", errorMaxLines: 3));
 
     validate() {
       formKey.currentState!.save();
       if (!formKey.currentState!.validate()) {
         return;
       }
-      getGreetingChannel(nameFieldController.value.text);
+      computeResult(URL, nameFieldController.value.text);
     }
 
     return Scaffold(
@@ -117,11 +112,11 @@ class _MyHomePageState extends State<MyHomePage> {
                 SizedBox(
                   height: 20,
                 ),
-                longButtons("Get greeting!", validate),
+                longButtons("Compute (x + 1)^2!", validate),
                 SizedBox(height: 20),
-                _greetingMessage.isEmpty
+                _computedResult.isEmpty
                     ? SizedBox(height: 0)
-                    : Text(_greetingMessage)
+                    : Text(_computedResult)
               ],
             ),
           )

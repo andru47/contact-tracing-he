@@ -9,9 +9,7 @@ public class JNIBridge {
     }
   }
 
-  public String getGreetingMessage(String name) {
-    return getNativeGreetingMessage(name);
-  }
+  public native char[] encrypt(String plain);
 
-  private native String getNativeGreetingMessage(String name);
+  public native String decrypt(char[] cipher);
 }

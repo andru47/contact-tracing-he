@@ -9,11 +9,11 @@ extern "C" {
 #endif
 /*
  * Class:     dissertation_backend_JNIBridge
- * Method:    getNativeGreetingMessage
- * Signature: (Ljava/lang/String;)Ljava/lang/String;
+ * Method:    computeSimplePoly
+ * Signature: ([C)[C
  */
-JNIEXPORT jstring JNICALL Java_dissertation_backend_JNIBridge_getNativeGreetingMessage
-  (JNIEnv *, jobject, jstring);
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_computeSimplePoly
+  (JNIEnv *, jobject, jcharArray);
 
 #ifdef __cplusplus
 }
