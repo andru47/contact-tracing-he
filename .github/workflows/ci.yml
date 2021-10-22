@@ -1,22 +1,8 @@
-name: Flutter CI
+name: Project CI
 
 on: [push, pull_request]
 
 jobs:
-  flutter_build_ios:
-    name: Build iOS
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
-        with:
-          java-version: "11.x"
-      - uses: subosito/flutter-action@v1
-        with:
-          channel: "stable"
-      - run: cd phone-app/ && flutter pub get
-      - run: cd phone-app/ && flutter clean && flutter doctor
-      - run: cd phone-app/ && flutter build ios --no-codesign
   flutter_build_android:
     name: Build Android
     runs-on: macos-latest
@@ -31,3 +17,20 @@ jobs:
       - run: cd phone-app/ && flutter pub get
       - run: cd phone-app/ && flutter clean
       - run: cd phone-app/ && flutter build appbundle
+  gradle_build_backend:
+    name: Build Java Backend Server
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: "11.x"
+      - name: Install SEAL
+        run: |
+           chmod +x scripts/install.sh
+           ./scripts/install.sh
+      - name: Build HE-Backend server
+        run: |
+           chmod +x scripts/build.sh
+           ./scripts/build.sh
+      - run: cd backend-server && chmod +x gradlew && ./gradlew test
