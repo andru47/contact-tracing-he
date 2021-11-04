@@ -1,28 +1,36 @@
 #include "dissertation_backend_JNIBridge.h"
-#include <simple_he.h>
+#include <ckks_he_server.h>
 #include <util.h>
-#include <string>
 
 using namespace std;
 
-string computePoly(stringstream &cipher)
+string getStringFromJ(JNIEnv *env, jcharArray arr)
 {
-  static HeUtilServer helper(getEncryptionParams());
-  return helper.evaluate(cipher);
+    int len = env->GetArrayLength(arr);
+    jchar *elements = env->GetCharArrayElements(arr, 0);
+
+    return getStringFromJCharArr(elements, len);
 }
 
-JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_computeSimplePoly(JNIEnv *env, jobject obj, jcharArray to_decrypt)
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance(
+    JNIEnv *env, jobject, jcharArray latitudeCosJ, jcharArray latitudeSinJ, jcharArray longitudeCosJ,
+    jcharArray longitudeSinJ, jcharArray relinJ, jcharArray privateJ)
 {
-  jchar *elements = env->GetCharArrayElements(to_decrypt, 0);
-  int len = env->GetArrayLength(to_decrypt);
+    string latitudeCos = getStringFromJ(env, latitudeCosJ);
+    string latitudeSin = getStringFromJ(env, latitudeSinJ);
+    string longitudeCos = getStringFromJ(env, longitudeCosJ);
+    string longitudeSin = getStringFromJ(env, longitudeSinJ);
+    vector<string> cipher = { latitudeCos, latitudeSin, longitudeCos, longitudeSin };
+    string relin = getStringFromJ(env, relinJ);
+    string privateKey = getStringFromJ(env, privateJ);
 
-  string cipher = getStringFromJCharArr(elements, len);
-  stringstream cipherStream(cipher);
-  string cipherComputedString = computePoly(cipherStream);
-  jchar *cipherComputed = getJCharArrFromString(cipherComputedString);
+    CKKSServerHelper helper(getCKKSParams());
+    string returned = helper.compute(cipher, relin, privateKey);
 
-  jcharArray j_version_array = env->NewCharArray(cipherComputedString.size());
-  env->SetCharArrayRegion(j_version_array, 0, cipherComputedString.size(), cipherComputed);
+    jchar *cipherComputed = getJCharArrFromString(returned);
 
-  return j_version_array;
+    jcharArray j_version_array = env->NewCharArray(returned.size());
+    env->SetCharArrayRegion(j_version_array, 0, returned.size(), cipherComputed);
+
+    return j_version_array;
 }
