@@ -52,8 +52,6 @@ android {
                         "-DSEAL__ADDCARRY_U64_FOUND_EXITCODE__TRYRUN_OUTPUT=''",
                         "-DSEAL__SUBBORROW_U64_FOUND_EXITCODE=0",
                         "-DSEAL__SUBBORROW_U64_FOUND_EXITCODE__TRYRUN_OUTPUT=''",
-                        "-DSEAL_USE_ZLIB=OFF",
-                        "-DSEAL_USE_ZSTD=OFF",
                         "-DSEAL_USE_MSGSL=OFF"
             }
         }
@@ -75,7 +73,7 @@ android {
             version "3.12.0+"
         }
     }
-    ndkVersion "22.1.7171670"
+    ndkVersion "23.1.7779620"
 }
 
 flutter {

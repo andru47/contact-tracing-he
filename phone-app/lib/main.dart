@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -57,18 +59,27 @@ class _MyHomePageState extends State<MyHomePage> {
   String _computedResult = "";
   static const platform = MethodChannel('BRIDGE');
 
-  Future<void> computeResult(String hostName, String number) async {
-    String cipherText = await platform.invokeMethod("encrypt", <String, String>{"plain": number});
+  Future<void> computeResult(String hostName, double latitude, double longitude) async {
+    List<String> cipherTexts = List<String>.from(await platform.invokeMethod("encrypt", {"latitude": latitude, "longitude": longitude}));
+    List<String> keys = List<String>.from(await platform.invokeMethod("keys"));
+    String cipherTextComputed = await ConnectionService.getDistance(hostName, cipherTexts, keys);
+    
+    double distance = await platform.invokeMethod("decrypt", {"cipher": cipherTextComputed});
+    distance = asin(sqrt(distance / 2.0)) * 6378.8 * 2.0;
+    setState(() {
+      _computedResult = distance.toString();
+    });
+    /*String cipherText = await platform.invokeMethod("encrypt", <String, String>{"plain": number});
     String cipherTextComputed = await ConnectionService.getSimpleResult(hostName, cipherText);
     String newNumber = await platform.invokeMethod("decrypt", <String, String>{"cipher": cipherTextComputed});
     setState(() {
       _computedResult = newNumber;
-    });
+    });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    final String URL = Theme.of(context).platform == TargetPlatform.android ? "http://10.0.2.2:8080/compute-simple" : "http://127.0.0.1:8080/compute-simple";
+    final String URL = Theme.of(context).platform == TargetPlatform.android ? "http://10.0.2.2:8080/distance-calculator" : "http://127.0.0.1:8080/compute-simple";
     final formKey = new GlobalKey<FormState>();
     TextEditingController nameFieldController = TextEditingController();
 
@@ -91,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!formKey.currentState!.validate()) {
         return;
       }
-      computeResult(URL, nameFieldController.value.text);
+      computeResult(URL, 52.20470092743611, 0.10547868225800006);
     }
 
     return Scaffold(

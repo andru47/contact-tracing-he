@@ -2,6 +2,10 @@ package com.example.phone_app;
 
 import androidx.annotation.NonNull;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
@@ -17,9 +21,16 @@ public class MainActivity extends FlutterActivity {
             .setMethodCallHandler(
                     (call, result) -> {
                       if (call.method.equals("encrypt")) {
-                        result.success(new String(bridge.encrypt((String) call.argument("plain"))));
-                      } else {
+                        double latitude = (double) call.argument("latitude");
+                        double longitude = (double) call.argument("longitude");
+                        double latitudeRad = latitude * Math.PI / 180.0;
+                        double longitudeRad = longitude * Math.PI / 180.0;
+                        CiphertextWrapper wrapper = bridge.encrypt(Math.cos(latitudeRad), Math.sin(latitudeRad), Math.cos(longitudeRad), Math.sin(longitudeRad));
+                        result.success(Arrays.asList(wrapper.getLatitudeCos(), wrapper.getLatitudeSin(), wrapper.getLongitudeCos(), wrapper.getLongitudeSin()));
+                      } else if (call.method.equals("decrypt")) {
                         result.success(bridge.decrypt(((String) call.argument("cipher")).toCharArray()));
+                      } else if (call.method.equals("keys")) {
+                        result.success(Arrays.asList(new String(bridge.getRelinKeys()), new String(bridge.getPrivateKey())));
                       }
                     }
             );
