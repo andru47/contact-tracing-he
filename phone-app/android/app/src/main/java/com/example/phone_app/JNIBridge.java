@@ -9,7 +9,11 @@ public class JNIBridge {
     }
   }
 
-  public native char[] encrypt(String plain);
+  public native CiphertextWrapper encrypt(double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin);
 
-  public native String decrypt(char[] cipher);
+  public native char[] getRelinKeys();
+
+  public native char[] getPrivateKey();
+
+  public native double decrypt(char[] cipher);
 }

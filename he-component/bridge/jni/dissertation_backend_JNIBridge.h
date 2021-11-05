@@ -9,11 +9,11 @@ extern "C" {
 #endif
 /*
  * Class:     dissertation_backend_JNIBridge
- * Method:    computeSimplePoly
- * Signature: ([C)[C
+ * Method:    getDistance
+ * Signature: ([C[C[C[C[C[C)[C
  */
-JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_computeSimplePoly
-  (JNIEnv *, jobject, jcharArray);
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance
+  (JNIEnv *, jobject, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray);
 
 #ifdef __cplusplus
 }

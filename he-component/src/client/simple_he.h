@@ -18,4 +18,5 @@ public:
     HeUtilClient(EncryptionParameters givenParams);
     string encrypt(uint64_t givenNumber);
     string decrypt(string givenCipher);
+    string getParams();
 };

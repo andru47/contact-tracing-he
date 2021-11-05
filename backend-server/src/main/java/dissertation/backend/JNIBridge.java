@@ -12,5 +12,5 @@ public class JNIBridge {
     }
   }
 
-  public native char[] computeSimplePoly(char[] givenCipher);
+  public native char[] getDistance(char[] latitudeCos, char[] latitudeSin, char[] longitudeCos, char[] longitudeSin, char[] relin, char[] privateKey);
 }
