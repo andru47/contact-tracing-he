@@ -2,11 +2,27 @@
 
 CKKSClientHelper::CKKSClientHelper(EncryptionParameters params) : context(params)
 {
-    KeyGenerator generator(context);
-    this->secretKey = generator.secret_key();
-    generator.create_public_key(this->publicKey);
-    generator.create_relin_keys(this->relinKeys);
-    generator.create_galois_keys(this->galoisKeys);
+    // KeyGenerator generator(context);
+    // this->secretKey = generator.secret_key();
+    // generator.create_public_key(this->publicKey);
+    // generator.create_relin_keys(this->relinKeys);
+    // generator.create_galois_keys(this->galoisKeys);
+}
+
+void loadPublicKey(PublicKey &pubKey, string &givenPubKey, SEALContext &context)
+{
+    stringstream stream(givenPubKey);
+    pubKey.load(context, stream);
+
+    return;
+}
+
+void loadPrivateKey(SecretKey &secretKey, string &givenSecretKey, SEALContext &context)
+{
+    stringstream stream(givenSecretKey);
+    secretKey.load(context, stream);
+
+    return;
 }
 
 string CKKSClientHelper::getGaloisKeys()
@@ -70,4 +86,21 @@ string CKKSClientHelper::getPrivateKey()
     stringstream ret;
     secretKey.save(ret);
     return ret.str();
+}
+
+string CKKSClientHelper::getPublicKey()
+{
+    stringstream ret;
+    publicKey.save(ret);
+    return ret.str();
+}
+
+void CKKSClientHelper::loadPublicKeyFromClient(string &publicKeyString)
+{
+    loadPublicKey(this->publicKey, publicKeyString, this->context);
+}
+
+void CKKSClientHelper::laodPrivateKeyFromClient(string &privateKeyString)
+{
+    loadPrivateKey(this->secretKey, privateKeyString, this->context);
 }

@@ -25,12 +25,13 @@ public class MainActivity extends FlutterActivity {
                         double longitude = (double) call.argument("longitude");
                         double latitudeRad = latitude * Math.PI / 180.0;
                         double longitudeRad = longitude * Math.PI / 180.0;
-                        CiphertextWrapper wrapper = bridge.encrypt(Math.cos(latitudeRad), Math.sin(latitudeRad), Math.cos(longitudeRad), Math.sin(longitudeRad));
+                        String publicKey = (String) call.argument("publicKey");
+                        CiphertextWrapper wrapper = bridge.encrypt(Math.cos(latitudeRad), Math.sin(latitudeRad), Math.cos(longitudeRad), Math.sin(longitudeRad), publicKey.toCharArray());
                         result.success(Arrays.asList(wrapper.getLatitudeCos(), wrapper.getLatitudeSin(), wrapper.getLongitudeCos(), wrapper.getLongitudeSin()));
                       } else if (call.method.equals("decrypt")) {
-                        result.success(bridge.decrypt(((String) call.argument("cipher")).toCharArray()));
+                        result.success(bridge.decrypt(((String) call.argument("cipher")).toCharArray(), ((String) call.argument("privateKey")).toCharArray()));
                       } else if (call.method.equals("keys")) {
-                        result.success(Arrays.asList(new String(bridge.getRelinKeys()), new String(bridge.getPrivateKey())));
+                        result.success(Arrays.asList(new String(bridge.getRelinKeys()), new String(bridge.getPrivateKey()), new String(bridge.getPublicKey())));
                       }
                     }
             );

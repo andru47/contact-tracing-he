@@ -5,14 +5,27 @@
 #include <util.h>
 
 static CKKSClientHelper helper(getCKKSParams());
+static bool loadedPrivate = false, loadedPublic = false;
 
 JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
-    JNIEnv *env, jobject, jdouble latitudeCosJ, jdouble latitudeSinJ, jdouble longitudeCosJ, jdouble longitudeSinJ)
+    JNIEnv *env, jobject, jdouble latitudeCosJ, jdouble latitudeSinJ, jdouble longitudeCosJ, jdouble longitudeSinJ,
+    jcharArray givenPublicKey)
 {
     double latitudeCos = (double)latitudeCosJ;
     double latitudeSin = (double)latitudeSinJ;
     double longitudeCos = (double)longitudeCosJ;
     double longitudeSin = (double)longitudeSinJ;
+    if (!loadedPublic)
+    {
+        loadedPublic = true;
+        jchar *elements = env->GetCharArrayElements(givenPublicKey, 0);
+        int len = env->GetArrayLength(givenPublicKey);
+
+        string pubKeyString = getStringFromJCharArr(elements, len);
+        helper.loadPublicKeyFromClient(pubKeyString);
+        env->ReleaseCharArrayElements(givenPublicKey, elements, 0);
+    }
+
     vector<string> encrypted = helper.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin);
 
     jcharArray latitudeCosJarray = env->NewCharArray(encrypted[0].size());
@@ -38,10 +51,22 @@ JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
     return toReturn;
 }
 
-JNIEXPORT jdouble JNICALL Java_com_example_phone_1app_JNIBridge_decrypt(JNIEnv *env, jobject, jcharArray to_decrypt)
+JNIEXPORT jdouble JNICALL
+Java_com_example_phone_1app_JNIBridge_decrypt(JNIEnv *env, jobject, jcharArray to_decrypt, jcharArray givenPrivateKey)
 {
     jchar *elements = env->GetCharArrayElements(to_decrypt, 0);
     int len = env->GetArrayLength(to_decrypt);
+
+    if (!loadedPrivate)
+    {
+        loadedPrivate = true;
+        jchar *privateKeyElements = env->GetCharArrayElements(givenPrivateKey, 0);
+        int privateKeyLen = env->GetArrayLength(givenPrivateKey);
+        string privateKey = getStringFromJCharArr(privateKeyElements, privateKeyLen);
+        helper.laodPrivateKeyFromClient(privateKey);
+
+        env->ReleaseCharArrayElements(givenPrivateKey, privateKeyElements, 0);
+    }
 
     string cipherString = getStringFromJCharArr(elements, len);
 
@@ -65,5 +90,14 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPrivateKey
 
     jcharArray j_version_array = env->NewCharArray(privateKey.size());
     env->SetCharArrayRegion(j_version_array, 0, privateKey.size(), getJCharArrFromString(privateKey));
+    return j_version_array;
+}
+
+JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey(JNIEnv *env, jobject)
+{
+    string publicKey = helper.getPublicKey();
+
+    jcharArray j_version_array = env->NewCharArray(publicKey.size());
+    env->SetCharArrayRegion(j_version_array, 0, publicKey.size(), getJCharArrFromString(publicKey));
     return j_version_array;
 }
