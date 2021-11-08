@@ -15,6 +15,9 @@ public:
     string getRelinKeys();
     string getGaloisKeys();
     string getPrivateKey();
+    string getPublicKey();
+    void loadPublicKeyFromClient(string &publicKeyString);
+    void laodPrivateKeyFromClient(string &privateKeyString);
     vector<string> encrypt(double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin);
     double decrypt(string cipherString);
 };

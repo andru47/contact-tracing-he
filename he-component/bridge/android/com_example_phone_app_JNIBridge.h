@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     com_example_phone_app_JNIBridge
  * Method:    encrypt
- * Signature: (DDDD)Lcom/example/phone_app/CiphertextWrapper;
+ * Signature: (DDDD[C)Lcom/example/phone_app/CiphertextWrapper;
  */
 JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt
-  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble);
+  (JNIEnv *, jobject, jdouble, jdouble, jdouble, jdouble, jcharArray);
 
 /*
  * Class:     com_example_phone_app_JNIBridge
@@ -33,11 +33,19 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPrivateKey
 
 /*
  * Class:     com_example_phone_app_JNIBridge
+ * Method:    getPublicKey
+ * Signature: ()[C
+ */
+JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_phone_app_JNIBridge
  * Method:    decrypt
- * Signature: ([C)D
+ * Signature: ([C[C)D
  */
 JNIEXPORT jdouble JNICALL Java_com_example_phone_1app_JNIBridge_decrypt
-  (JNIEnv *, jobject, jcharArray);
+  (JNIEnv *, jobject, jcharArray, jcharArray);
 
 #ifdef __cplusplus
 }

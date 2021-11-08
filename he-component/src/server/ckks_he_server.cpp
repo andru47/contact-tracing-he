@@ -1,11 +1,15 @@
 #include "ckks_he_server.h"
+#include <fstream>
 
 CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params)
 {}
 
 void loadRelin(RelinKeys &relinKeys, string &relinString, SEALContext &context)
 {
-    stringstream stream(relinString);
+    ifstream f("assets/relinKey.bin", ios::binary);
+    stringstream stream;
+    stream << f.rdbuf();
+    f.close();
     relinKeys.load(context, stream);
 }
 
@@ -18,12 +22,12 @@ void loadSecret(SecretKey &secret, string &secretString, SEALContext &context)
 string CKKSServerHelper::compute(vector<string> &cipher, string relin, string privateKey)
 {
     RelinKeys relinKeys;
-    SecretKey secret;
+    //SecretKey secret;
     loadRelin(relinKeys, relin, context);
-    loadSecret(secret, privateKey, context);
+    //loadSecret(secret, privateKey, context);
 
     Evaluator eval(context);
-    Decryptor decr(context, secret);
+    //Decryptor decr(context, secret);
     Ciphertext ciphertext;
     stringstream cipherStream;
 
