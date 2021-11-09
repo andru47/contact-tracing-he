@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:he_contact_tracing/util/util.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './util/connection_service.dart';
 
@@ -62,6 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       String hostName, double latitude1, double longitude1, double latitude2, double longitude2) async {
     String publicKey = await rootBundle.loadString("assets/pubKey.bin");
     String privateKey = await rootBundle.loadString("assets/privateKey.bin");
+    //final prefs = await SharedPreferences.getInstance();
     List<String> cipherTexts = List<String>.from(await platform.invokeMethod(
         "encrypt", {
       "latitude1": latitude1,
@@ -70,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage> {
       "longitude2": longitude2,
       "publicKey": publicKey
     }));
-    List<String> keys = List<String>.from(await platform.invokeMethod("keys"));
     String cipherTextComputed =
-        await ConnectionService.getDistance(hostName, cipherTexts, keys);
+        await ConnectionService.getDistance(hostName, cipherTexts);
+    //await ConnectionService.uploadNewLocation("http://10.0.2.2:8080/upload-location", getId(prefs), "2021-11-09 12:45", cipherTexts);
 
     double distance = await platform.invokeMethod(
         "decrypt", {"cipher": cipherTextComputed, "privateKey": privateKey});

@@ -22,4 +22,5 @@ dependencies {
 	implementation 'com.google.code.gson:gson:2.8.8'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '2.7.4'
 }

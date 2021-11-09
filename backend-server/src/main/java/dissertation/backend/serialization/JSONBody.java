@@ -1,9 +1,8 @@
-package dissertation.backend;
+package dissertation.backend.serialization;
 
 public class JSONBody {
   private String latitudeCos1, latitudeSin1, longitudeCos1, longitudeSin1;
   private String latitudeCos2, latitudeSin2, longitudeCos2, longitudeSin2;
-  String relin, privateKey;
 
   public String getLatitudeCos1() {
     return latitudeCos1;
@@ -35,13 +34,5 @@ public class JSONBody {
 
   public String getLongitudeSin2() {
     return longitudeSin2;
-  }
-
-  public String getRelin() {
-    return relin;
-  }
-
-  public String getPrivateKey() {
-    return privateKey;
   }
 }

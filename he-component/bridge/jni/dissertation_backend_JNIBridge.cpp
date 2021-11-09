@@ -26,14 +26,13 @@ vector<string> getCipherFromOjectArray(JNIEnv *env, jobjectArray &location)
 }
 
 JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance(
-    JNIEnv *env, jobject, jobjectArray location1, jobjectArray location2, jcharArray privateJ)
+    JNIEnv *env, jobject, jobjectArray location1, jobjectArray location2)
 {
     vector<string> cipher1 = getCipherFromOjectArray(env, location1);
     vector<string> cipher2 = getCipherFromOjectArray(env, location2);
-    string privateKey = getStringFromJ(env, privateJ);
 
     CKKSServerHelper helper(getCKKSParams());
-    string returned = helper.compute(cipher1, cipher2, privateKey);
+    string returned = helper.compute(cipher1, cipher2);
 
     jchar *cipherComputed = getJCharArrFromString(returned);
 
