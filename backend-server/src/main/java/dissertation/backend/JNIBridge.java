@@ -12,5 +12,5 @@ public class JNIBridge {
     }
   }
 
-  public native char[] getDistance(char[][] location1, char[][] location2, char[] privateKey);
+  public native char[] getDistance(char[][] location1, char[][] location2);
 }

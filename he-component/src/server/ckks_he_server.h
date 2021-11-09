@@ -6,5 +6,5 @@ class CKKSServerHelper
 
 public:
     CKKSServerHelper(EncryptionParameters params);
-    string compute(vector<string> &cipher1, vector<string> &cipher2, string privateKey);
+    string compute(vector<string> &cipher1, vector<string> &cipher2);
 };

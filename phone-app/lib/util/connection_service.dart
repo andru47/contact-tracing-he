@@ -13,7 +13,7 @@ class ConnectionService {
     }
   }
 
-  static Future<String> getDistance(String url, List<String> cipher, List<String> keys) async {
+  static Future<String> getDistance(String url, List<String> cipher) async {
     Uri requestUri = Uri.parse(url);
     try {
       var resp = await http.post(requestUri, body: JsonEncoder().convert({"latitudeCos1": cipher.elementAt(0),
@@ -23,13 +23,21 @@ class ConnectionService {
                                                         "latitudeCos2": cipher.elementAt(4),
                                                         "latitudeSin2": cipher.elementAt(5),
                                                         "longitudeCos2": cipher.elementAt(6),
-                                                        "longitudeSin2": cipher.elementAt(7),
-                                                         "relin": keys.elementAt(0),
-                                                          "privateKey": keys.elementAt(1)
+                                                        "longitudeSin2": cipher.elementAt(7)
       }));
       return resp.body;
     } catch (e) {
     return Future.value("");
     }
+  }
+
+  static Future<void> uploadNewLocation(String url, String id, String timestamp, List<String> cipher) async {
+    Uri requestUri = Uri.parse(url);
+    await http.post(requestUri, body: JsonEncoder().convert({"id": id,
+                            "timestamp": timestamp,
+                            "latitudeCos": cipher.elementAt(0),
+                            "latitudeSin": cipher.elementAt(1),
+                            "longitudeCos": cipher.elementAt(2),
+                            "longitudeSin": cipher.elementAt(3)}));
   }
 }

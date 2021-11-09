@@ -33,7 +33,7 @@ void loadCipherToValues(
     sinLong.load(context, str3);
 }
 
-string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2, string privateKey)
+string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2)
 {
     RelinKeys relinKeys;
     // SecretKey secret;
