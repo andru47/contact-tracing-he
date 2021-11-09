@@ -18,11 +18,17 @@ public class SimpleController {
   public String returnSimpleMessage(@RequestBody String jsonBody) {
     Gson gson = new Gson();
     JSONBody body = gson.fromJson(jsonBody, JSONBody.class);
-    return new String(jniBridge.getDistance(body.getLatitudeCos().toCharArray(),
-                                 body.getLatitudeSin().toCharArray(),
-                                 body.getLongitudeCos().toCharArray(),
-                                 body.getLongitudeSin().toCharArray(),
-                                 body.getRelin().toCharArray(),
-                                 body.getPrivateKey().toCharArray()));
+    return new String(jniBridge.getDistance(new char[][] {
+            body.getLatitudeCos1().toCharArray(),
+            body.getLatitudeSin1().toCharArray(),
+            body.getLongitudeCos1().toCharArray(),
+            body.getLongitudeSin1().toCharArray()
+        }, new char[][] {
+            body.getLatitudeCos2().toCharArray(),
+            body.getLatitudeSin2().toCharArray(),
+            body.getLongitudeCos2().toCharArray(),
+            body.getLongitudeSin2().toCharArray()
+        },
+        body.getPrivateKey().toCharArray()));
   }
 }

@@ -4,7 +4,7 @@
 CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params)
 {}
 
-void loadRelin(RelinKeys &relinKeys, string &relinString, SEALContext &context)
+void loadRelin(RelinKeys &relinKeys, SEALContext &context)
 {
     ifstream f("assets/relinKey.bin", ios::binary);
     stringstream stream;
@@ -19,21 +19,10 @@ void loadSecret(SecretKey &secret, string &secretString, SEALContext &context)
     secret.load(context, stream);
 }
 
-string CKKSServerHelper::compute(vector<string> &cipher, string relin, string privateKey)
+void loadCipherToValues(
+    Ciphertext &cosLat, Ciphertext &sinLat, Ciphertext &cosLong, Ciphertext &sinLong, vector<string> &cipher,
+    SEALContext &context)
 {
-    RelinKeys relinKeys;
-    //SecretKey secret;
-    loadRelin(relinKeys, relin, context);
-    //loadSecret(secret, privateKey, context);
-
-    Evaluator eval(context);
-    //Decryptor decr(context, secret);
-    Ciphertext ciphertext;
-    stringstream cipherStream;
-
-    Ciphertext cosLat;
-    Ciphertext sinLat, cosLong, sinLong;
-
     stringstream str(cipher[0]);
     cosLat.load(context, str);
     stringstream str1(cipher[1]);
@@ -42,24 +31,45 @@ string CKKSServerHelper::compute(vector<string> &cipher, string relin, string pr
     cosLong.load(context, str2);
     stringstream str3(cipher[3]);
     sinLong.load(context, str3);
+}
+
+string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2, string privateKey)
+{
+    RelinKeys relinKeys;
+    // SecretKey secret;
+    loadRelin(relinKeys, context);
+    // loadSecret(secret, privateKey, context);
+
+    Evaluator eval(context);
+    // Decryptor decr(context, secret);
+    Ciphertext ciphertext;
+    stringstream cipherStream;
+
+    Ciphertext cosLat1, cosLat2;
+    Ciphertext sinLat1, sinLat2;
+    Ciphertext cosLong1, cosLong2;
+    Ciphertext sinLong1, sinLong2;
+
+    loadCipherToValues(cosLat1, sinLat1, cosLong1, sinLong1, cipher1, context);
+    loadCipherToValues(cosLat2, sinLat2, cosLong2, sinLong2, cipher2, context);
 
     CKKSEncoder encoder(context);
-    Plaintext cosLatRob, sinLatRob, cosLongRob, sinLongRob;
+    // Plaintext cosLatRob, sinLatRob, cosLongRob, sinLongRob;
     double scale = pow(2.0, 60);
-    const double robLat = 52.204761 * M_PI / 180.0, robLong = 0.105507 * M_PI / 180.0;
+    // const double robLat = 52.204761 * M_PI / 180.0, robLong = 0.105507 * M_PI / 180.0;
 
-    encoder.encode(cos(robLat), scale, cosLatRob);
-    encoder.encode(sin(robLat), scale, sinLatRob);
-    encoder.encode(cos(robLong), scale, cosLongRob);
-    encoder.encode(sin(robLong), scale, sinLongRob);
+    // encoder.encode(cos(robLat), scale, cosLatRob);
+    // encoder.encode(sin(robLat), scale, sinLatRob);
+    // encoder.encode(cos(robLong), scale, cosLongRob);
+    // encoder.encode(sin(robLong), scale, sinLongRob);
 
     Ciphertext cosLatProd;
-    eval.multiply_plain(cosLat, cosLatRob, cosLatProd);
+    eval.multiply(cosLat1, cosLat2, cosLatProd);
     eval.rescale_to_next_inplace(cosLatProd);
     eval.relinearize_inplace(cosLatProd, relinKeys);
 
     Ciphertext sinLatProd;
-    eval.multiply_plain(sinLat, sinLatRob, sinLatProd);
+    eval.multiply(sinLat1, sinLat2, sinLatProd);
     eval.rescale_to_next_inplace(sinLatProd);
     eval.relinearize_inplace(sinLatProd, relinKeys);
 
@@ -75,12 +85,12 @@ string CKKSServerHelper::compute(vector<string> &cipher, string relin, string pr
     eval.add_plain_inplace(havLat, oneLat);
 
     Ciphertext cosLongProd;
-    eval.multiply_plain(cosLong, cosLongRob, cosLongProd);
+    eval.multiply(cosLong1, cosLong2, cosLongProd);
     eval.rescale_to_next_inplace(cosLongProd);
     eval.relinearize_inplace(cosLongProd, relinKeys);
 
     Ciphertext sinLongProd;
-    eval.multiply_plain(sinLong, sinLongRob, sinLongProd);
+    eval.multiply(sinLong1, sinLong2, sinLongProd);
     eval.rescale_to_next_inplace(sinLongProd);
     eval.relinearize_inplace(sinLongProd, relinKeys);
 

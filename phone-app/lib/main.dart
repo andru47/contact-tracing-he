@@ -59,13 +59,15 @@ class _MyHomePageState extends State<MyHomePage> {
   static const platform = MethodChannel('BRIDGE');
 
   Future<void> computeResult(
-      String hostName, double latitude, double longitude) async {
+      String hostName, double latitude1, double longitude1, double latitude2, double longitude2) async {
     String publicKey = await rootBundle.loadString("assets/pubKey.bin");
     String privateKey = await rootBundle.loadString("assets/privateKey.bin");
     List<String> cipherTexts = List<String>.from(await platform.invokeMethod(
         "encrypt", {
-      "latitude": latitude,
-      "longitude": longitude,
+      "latitude1": latitude1,
+      "longitude1": longitude1,
+      "latitude2": latitude2,
+      "longitude2": longitude2,
       "publicKey": publicKey
     }));
     List<String> keys = List<String>.from(await platform.invokeMethod("keys"));
@@ -114,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
       if (!formKey.currentState!.validate()) {
         return;
       }
-      computeResult(URL, 52.20467756586156, 0.10558759665058481);
+      computeResult(URL, 52.20467756586156, 0.10558759665058481, 52.204761, 0.105507);
     }
 
     return Scaffold(
