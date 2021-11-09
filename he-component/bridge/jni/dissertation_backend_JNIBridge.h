@@ -10,10 +10,10 @@ extern "C" {
 /*
  * Class:     dissertation_backend_JNIBridge
  * Method:    getDistance
- * Signature: ([C[C[C[C[C[C)[C
+ * Signature: ([[C[[C[C)[C
  */
 JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance
-  (JNIEnv *, jobject, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray);
+  (JNIEnv *, jobject, jobjectArray, jobjectArray, jcharArray);
 
 #ifdef __cplusplus
 }
