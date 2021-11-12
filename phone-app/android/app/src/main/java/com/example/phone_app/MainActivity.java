@@ -1,10 +1,16 @@
 package com.example.phone_app;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
 
-import java.nio.charset.StandardCharsets;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+
+import com.example.phone_app.background.LocationService;
+
 import java.util.Arrays;
-import java.util.HashMap;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
@@ -13,6 +19,14 @@ import io.flutter.plugin.common.MethodChannel;
 public class MainActivity extends FlutterActivity {
   private final String CHANNEL = "BRIDGE";
   private final JNIBridge bridge = new JNIBridge();
+
+  @RequiresApi(api = Build.VERSION_CODES.O)
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    Intent intent = new Intent(this, LocationService.class);
+    startForegroundService(intent);
+  }
 
   @Override
   public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {

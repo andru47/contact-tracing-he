@@ -33,7 +33,7 @@ public class Controller {
 
   public String[] getElement() {
     try (Statement statement = connection.createStatement()) {
-      ResultSet rs = statement.executeQuery("SELECT latitude_cos, latitude_sin, longitude_cos, longitude_sin from locations where user_id='1bebf060-d9f8-4cfe-a60c-e23de3ee7daf'");
+      ResultSet rs = statement.executeQuery("SELECT latitude_cos, latitude_sin, longitude_cos, longitude_sin from locations where user_id='a0b9cce1-682e-43dc-b6b2-b5a24209ea22'");
       rs.first();
       return new String[]{rs.getString("latitude_cos"), rs.getString("latitude_sin"), rs.getString("longitude_cos"), rs.getString("longitude_sin")};
     } catch (SQLException throwables) {
