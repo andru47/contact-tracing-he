@@ -11,9 +11,12 @@ import java.util.UUID;
 public class Util {
   protected final static String SHARED_PREFERENCES_FILENAME = "com.example.phone_app.PRIVATE_PREFS";
   private final static String SHARED_PREFERENCES_UID_KEY = "uuid";
+  private final static String SHARED_PREFERENCES_ISO_KEY = "isolation";
+  private final static String SHARED_PREFERENCES_ISO_END_KEY = "isolation-end";
   private static String uuid = null;
   private static char[] privateKey = null;
   private static char[] publicKey = null;
+  private static Boolean isIsolating = null;
 
   protected static synchronized String getUuid(Context givenContext) {
     if (uuid == null) {
@@ -39,6 +42,13 @@ public class Util {
     return privateKey;
   }
 
+  public static synchronized boolean isIsolating(Context givenContext) {
+    if (isIsolating == null) {
+      isIsolating = getIsolationStatus(givenContext);
+    }
+
+    return isIsolating;
+  }
 
   private static char[] readKey(String fileName, Context context) {
     try (InputStream stream = context.getAssets().open(fileName)) {
@@ -52,6 +62,21 @@ public class Util {
     }
     Log.e(Util.class.getName(), "The " + fileName + "was not read.");
     return null;
+  }
+
+  private static boolean getIsolationStatus(Context context) {
+    SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
+    return sharedPreferences.getBoolean(SHARED_PREFERENCES_ISO_KEY, false);
+  }
+
+  public static void setIsolationStatus(Context context, boolean value, Long endIsolation) {
+    Log.d(Util.class.getName(), "Setting isolation to " + value + " end " + endIsolation);
+    isIsolating = value;
+    SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putBoolean(SHARED_PREFERENCES_ISO_KEY, value);
+    editor.putLong(SHARED_PREFERENCES_ISO_END_KEY, endIsolation);
+    editor.apply();
   }
 
   private static String getOrUpdateSharedPrefIfNotPresent(Context context) {

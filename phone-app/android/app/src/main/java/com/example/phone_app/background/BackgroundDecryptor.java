@@ -3,6 +3,8 @@ package com.example.phone_app.background;
 import android.util.Log;
 
 import com.example.phone_app.JNIBridge;
+import com.example.phone_app.background.serialization.ContactMessage;
+import com.example.phone_app.background.serialization.NewDistanceMessage;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,25 +16,34 @@ public class BackgroundDecryptor {
 
   public static void getDistances(String userId, char[] privateKey) {
     while (true) {
-      List<String> givenCiphertexts = ConnectionService.getDistances(userId);
+      List<NewDistanceMessage> givenCiphertexts = ConnectionService.getDistances(userId);
       if (givenCiphertexts.size() == 0) {
         return;
       }
       Log.i(BackgroundDecryptor.class.getName(), "I have received " + givenCiphertexts.size() + " ciphertexts.");
-      wasInContact(givenCiphertexts, privateKey);
+      wasInContact(givenCiphertexts, privateKey, userId);
     }
   }
 
-  private static void wasInContact(List<String> givenCiphertexts, char[] privateKey) {
-    for (String cipherText : givenCiphertexts) {
-      Log.i(BackgroundDecryptor.class.getName(), "Current ciphertext size is " + cipherText.length());
+  private static void wasInContact(List<NewDistanceMessage> givenCiphertexts, char[] privateKey, String userId) {
+    for (NewDistanceMessage distanceMessage : givenCiphertexts) {
       decryptorService.execute(() -> {
-        double initialResult = bridge.decrypt(cipherText.toCharArray(), privateKey);
+        Log.d(BackgroundDecryptor.class.getName(), "Start timestamp " + distanceMessage.getTimestamp());
+        Log.d(BackgroundDecryptor.class.getName(), "End timestamp " + distanceMessage.getTimestampEnd());
+        Log.d(BackgroundDecryptor.class.getName(), "Contact user id " + distanceMessage.getContactUserId());
+        Log.d(BackgroundDecryptor.class.getName(), "Current ciphertext size is " + distanceMessage.getCiphertext().length());
+        Log.d(BackgroundDecryptor.class.getName(), "current private key is " + privateKey.length);
+        double initialResult = bridge.decrypt(distanceMessage.getCiphertext().toCharArray(), privateKey);
         if (initialResult < 0) {
-          Log.i(BackgroundDecryptor.class.getName(), "The location was very close");
+          Log.d(BackgroundDecryptor.class.getName(), "The location was very close");
         }
-        initialResult = Math.asin(Math.sqrt(initialResult / 2.0)) * 6378.8 * 2.0;
-        Log.i(BackgroundDecryptor.class.getName(), "The distance was " + initialResult + " km.");
+        initialResult = Math.asin(Math.sqrt(initialResult / 2.0)) * 6378.8 * 2.0 * 1000;
+        Log.d(BackgroundDecryptor.class.getName(), "The distance was " + initialResult + " meters.");
+        if (initialResult <= 5) {
+          Log.d(BackgroundDecryptor.class.getName(), "Found contact " + distanceMessage.getContactUserId());
+          ConnectionService.sendObject(new ContactMessage(userId, distanceMessage.getContactUserId(),
+                  distanceMessage.getTimestamp(), distanceMessage.getTimestampEnd()), "new-contact");
+        }
       });
     }
   }

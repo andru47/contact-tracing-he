@@ -63,7 +63,7 @@ public class LocationService extends Service {
     isStarted = true;
 
     LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0F,
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2.5F,
             new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this)));
   }
 }

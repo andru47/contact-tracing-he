@@ -25,6 +25,10 @@ public class NotificationService extends FirebaseMessagingService {
     if (!remoteMessage.getData().containsKey("he-server-message")) {
       return;
     }
-    BackgroundDecryptor.getDistances(Util.getUuid(this), Util.getPrivateKey(this));
+    if (remoteMessage.getData().get("he-server-message").equals("new data")) {
+      BackgroundDecryptor.getDistances(Util.getUuid(this), Util.getPrivateKey(this));
+    } else {
+      Util.setIsolationStatus(this, true, Long.parseLong(remoteMessage.getData().get("he-server-message")));
+    }
   }
 }

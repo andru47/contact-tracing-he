@@ -2,9 +2,12 @@ package com.example.phone_app.background;
 
 import android.util.Log;
 
+import com.example.phone_app.background.serialization.NewDistanceMessage;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +20,7 @@ public class ConnectionService {
   private final static String URL = "http://10.0.2.2:8080/";
   private final static Gson gson = new Gson();
   private final static OkHttpClient client = new OkHttpClient();
+  private static final Type distanceListType = new TypeToken<ArrayList<NewDistanceMessage>>(){}.getType();
 
   private static void sendJson(String json, String endpoint) {
     Request request = new Request.Builder()
@@ -31,7 +35,7 @@ public class ConnectionService {
     }
   }
 
-  protected static List<String> getDistances(String userId) {
+  protected static List<NewDistanceMessage> getDistances(String userId) {
     Request request = new Request.Builder()
             .url(URL + "get-computed-distances/" + userId)
             .get()
@@ -40,7 +44,7 @@ public class ConnectionService {
     try {
       String jsonResponse = client.newCall(request).execute().body().string();
       Log.i(ConnectionService.class.getName(), "Received " + jsonResponse + " from server for new distances");
-      return gson.fromJson(jsonResponse, ArrayList.class);
+      return gson.fromJson(jsonResponse, distanceListType);
     } catch (IOException e) {
       e.printStackTrace();
     }
