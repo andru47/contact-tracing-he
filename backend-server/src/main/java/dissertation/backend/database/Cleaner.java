@@ -19,6 +19,7 @@ public class Cleaner {
     logger.info("I have received command to clean stale data");
     Controller.executeDeleteStaleStatement(SQL_DELETE_STATEMENT_LOCATIONS, Instant.now().getEpochSecond());
     Controller.executeDeleteStaleStatement(SQL_DELETE_STATEMENT_QUARANTINED, Instant.now().getEpochSecond());
+    Controller.executeDeleteOldContacts();
     logger.info("I have finished cleaning stale data");
   }
 }

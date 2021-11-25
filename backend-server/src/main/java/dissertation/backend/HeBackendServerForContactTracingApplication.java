@@ -17,7 +17,13 @@ public class HeBackendServerForContactTracingApplication {
     startSchedulerForOldData();
     startSchedulerForComputingNewDistances();
     startSchedulerForNotification();
+    startSchedulerForContact();
     SpringApplication.run(HeBackendServerForContactTracingApplication.class, args);
+  }
+
+  private static void startSchedulerForContact() {
+    ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.scheduleAtFixedRate(ContactTracingHelper::checkContacts, 10, 300000, TimeUnit.SECONDS);
   }
 
   private static void startSchedulerForOldData() {
@@ -32,6 +38,6 @@ public class HeBackendServerForContactTracingApplication {
 
   private static void startSchedulerForNotification() {
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(FCMNotificationManager::sendNotifications, 1, 30, TimeUnit.MINUTES);
+    executorService.scheduleAtFixedRate(FCMNotificationManager::sendDataNotifications, 15, 30, TimeUnit.SECONDS);
   }
 }

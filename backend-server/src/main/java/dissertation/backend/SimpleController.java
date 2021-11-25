@@ -3,10 +3,7 @@ package dissertation.backend;
 import com.google.gson.Gson;
 import dissertation.backend.database.ContactTracingHelper;
 import dissertation.backend.database.Controller;
-import dissertation.backend.serialization.JSONBody;
-import dissertation.backend.serialization.NewCaseMessage;
-import dissertation.backend.serialization.NewTokenMessage;
-import dissertation.backend.serialization.UploadDistanceMessage;
+import dissertation.backend.serialization.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,8 +65,15 @@ public class SimpleController {
 
   @GetMapping("/get-computed-distances/{userId}")
   public String getDistances(@PathVariable String userId) {
-    List<String> givenCiphertexts = ContactTracingHelper.getComputedDistancesForUser(userId);
+    List<ComputedDistanceMessage> givenCiphertexts = ContactTracingHelper.getComputedDistancesForUser(userId);
 
     return gson.toJson(givenCiphertexts);
+  }
+
+  @PostMapping("/new-contact")
+  public String reportNewContact(@RequestBody String jsonContactMessage) {
+    ContactMessage message = gson.fromJson(jsonContactMessage, ContactMessage.class);
+    Controller.addNewContact(message);
+    return "SUCCESS";
   }
 }

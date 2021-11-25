@@ -39,7 +39,15 @@ public class FCMNotificationManager {
     }
   }
 
-  public static void sendNotifications() {
+  public static void sendContactNotification(String userId, String endIsolation) {
+    String token = Controller.getTokenForUser(userId);
+    if (token == null) {
+      logger.error("Could not find token for user " + userId);
+    }
+    sendNotification(endIsolation, token);
+  }
+
+  public static void sendDataNotifications() {
     for (String token : Controller.getUsersThatNeedToDownloadDistances()) {
       sendNotification("new data", token);
     }
