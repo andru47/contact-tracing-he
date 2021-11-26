@@ -23,7 +23,7 @@ public class CTLocationListener implements LocationListener {
 
   @Override
   public void onLocationChanged(@NonNull Location location) {
-    Log.i("location_listener", "Got new location " + location.getLatitude() + location.getLongitude());
+    Log.d(CTLocationListener.class.getName(), "Got new location " + location.getLatitude() + " " + location.getLongitude());
     double latitudeCos = Math.cos(Math.toRadians(location.getLatitude()));
     double longitudeCos = Math.cos(Math.toRadians(location.getLongitude()));
     double latitudeSin = Math.sin(Math.toRadians(location.getLatitude()));

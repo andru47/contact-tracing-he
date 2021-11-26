@@ -36,7 +36,7 @@ public class LocationService extends Service {
 
   @Override
   public int onStartCommand(Intent intent, int flags, int startId) {
-    Log.i(getPackageName(), "Started the service that sends the location.");
+    Log.d(LocationService.class.getName(), "Started the service that sends the location.");
     startService();
     return START_STICKY;
   }
@@ -57,13 +57,15 @@ public class LocationService extends Service {
   @SuppressLint("MissingPermission")
   private void startService() {
     if (isStarted) {
-      Log.i(getPackageName(), "detected start");
+      Log.d(LocationService.class.getName(), "Detected start.");
       return;
     }
     isStarted = true;
 
     LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
     locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2.5F,
+            new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this)));
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 5 * 60, 0F,
             new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this)));
   }
 }

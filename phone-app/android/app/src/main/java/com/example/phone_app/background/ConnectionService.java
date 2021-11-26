@@ -29,9 +29,9 @@ public class ConnectionService {
             .build();
     try {
       client.newCall(request).execute();
-      Log.i("Http request sender", "Finished sending the request to the server");
+      Log.d(ConnectionService.class.getName(), "Finished sending the request to the server");
     } catch (IOException e) {
-      e.printStackTrace();
+      Log.e(ConnectionService.class.getName(), e.toString());
     }
   }
 
@@ -40,13 +40,13 @@ public class ConnectionService {
             .url(URL + "get-computed-distances/" + userId)
             .get()
             .build();
-    Log.i(ConnectionService.class.getName(), "Url is " + request.url().toString());
+    Log.d(ConnectionService.class.getName(), "Url is " + request.url().toString());
     try {
       String jsonResponse = client.newCall(request).execute().body().string();
-      Log.i(ConnectionService.class.getName(), "Received " + jsonResponse + " from server for new distances");
+      Log.d(ConnectionService.class.getName(), "Received " + jsonResponse + " from server for new distances");
       return gson.fromJson(jsonResponse, distanceListType);
     } catch (IOException e) {
-      e.printStackTrace();
+      Log.e(ConnectionService.class.getName(), e.toString());
     }
     return new ArrayList<>();
   }

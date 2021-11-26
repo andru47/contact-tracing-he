@@ -1,35 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:he_contact_tracing/util/util.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import './util/connection_service.dart';
+import 'package:he_contact_tracing/drawer.dart';
 
 void main() {
   runApp(const MyApp());
-}
-
-MaterialButton longButtons(String title, Function fun,
-    {Color color: const Color(0xfff063057), Color textColor: Colors.white}) {
-  return MaterialButton(
-    onPressed: () {
-      fun();
-    },
-    textColor: textColor,
-    color: color,
-    child: SizedBox(
-      width: double.infinity,
-      child: Text(
-        title,
-        textAlign: TextAlign.center,
-      ),
-    ),
-    height: 45,
-    minWidth: 600,
-    shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.all(Radius.circular(10))),
-  );
 }
 
 class MyApp extends StatelessWidget {
@@ -38,11 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'HE-Contact Tracing',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'HE-Contact Tracing'),
     );
   }
 }
@@ -57,72 +31,38 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _computedResult = "";
+  int timestampEnd = -1;
   static const platform = MethodChannel('BRIDGE');
 
-  Future<void> computeResult(
-      String hostName, double latitude1, double longitude1, double latitude2, double longitude2) async {
-    String publicKey = await rootBundle.loadString("assets/pubKey.bin");
-    String privateKey = await rootBundle.loadString("assets/privateKey.bin");
-    //final prefs = await SharedPreferences.getInstance();
-    List<String> cipherTexts = List<String>.from(await platform.invokeMethod(
-        "encrypt", {
-      "latitude1": latitude1,
-      "longitude1": longitude1,
-      "latitude2": latitude2,
-      "longitude2": longitude2,
-      "publicKey": publicKey
-    }));
-    String cipherTextComputed =
-        await ConnectionService.getDistance(hostName, cipherTexts);
-    //await ConnectionService.uploadNewLocation("http://10.0.2.2:8080/upload-location", getId(prefs), "2021-11-09 12:45", cipherTexts);
-
-    double distance = await platform.invokeMethod(
-        "decrypt", {"cipher": cipherTextComputed, "privateKey": privateKey});
-    print(distance);
-    distance = asin(sqrt(distance / 2.0)) * 6378.8 * 2.0;
+  void getIsolationStatus() async {
+    int returnedTimestamp = await platform.invokeMethod("get-isolation");
     setState(() {
-      _computedResult = distance.toString();
+      timestampEnd = returnedTimestamp;
     });
-    /*String cipherText = await platform.invokeMethod("encrypt", <String, String>{"plain": number});
-    String cipherTextComputed = await ConnectionService.getSimpleResult(hostName, cipherText);
-    String newNumber = await platform.invokeMethod("decrypt", <String, String>{"cipher": cipherTextComputed});
-    setState(() {
-      _computedResult = newNumber;
-    });*/
   }
 
   @override
   Widget build(BuildContext context) {
-    final String URL = Theme.of(context).platform == TargetPlatform.android
-        ? "http://10.0.2.2:8080/distance-calculator"
-        : "http://127.0.0.1:8080/compute-simple";
-    final formKey = new GlobalKey<FormState>();
-    TextEditingController nameFieldController = TextEditingController();
-
-    var nameField = TextFormField(
-        controller: nameFieldController,
-        validator: (name) {
-          if (name == null || name.isEmpty) {
-            return 'Please input at least one digit';
-          }
-
-          return null;
-        },
-        autocorrect: false,
-        enableSuggestions: false,
-        decoration: const InputDecoration(
-            hintText: "Enter a number", errorMaxLines: 3));
-
-    validate() {
-      formKey.currentState!.save();
-      if (!formKey.currentState!.validate()) {
-        return;
-      }
-      computeResult(URL, 52.20467756586156, 0.10558759665058481, 52.204761, 0.105507);
+    if (timestampEnd == -1) {
+      getIsolationStatus();
     }
+    final formKey = new GlobalKey<FormState>();
+
+    var displayIsolation = timestampEnd == 0
+        ? (const SelectableText("The app is scanning possible contacts.",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)))
+        : (timestampEnd == -1
+            ? (const CircularProgressIndicator())
+            : (SelectableText(
+                "You have been in contact with a positive case.\nPlease isolate until " +
+                    DateTime.fromMillisecondsSinceEpoch(timestampEnd * 1000)
+                        .toLocal()
+                        .toString(),
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold, fontSize: 20))));
 
     return Scaffold(
+      drawer: MyDrawerStateful(),
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -133,18 +73,34 @@ class _MyHomePageState extends State<MyHomePage> {
             key: formKey,
             child: Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
-                ListTile(leading: Icon(Icons.info), title: nameField),
-                SizedBox(
-                  height: 20,
-                ),
-                longButtons("Compute (x + 1)^2!", validate),
-                SizedBox(height: 20),
-                _computedResult.isEmpty
-                    ? SizedBox(height: 0)
-                    : Text(_computedResult)
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(5)),
+                      color: timestampEnd == -1
+                          ? Colors.yellow
+                          : (timestampEnd == 0 ? Colors.green : Colors.red),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3),
+                        )
+                      ]),
+                  padding: const EdgeInsets.all(20),
+                  child: Column(children: [
+                    const SelectableText(
+                      "Isolation status",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    displayIsolation
+                  ]),
+                )
               ],
             ),
           )

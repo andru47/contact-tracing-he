@@ -15,20 +15,20 @@ public class NotificationService extends FirebaseMessagingService {
   @Override
   public void onNewToken(@NonNull String newToken) {
     super.onNewToken(newToken);
-    Log.i(NotificationService.class.toString(), "Received token " + newToken);
+    Log.d(NotificationService.class.toString(), "Received token " + newToken);
     ConnectionService.sendObject(new NewTokenMessage(Util.getUuid(this), newToken), "upload-fcm-token");
   }
 
   @Override
   public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-    Log.i(NotificationService.class.toString(), "Received message " + remoteMessage.getData().toString());
+    Log.d(NotificationService.class.toString(), "Received message " + remoteMessage.getData().toString());
     if (!remoteMessage.getData().containsKey("he-server-message")) {
       return;
     }
     if (remoteMessage.getData().get("he-server-message").equals("new data")) {
       BackgroundDecryptor.getDistances(Util.getUuid(this), Util.getPrivateKey(this));
     } else {
-      Util.setIsolationStatus(this, true, Long.parseLong(remoteMessage.getData().get("he-server-message")));
+      Util.setIsolationStatus(this, Long.parseLong(remoteMessage.getData().get("he-server-message")));
     }
   }
 }
