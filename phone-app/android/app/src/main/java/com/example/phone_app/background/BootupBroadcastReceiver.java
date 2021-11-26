@@ -13,7 +13,7 @@ public class BootupBroadcastReceiver extends BroadcastReceiver {
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   public void onReceive(Context context, Intent intent) {
-    Log.i("Broadcast service", "Received broadcast " + intent.getAction());
+    Log.d(BootupBroadcastReceiver.class.getName(), "Received broadcast " + intent.getAction());
     if (intent.getAction().equalsIgnoreCase(Intent.ACTION_BOOT_COMPLETED)) {
       Intent locationService = new Intent(context, LocationService.class);
       context.startForegroundService(locationService);

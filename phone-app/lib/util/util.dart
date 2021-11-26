@@ -1,14 +1,31 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/uuid.dart';
+import 'package:flutter/material.dart';
 
-String getId(SharedPreferences prefs) {
-  if (prefs.containsKey("id")) {
-    return prefs.getString("id")!;
+MaterialButton longButtons(String title, Function fun,
+    {Color color: const Color(0xfff063057), Color textColor: Colors.white}) {
+  return MaterialButton(
+    onPressed: () {
+      fun();
+    },
+    textColor: textColor,
+    color: color,
+    child: SizedBox(
+      width: double.infinity,
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+      ),
+    ),
+    height: 45,
+    minWidth: 600,
+    shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(10))),
+  );
+}
+
+String? responseFieldValidator(String? response) {
+  if (response == null || response != 'yes') {
+    return 'You need to type yes in order to confirm';
   }
 
-  var uuid = Uuid();
-  String newId = uuid.v4();
-  prefs.setString("id", newId);
-
-  return newId;
+  return null;
 }
