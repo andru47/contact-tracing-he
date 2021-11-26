@@ -17,7 +17,7 @@ public class ContactTracingHelper {
   private final static Logger logger = LogManager.getLogger(ContactTracingHelper.class);
 
   public static void addNewCovidCase(NewCaseMessage message) {
-    Controller.addNewInfectedUser(message.getUser_id(), Long.parseLong(message.getTimestamp()) + 10 * 24 * 60 * 60);
+    Controller.addNewInfectedUser(message.getUserId(), Long.parseLong(message.getTimestamp()) + 10 * 24 * 60 * 60);
   }
 
   public static List<ComputedDistanceMessage> getComputedDistancesForUser(String userId) {
@@ -81,7 +81,7 @@ public class ContactTracingHelper {
     }
 
     for (String positiveId: positives.keySet()) {
-      FCMNotificationManager.sendContactNotification(positiveId, positives.get(positiveId).toString());
+      FCMNotificationManager.sendContactNotification(positiveId, String.valueOf(positives.get(positiveId) + 10 * 24 * 60 * 60));
       Controller.addNewInfectedUser(positiveId, positives.get(positiveId) + 10 * 24 * 60 * 60);
     }
   }
@@ -139,6 +139,7 @@ public class ContactTracingHelper {
         "and infected_user_locations.user_id != loc.user_id\n"+
         "WHERE loc.id NOT IN (SELECT location_id from computed_distances where computed_distances.infected_location_id = infected_user_locations.id)\n" +
         "AND loc.id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_user_locations.id)\n" +
+        "AND loc.user_id NOT IN (SELECT user_id from quarantined_users)\n" +
         "LIMIT 100";
 
     try (ResultSet rs = Controller.getResultSetFromStatement(sqlCommand)) {
