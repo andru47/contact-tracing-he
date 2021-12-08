@@ -34,6 +34,8 @@ public class BackgroundDecryptor {
         Log.d(BackgroundDecryptor.class.getName(), "Current ciphertext size is " + distanceMessage.getCiphertext().length());
 
         double initialResult = bridge.decrypt(distanceMessage.getCiphertext().toCharArray(), privateKey);
+        double differenceInAltitude = bridge.decrypt(distanceMessage.getAltitudeDifference().toCharArray(), privateKey);
+        Log.d(BackgroundDecryptor.class.getName(), "Altitude difference was " + differenceInAltitude);
         if (initialResult < 0) {
           Log.d(BackgroundDecryptor.class.getName(), "The location was very close");
         }

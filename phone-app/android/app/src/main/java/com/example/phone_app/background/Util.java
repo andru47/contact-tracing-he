@@ -84,6 +84,7 @@ public class Util {
     }
     SharedPreferences.Editor editor = sharedPreferences.edit();
     String generatedId = UUID.randomUUID().toString();
+    Log.d(Util.class.getName(), "Generated uuid " + generatedId);
     editor.putString(SHARED_PREFERENCES_UID_KEY, generatedId);
     editor.apply();
 

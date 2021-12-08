@@ -10,12 +10,13 @@ static mutex publicKeyMtx, privateKeyMtx;
 
 JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
     JNIEnv *env, jobject, jdouble latitudeCosJ, jdouble latitudeSinJ, jdouble longitudeCosJ, jdouble longitudeSinJ,
-    jcharArray givenPublicKey)
+    jdouble altitudeJ, jcharArray givenPublicKey)
 {
     double latitudeCos = (double)latitudeCosJ;
     double latitudeSin = (double)latitudeSinJ;
     double longitudeCos = (double)longitudeCosJ;
     double longitudeSin = (double)longitudeSinJ;
+    double altitude = (double)altitudeJ;
     publicKeyMtx.lock();
     if (!loadedPublic)
     {
@@ -29,7 +30,7 @@ JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
     }
     publicKeyMtx.unlock();
 
-    vector<string> encrypted = helper.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin);
+    vector<string> encrypted = helper.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude);
 
     jcharArray latitudeCosJarray = env->NewCharArray(encrypted[0].size());
     env->SetCharArrayRegion(latitudeCosJarray, 0, encrypted[0].size(), getJCharArrFromString(encrypted[0]));
@@ -43,6 +44,9 @@ JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
     jcharArray longitudeSinJarray = env->NewCharArray(encrypted[3].size());
     env->SetCharArrayRegion(longitudeSinJarray, 0, encrypted[3].size(), getJCharArrFromString(encrypted[3]));
 
+    jcharArray altitudeJarray = env->NewCharArray(encrypted[4].size());
+    env->SetCharArrayRegion(altitudeJarray, 0, encrypted[4].size(), getJCharArrFromString(encrypted[4]));
+
     jclass cls = env->FindClass("com/example/phone_app/CiphertextWrapper");
     jobject toReturn = env->AllocObject(cls);
 
@@ -50,6 +54,7 @@ JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
     env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setLatitudeSin", "([C)V"), latitudeSinJarray);
     env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setLongitudeCos", "([C)V"), longitudeCosJarray);
     env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setLongitudeSin", "([C)V"), longitudeSinJarray);
+    env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setAltitude", "([C)V"), altitudeJarray);
 
     return toReturn;
 }

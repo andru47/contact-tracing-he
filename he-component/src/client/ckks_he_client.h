@@ -18,6 +18,6 @@ public:
     string getPublicKey();
     void loadPublicKeyFromClient(string &publicKeyString);
     void laodPrivateKeyFromClient(string &privateKeyString);
-    vector<string> encrypt(double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin);
+    vector<string> encrypt(double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin, double altitude);
     double decrypt(string cipherString);
 };

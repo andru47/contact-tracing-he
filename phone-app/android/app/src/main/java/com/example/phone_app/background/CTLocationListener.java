@@ -23,12 +23,12 @@ public class CTLocationListener implements LocationListener {
 
   @Override
   public void onLocationChanged(@NonNull Location location) {
-    Log.d(CTLocationListener.class.getName(), "Got new location " + location.getLatitude() + " " + location.getLongitude());
+    Log.d(CTLocationListener.class.getName(), "Got new location " + location.getLatitude() + " " + location.getLongitude() + " " + location.getAltitude());
     double latitudeCos = Math.cos(Math.toRadians(location.getLatitude()));
     double longitudeCos = Math.cos(Math.toRadians(location.getLongitude()));
     double latitudeSin = Math.sin(Math.toRadians(location.getLatitude()));
     double longitudeSin = Math.sin(Math.toRadians(location.getLongitude()));
-    CiphertextWrapper wrapper = bridge.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin, publicKey);
+    CiphertextWrapper wrapper = bridge.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin, location.getAltitude(), publicKey);
 
     Thread thread = new Thread() {
       @Override
@@ -37,6 +37,7 @@ public class CTLocationListener implements LocationListener {
                 wrapper.getLatitudeSin(),
                 wrapper.getLongitudeCos(),
                 wrapper.getLongitudeSin(),
+                wrapper.getAltitude(),
                 userId,
                 getTimestamp(location.getTime())), "upload-location");
       }
