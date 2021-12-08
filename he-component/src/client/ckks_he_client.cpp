@@ -40,14 +40,14 @@ string CKKSClientHelper::getRelinKeys()
 }
 
 vector<string> CKKSClientHelper::encrypt(
-    double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin)
+    double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin, double altitude)
 {
-    vector<double> coordinates = { latitudeCos, latitudeSin, longitudeCos, longitudeSin };
+    vector<double> toEncrypt = { latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude };
     vector<string> result;
     CKKSEncoder encoder(context);
 
     Encryptor encryptor(context, this->publicKey);
-    for (auto &it : coordinates)
+    for (auto &it : toEncrypt)
     {
         Plaintext plain;
 

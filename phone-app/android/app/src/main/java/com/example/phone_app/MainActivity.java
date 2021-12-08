@@ -45,8 +45,8 @@ public class MainActivity extends FlutterActivity {
                         double latitudeRad2 = latitude2 * Math.PI / 180.0;
                         double longitudeRad2 = longitude2 * Math.PI / 180.0;
                         String publicKey = call.argument("publicKey");
-                        CiphertextWrapper wrapper1 = bridge.encrypt(Math.cos(latitudeRad1), Math.sin(latitudeRad1), Math.cos(longitudeRad1), Math.sin(longitudeRad1), publicKey.toCharArray());
-                        CiphertextWrapper wrapper2 = bridge.encrypt(Math.cos(latitudeRad2), Math.sin(latitudeRad2), Math.cos(longitudeRad2), Math.sin(longitudeRad2), publicKey.toCharArray());
+                        CiphertextWrapper wrapper1 = bridge.encrypt(Math.cos(latitudeRad1), Math.sin(latitudeRad1), Math.cos(longitudeRad1), Math.sin(longitudeRad1), 0, publicKey.toCharArray());
+                        CiphertextWrapper wrapper2 = bridge.encrypt(Math.cos(latitudeRad2), Math.sin(latitudeRad2), Math.cos(longitudeRad2), Math.sin(longitudeRad2), 0, publicKey.toCharArray());
                         result.success(Arrays.asList(wrapper1.getLatitudeCos(), wrapper1.getLatitudeSin(), wrapper1.getLongitudeCos(), wrapper1.getLongitudeSin(),
                                 wrapper2.getLatitudeCos(), wrapper2.getLatitudeSin(), wrapper2.getLongitudeCos(), wrapper2.getLongitudeSin()));
                       } else if (call.method.equals("decrypt")) {

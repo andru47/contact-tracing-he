@@ -1,7 +1,7 @@
 package com.example.phone_app;
 
 public class CiphertextWrapper {
-  private char[] latitudeCos, latitudeSin, longitudeCos, longitudeSin;
+  private char[] latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude;
 
   public void setLatitudeCos(char[] latitudeCos) {
     this.latitudeCos = latitudeCos;
@@ -19,6 +19,10 @@ public class CiphertextWrapper {
     this.longitudeSin = longitudeSin;
   }
 
+  public void setAltitude(char[] altitude) {
+    this.altitude = altitude;
+  }
+
   public String getLatitudeCos() {
     return new String(latitudeCos);
   }
@@ -33,5 +37,9 @@ public class CiphertextWrapper {
 
   public String getLongitudeSin() {
     return new String(longitudeSin);
+  }
+
+  public String getAltitude() {
+    return new String(altitude);
   }
 }

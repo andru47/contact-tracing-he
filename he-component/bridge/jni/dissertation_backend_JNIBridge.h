@@ -15,6 +15,14 @@ extern "C" {
 JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance
   (JNIEnv *, jobject, jobjectArray, jobjectArray);
 
+/*
+ * Class:     dissertation_backend_JNIBridge
+ * Method:    getAltitudeDifference
+ * Signature: ([C[C)[C
+ */
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getAltitudeDifference
+  (JNIEnv *, jobject, jcharArray, jcharArray);
+
 #ifdef __cplusplus
 }
 #endif

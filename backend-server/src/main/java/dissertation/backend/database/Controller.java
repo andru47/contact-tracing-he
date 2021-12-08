@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Controller {
-  private static final String SQL_INSERT_QUERY = "INSERT INTO locations(latitude_cos,latitude_sin,longitude_cos,longitude_sin,user_id,timestamp,timestamp_end) VALUES(?,?,?,?,?,?,?)";
+  private static final String SQL_INSERT_QUERY = "INSERT INTO locations(latitude_cos,latitude_sin,longitude_cos,longitude_sin,altitude,user_id,timestamp,timestamp_end) VALUES(?,?,?,?,?,?,?,?)";
   private static Connection connection = null;
 
   static {
@@ -69,17 +69,18 @@ public class Controller {
     }
   }
 
-  public static void addNewContactDistance(String distance, String userId, String infectedLocationId, String locationId, String infectedUserId,
+  public static void addNewContactDistance(String distance, String altitudeDifference, String userId, String infectedLocationId, String locationId, String infectedUserId,
                                            String timestamp, String timestampEnd) {
-    String sqlCommand = "INSERT INTO computed_distances(distance_ciphertext, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    String sqlCommand = "INSERT INTO computed_distances(distance_ciphertext, altitude_difference, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand)) {
       statement.setString(1, distance);
-      statement.setString(2, userId);
-      statement.setString(3, infectedLocationId);
-      statement.setString(4, locationId);
-      statement.setInt(5, Integer.parseInt(timestamp));
-      statement.setInt(6, Integer.parseInt(timestampEnd));
-      statement.setString(7, infectedUserId);
+      statement.setString(2, altitudeDifference);
+      statement.setString(3, userId);
+      statement.setString(4, infectedLocationId);
+      statement.setString(5, locationId);
+      statement.setInt(6, Integer.parseInt(timestamp));
+      statement.setInt(7, Integer.parseInt(timestampEnd));
+      statement.setString(8, infectedUserId);
       statement.executeUpdate();
     } catch (SQLException throwables) {
       throwables.printStackTrace();
@@ -118,7 +119,7 @@ public class Controller {
   }
 
   public static ResultSet getDistancesForUser(String userId) {
-    String sqlCommand = "SELECT row_id, distance_ciphertext, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end from computed_distances\n" +
+    String sqlCommand = "SELECT row_id, distance_ciphertext, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, altitude_difference from computed_distances\n" +
         "where possible_contact_user_id = ? \n" +
         "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
         "LIMIT 10";
@@ -185,9 +186,10 @@ public class Controller {
       statement.setString(2, message.getLatitudeSin());
       statement.setString(3, message.getLongitudeCos());
       statement.setString(4, message.getLongitudeSin());
-      statement.setString(5, message.getId());
-      statement.setString(6, message.getTimestamp());
-      statement.setString(7, String.valueOf(Integer.parseInt(message.getTimestamp()) + 5));
+      statement.setString(5, message.getAltitude());
+      statement.setString(6, message.getId());
+      statement.setString(7, message.getTimestamp());
+      statement.setString(8, String.valueOf(Integer.parseInt(message.getTimestamp()) + 5));
       statement.executeUpdate();
     } catch (SQLException throwables) {
       throwables.printStackTrace();

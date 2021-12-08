@@ -27,7 +27,7 @@ public class ContactTracingHelper {
         return result;
       }
       while (rs.next()) {
-        result.add(new ComputedDistanceMessage(rs.getString("distance_ciphertext"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
+        result.add(new ComputedDistanceMessage(rs.getString("distance_ciphertext"), rs.getString("altitude_difference"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
                                   Long.parseLong(rs.getString("timestamp_end"))));
         Controller.addNewProcessedLocationPair(rs.getString("infected_location_id"), rs.getString("location_id"));
         rs.deleteRow();
@@ -130,7 +130,8 @@ public class ContactTracingHelper {
         "infected_user_locations.latitude_cos", "infected_user_locations.latitude_sin",
         "infected_user_locations.longitude_cos", "infected_user_locations.longitude_sin",
         "loc.timestamp", "loc.user_id", "infected_user_locations.id", "loc.id", "infected_user_locations.user_id",
-        "loc.timestamp_end", "infected_user_locations.timestamp", "infected_user_locations.timestamp_end");
+        "loc.timestamp_end", "infected_user_locations.timestamp", "infected_user_locations.timestamp_end",
+        "loc.altitude", "infected_user_locations.altitude");
     String sqlCommand = "SELECT *\n" +
         "from locations as loc\n" +
         "JOIN (SELECT * from locations where user_id IN (SELECT user_id from quarantined_users)) as infected_user_locations " +
@@ -171,7 +172,12 @@ public class ContactTracingHelper {
         valueForColumn.get("infected_user_locations.longitude_sin").toCharArray()
     }));
 
-    Controller.addNewContactDistance(distanceCiphertext, valueForColumn.get("loc.user_id"), valueForColumn.get("infected_user_locations.id"),
+    String altitudeDifferenceCiphertext = new String(jniBridge.getAltitudeDifference(
+        valueForColumn.get("loc.altitude").toCharArray(),
+        valueForColumn.get("infected_user_locations.altitude").toCharArray()
+    ));
+
+    Controller.addNewContactDistance(distanceCiphertext, altitudeDifferenceCiphertext, valueForColumn.get("loc.user_id"), valueForColumn.get("infected_user_locations.id"),
         valueForColumn.get("loc.id"), valueForColumn.get("infected_user_locations.user_id"),
         getStart(valueForColumn.get("loc.timestamp"), valueForColumn.get("infected_user_locations.timestamp")),
         getStop(valueForColumn.get("loc.timestamp_end"), valueForColumn.get("infected_user_locations.timestamp_end")));
