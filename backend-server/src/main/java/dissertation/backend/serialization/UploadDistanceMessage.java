@@ -1,7 +1,7 @@
 package dissertation.backend.serialization;
 
 public class UploadDistanceMessage {
-  private String id, latitudeCos, latitudeSin, longitudeCos, longitudeSin, timestamp;
+  private String id, latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude, timestamp;
 
   public String getLongitudeSin() {
     return longitudeSin;
@@ -17,6 +17,10 @@ public class UploadDistanceMessage {
 
   public String getLatitudeCos() {
     return latitudeCos;
+  }
+
+  public String getAltitude() {
+    return altitude;
   }
 
   public String getId() {

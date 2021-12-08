@@ -25,8 +25,8 @@ vector<string> getCipherFromOjectArray(JNIEnv *env, jobjectArray &location)
     return { latitudeCos, latitudeSin, longitudeCos, longitudeSin };
 }
 
-JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance(
-    JNIEnv *env, jobject, jobjectArray location1, jobjectArray location2)
+JNIEXPORT jcharArray JNICALL
+Java_dissertation_backend_JNIBridge_getDistance(JNIEnv *env, jobject, jobjectArray location1, jobjectArray location2)
 {
     vector<string> cipher1 = getCipherFromOjectArray(env, location1);
     vector<string> cipher2 = getCipherFromOjectArray(env, location2);
@@ -38,6 +38,22 @@ JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance(
 
     jcharArray j_version_array = env->NewCharArray(returned.size());
     env->SetCharArrayRegion(j_version_array, 0, returned.size(), cipherComputed);
+
+    return j_version_array;
+}
+
+JNIEXPORT jcharArray JNICALL
+Java_dissertation_backend_JNIBridge_getAltitudeDifference(JNIEnv *env, jobject, jcharArray altitude1, jcharArray altitude2)
+{
+    string altitude1String = getStringFromJ(env, altitude1);
+    string altitude2String = getStringFromJ(env, altitude2);
+
+    CKKSServerHelper helper(getCKKSParams());
+    string difference = helper.computeAltitudeDifference(altitude1String, altitude2String);
+
+    jchar* jDifference = getJCharArrFromString(difference);
+    jcharArray j_version_array = env->NewCharArray(difference.size());
+    env->SetCharArrayRegion(j_version_array, 0, difference.size(), jDifference);
 
     return j_version_array;
 }

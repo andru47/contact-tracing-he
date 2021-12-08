@@ -13,4 +13,6 @@ public class JNIBridge {
   }
 
   public native char[] getDistance(char[][] location1, char[][] location2);
+
+  public native char[] getAltitudeDifference(char[] altitude1, char[] altitude2);
 }

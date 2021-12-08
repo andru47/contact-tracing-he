@@ -33,6 +33,13 @@ void loadCipherToValues(
     sinLong.load(context, str3);
 }
 
+void loadAltitudesToCiphers(string &altitude1, string &altitude2, Ciphertext &cipher1, Ciphertext &cipher2, SEALContext &context) {
+    stringstream stream1(altitude1);
+    cipher1.load(context, stream1);
+    stringstream stream2(altitude2);
+    cipher2.load(context, stream2);
+}
+
 string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2)
 {
     RelinKeys relinKeys;
@@ -119,4 +126,17 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     result.save(resultStore);
 
     return resultStore.str();
+}
+
+
+string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2) {
+    Evaluator eval(context);
+    Ciphertext altitude1Cipher, altitude2Cipher;
+    loadAltitudesToCiphers(altitude1, altitude2, altitude1Cipher, altitude2Cipher, context);
+    eval.sub_inplace(altitude1Cipher, altitude2Cipher);
+
+    stringstream resultStream;
+    altitude1Cipher.save(resultStream);
+
+    return resultStream.str();
 }
