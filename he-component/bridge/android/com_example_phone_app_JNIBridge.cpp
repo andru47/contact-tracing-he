@@ -71,7 +71,7 @@ Java_com_example_phone_1app_JNIBridge_decrypt(JNIEnv *env, jobject, jcharArray t
         jchar *privateKeyElements = env->GetCharArrayElements(givenPrivateKey, 0);
         int privateKeyLen = env->GetArrayLength(givenPrivateKey);
         string privateKey = getStringFromJCharArr(privateKeyElements, privateKeyLen);
-        helper.laodPrivateKeyFromClient(privateKey);
+        helper.loadPrivateKeyFromClient(privateKey);
 
         env->ReleaseCharArrayElements(givenPrivateKey, privateKeyElements, 0);
     }

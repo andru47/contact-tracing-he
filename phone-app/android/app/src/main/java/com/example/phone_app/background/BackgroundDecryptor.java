@@ -41,7 +41,7 @@ public class BackgroundDecryptor {
         }
         initialResult = Math.asin(Math.sqrt(initialResult / 2.0)) * 6378.8 * 2.0 * 1000;
         Log.d(BackgroundDecryptor.class.getName(), "The distance was " + initialResult + " meters.");
-        if (initialResult <= 6 || Double.isNaN(initialResult)) {
+        if ((initialResult <= 6 || Double.isNaN(initialResult)) && differenceInAltitude * 100 < 210) {
           Log.d(BackgroundDecryptor.class.getName(), "Found contact " + distanceMessage.getContactUserId());
           ConnectionService.sendObject(new ContactMessage(userId, distanceMessage.getContactUserId(),
                   distanceMessage.getTimestamp(), distanceMessage.getTimestampEnd()), "new-contact");

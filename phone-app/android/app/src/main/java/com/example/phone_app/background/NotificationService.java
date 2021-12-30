@@ -1,10 +1,19 @@
 package com.example.phone_app.background;
 
-import androidx.annotation.NonNull;
+import android.app.PendingIntent;
+import android.content.Intent;
 
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
+import com.example.phone_app.MainActivity;
+import com.example.phone_app.R;
 import com.example.phone_app.background.serialization.NewTokenMessage;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Date;
 
 import io.flutter.Log;
 
@@ -28,7 +37,31 @@ public class NotificationService extends FirebaseMessagingService {
     if (remoteMessage.getData().get("he-server-message").equals("new data")) {
       BackgroundDecryptor.getDistances(Util.getUuid(this), Util.getPrivateKey(this));
     } else {
-      Util.setIsolationStatus(this, Long.parseLong(remoteMessage.getData().get("he-server-message")));
+      long unixSeconds = Long.parseLong(remoteMessage.getData().get("he-server-message"));
+      showContactNotification(unixSeconds);
+      Util.setIsolationStatus(this, unixSeconds);
     }
+  }
+
+  private void showContactNotification(long unixSeconds) {
+    Intent intent = new Intent(this, MainActivity.class);
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+    PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+    NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "HE-CONTACT-TRACING")
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("You need to isolate!")
+            .setContentText("You have been in contact and need to isolate until " + getCurrentDateString(unixSeconds))
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+    notificationManager.notify((int) (unixSeconds / 1000), builder.build());
+  }
+
+  private String getCurrentDateString(long unixSeconds) {
+    return new Date(unixSeconds * 1000).toString();
   }
 }

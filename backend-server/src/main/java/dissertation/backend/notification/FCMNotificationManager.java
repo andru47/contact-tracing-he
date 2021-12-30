@@ -3,9 +3,7 @@ package dissertation.backend.notification;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingException;
-import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.*;
 import dissertation.backend.database.Controller;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +28,7 @@ public class FCMNotificationManager {
   public static void sendNotification(String message, String token) {
     Message fcmMessage = Message.builder()
         .putData("he-server-message", message)
+        .setApnsConfig(ApnsConfig.builder().setAps(Aps.builder().setContentAvailable(true).build()).build())
         .setToken(token)
         .build();
     try {

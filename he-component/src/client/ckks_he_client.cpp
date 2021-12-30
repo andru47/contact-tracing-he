@@ -100,7 +100,7 @@ void CKKSClientHelper::loadPublicKeyFromClient(string &publicKeyString)
     loadPublicKey(this->publicKey, publicKeyString, this->context);
 }
 
-void CKKSClientHelper::laodPrivateKeyFromClient(string &privateKeyString)
+void CKKSClientHelper::loadPrivateKeyFromClient(string &privateKeyString)
 {
     loadPrivateKey(this->secretKey, privateKeyString, this->context);
 }
