@@ -1,6 +1,6 @@
-#include "util.h"
+#include "base/server_base.h"
 
-class CKKSServerHelper
+class CKKSServerHelper : public ServerHelper
 {
     SEALContext context;
 
