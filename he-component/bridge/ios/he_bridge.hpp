@@ -9,18 +9,17 @@
 #define he_bridge_hpp
 
 #include <string>
-#include "ckks_he_client.h"
-#include "util.h"
+#include "client_selector.h"
 
 using namespace std;
 
 class HeBridge {
 private:
-    CKKSClientHelper helper;
+    ClientHelper* helper;
     bool publicLoaded, privateLoaded;
     mutex pubKeyMtx, privateKeyMtx;
 public:
-    HeBridge();
+    HeBridge(ClientHelper** helplerPointer);
     void setPublic(string& publicKey);
     void setPrivate(string& privateKey);
     string hello(string& name);

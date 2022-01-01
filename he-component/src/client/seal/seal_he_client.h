@@ -1,6 +1,6 @@
-#include "util.h"
+#include "base/client_base.h"
 
-class CKKSClientHelper
+class CKKSClientHelper : public ClientHelper
 {
 private:
     double scale = pow(2.0, 60);

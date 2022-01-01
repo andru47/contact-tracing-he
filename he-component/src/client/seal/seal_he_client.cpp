@@ -1,4 +1,4 @@
-#include "ckks_he_client.h"
+#include "seal_he_client.h"
 
 CKKSClientHelper::CKKSClientHelper(EncryptionParameters params) : context(params)
 {

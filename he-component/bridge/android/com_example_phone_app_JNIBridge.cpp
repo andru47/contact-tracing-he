@@ -1,10 +1,8 @@
 #include "com_example_phone_app_JNIBridge.h"
-#include <ckks_he_client.h>
-#include <seal/seal.h>
+#include <client_selector.h>
 #include <string>
-#include <util.h>
 
-static CKKSClientHelper helper(getCKKSParams());
+static ClientHelper* helper = getHelper();
 static bool loadedPrivate = false, loadedPublic = false;
 static mutex publicKeyMtx, privateKeyMtx;
 
@@ -25,12 +23,12 @@ JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_encrypt(
         int len = env->GetArrayLength(givenPublicKey);
 
         string pubKeyString = getStringFromJCharArr(elements, len);
-        helper.loadPublicKeyFromClient(pubKeyString);
+        helper->loadPublicKeyFromClient(pubKeyString);
         env->ReleaseCharArrayElements(givenPublicKey, elements, 0);
     }
     publicKeyMtx.unlock();
 
-    vector<string> encrypted = helper.encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude);
+    vector<string> encrypted = helper->encrypt(latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude);
 
     jcharArray latitudeCosJarray = env->NewCharArray(encrypted[0].size());
     env->SetCharArrayRegion(latitudeCosJarray, 0, encrypted[0].size(), getJCharArrFromString(encrypted[0]));
@@ -71,7 +69,7 @@ Java_com_example_phone_1app_JNIBridge_decrypt(JNIEnv *env, jobject, jcharArray t
         jchar *privateKeyElements = env->GetCharArrayElements(givenPrivateKey, 0);
         int privateKeyLen = env->GetArrayLength(givenPrivateKey);
         string privateKey = getStringFromJCharArr(privateKeyElements, privateKeyLen);
-        helper.loadPrivateKeyFromClient(privateKey);
+        helper->loadPrivateKeyFromClient(privateKey);
 
         env->ReleaseCharArrayElements(givenPrivateKey, privateKeyElements, 0);
     }
@@ -81,12 +79,12 @@ Java_com_example_phone_1app_JNIBridge_decrypt(JNIEnv *env, jobject, jcharArray t
 
     env->ReleaseCharArrayElements(to_decrypt, elements, 0);
 
-    return (jdouble)helper.decrypt(cipherString);
+    return (jdouble)helper->decrypt(cipherString);
 }
 
 JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getRelinKeys(JNIEnv *env, jobject)
 {
-    string relinString = helper.getRelinKeys();
+    string relinString = helper->getRelinKeys();
 
     jcharArray j_version_array = env->NewCharArray(relinString.size());
     env->SetCharArrayRegion(j_version_array, 0, relinString.size(), getJCharArrFromString(relinString));
@@ -95,7 +93,7 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getRelinKeys(
 
 JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPrivateKey(JNIEnv *env, jobject)
 {
-    string privateKey = helper.getPrivateKey();
+    string privateKey = helper->getPrivateKey();
 
     jcharArray j_version_array = env->NewCharArray(privateKey.size());
     env->SetCharArrayRegion(j_version_array, 0, privateKey.size(), getJCharArrFromString(privateKey));
@@ -104,7 +102,7 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPrivateKey
 
 JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey(JNIEnv *env, jobject)
 {
-    string publicKey = helper.getPublicKey();
+    string publicKey = helper->getPublicKey();
 
     jcharArray j_version_array = env->NewCharArray(publicKey.size());
     env->SetCharArrayRegion(j_version_array, 0, publicKey.size(), getJCharArrFromString(publicKey));

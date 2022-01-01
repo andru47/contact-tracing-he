@@ -4,6 +4,8 @@
 **/CMakeFiles/**
 **/CMakeCache.txt
 
+**/.idea
+
 **/Makefile
 
 **/*.dylib
