@@ -1,5 +1,5 @@
 #include "dissertation_backend_JNIBridge.h"
-#include <ckks_he_server.h>
+#include <server_selector.h>
 #include <util.h>
 
 using namespace std;
@@ -31,8 +31,8 @@ Java_dissertation_backend_JNIBridge_getDistance(JNIEnv *env, jobject, jobjectArr
     vector<string> cipher1 = getCipherFromOjectArray(env, location1);
     vector<string> cipher2 = getCipherFromOjectArray(env, location2);
 
-    CKKSServerHelper helper(getCKKSParams());
-    string returned = helper.compute(cipher1, cipher2);
+    ServerHelper* helper = getHelper();
+    string returned = helper->compute(cipher1, cipher2);
 
     jchar *cipherComputed = getJCharArrFromString(returned);
 
@@ -48,8 +48,8 @@ Java_dissertation_backend_JNIBridge_getAltitudeDifference(JNIEnv *env, jobject, 
     string altitude1String = getStringFromJ(env, altitude1);
     string altitude2String = getStringFromJ(env, altitude2);
 
-    CKKSServerHelper helper(getCKKSParams());
-    string difference = helper.computeAltitudeDifference(altitude1String, altitude2String);
+    ServerHelper* helper = getHelper();
+    string difference = helper->computeAltitudeDifference(altitude1String, altitude2String);
 
     jchar* jDifference = getJCharArrFromString(difference);
     jcharArray j_version_array = env->NewCharArray(difference.size());

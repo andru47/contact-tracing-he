@@ -11,7 +11,8 @@
 @implementation HeBridgeWrapper
 - (NSString *) hello: (NSString *) name {
     string myString = string([name UTF8String]);
-    static HeBridge bridge;
+    static ClientHelper* helper = getHelper();
+    static HeBridge bridge(&helper);
     string helloWorldMessage = bridge.hello(myString);
     return [NSString
             stringWithCString:helloWorldMessage.c_str()
@@ -20,7 +21,8 @@
 
 - (NSArray<NSString *> *)encrypt:(double)latitudeCos latSin:(double)latitudeSin longCos:(double)longitudeCos longSin:(double)longitudeSin alt:(double)altitude pubKey:(NSString*)publicKey {
     
-    static HeBridge bridge;
+    static ClientHelper* helper = getHelper();
+    static HeBridge bridge(&helper);
     
     string publicKeyString = [self getStringFromNSString:publicKey];
     bridge.setPublic(publicKeyString);
@@ -36,7 +38,9 @@
 - (double)decrypt:(NSString *)givenCiphertext privateKey:(NSString *)givenPrivateKey {
     string ciphertextString = [self getStringFromNSString:givenCiphertext];
     string privateKeyString = [self getStringFromNSString:givenPrivateKey];
-    static HeBridge bridge;
+    static ClientHelper* helper = getHelper();
+    static HeBridge bridge(&helper);
+    
     bridge.setPrivate(privateKeyString);
     
     return bridge.decrypt(ciphertextString);

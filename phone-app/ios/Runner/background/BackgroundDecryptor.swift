@@ -35,6 +35,11 @@ class BackgroundDecryptor {
             
             NSLog("Altitude difference was \(altitudeDifference)")
             initialResult = asin(sqrt(initialResult / 2.0)) * 6378.8 * 2.0 * 1000
+            
+            if (initialResult.isNaN) {
+                initialResult = 0
+            }
+            
             NSLog("Distance was \(initialResult)")
             
             if (initialResult <= 6.0 && altitudeDifference * 100 < 210) {

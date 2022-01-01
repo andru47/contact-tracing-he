@@ -1,4 +1,4 @@
-#include "ckks_he_server.h"
+#include "seal_he_server.h"
 #include <fstream>
 
 CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params)
