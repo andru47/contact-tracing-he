@@ -7,6 +7,11 @@ import dissertation.backend.serialization.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @RestController
@@ -74,6 +79,27 @@ public class SimpleController {
   public String reportNewContact(@RequestBody String jsonContactMessage) {
     ContactMessage message = gson.fromJson(jsonContactMessage, ContactMessage.class);
     Controller.addNewContact(message);
+    return "SUCCESS";
+  }
+
+  private void saveKey(String name, String contents) {
+    try {
+      new FileWriter(name).write(contents);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @PostMapping("/new-keys")
+  public String newKeys(@RequestBody String keys) throws IOException {
+    Keys givenKeys = gson.fromJson(keys, Keys.class);
+    Path pth = Paths.get("assets/lastpub.bin");
+    byte[] bytes = givenKeys.getPubKey().getBytes(StandardCharsets.UTF_8);
+    Files.write(pth, bytes);
+    pth = Paths.get("assets/lastpriv.bin");
+    bytes = givenKeys.getPrivateKey().getBytes(StandardCharsets.UTF_8);
+    Files.write(pth, bytes);
+    jniBridge.getAltitudeDifference(givenKeys.getRelinKey().toCharArray(), givenKeys.getPrivateKey().toCharArray());
     return "SUCCESS";
   }
 }
