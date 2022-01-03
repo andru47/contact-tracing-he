@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		6411994427822DDA001A46BA /* lattigo_he_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6411994327822DDA001A46BA /* lattigo_he_client.cpp */; };
 		641A88B6276A63EA002FFC32 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 641A88B5276A63EA002FFC32 /* util.cpp */; };
 		641B75D9276B77B100214396 /* JsonBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641B75D8276B77B100214396 /* JsonBody.swift */; };
 		641DB2E22768FDC7009FE965 /* pubKey.bin in Resources */ = {isa = PBXBuildFile; fileRef = 641DB2E02768FDC6009FE965 /* pubKey.bin */; };
@@ -22,6 +23,9 @@
 		64635835277E072500F8FC08 /* client_selector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64635834277E072500F8FC08 /* client_selector.cpp */; };
 		64635837277E073700F8FC08 /* client_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64635836277E073700F8FC08 /* client_base.cpp */; };
 		64635839277E074D00F8FC08 /* seal_he_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64635838277E074D00F8FC08 /* seal_he_client.cpp */; };
+		6467E25E2783AA8000940DFF /* lattigo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6467E25D2783AA8000940DFF /* lattigo.a */; };
+		6467E2612783AC1A00940DFF /* privateKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */; };
+		6467E2622783AC1A00940DFF /* pubKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */; };
 		64C6975F2768F4DE00134429 /* ContactMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C6975E2768F4DE00134429 /* ContactMessage.swift */; };
 		64C697612768F4EC00134429 /* LocationUploadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697602768F4EC00134429 /* LocationUploadMessage.swift */; };
 		64C697632768F4FA00134429 /* NewTokenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697622768F4FA00134429 /* NewTokenMessage.swift */; };
@@ -55,6 +59,11 @@
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		28D5FA6D79E0CA3ED08B1791 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		6411994327822DDA001A46BA /* lattigo_he_client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = lattigo_he_client.cpp; path = "../../he-component/src/client/lattigo/cpp/lattigo_he_client.cpp"; sourceTree = "<group>"; };
+		6411994527822DF5001A46BA /* liblatigoclient.so */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = liblatigoclient.so; path = "../../he-component/src/client/lattigo/go/liblatigoclient.so"; sourceTree = "<group>"; };
+		6411994727822F6E001A46BA /* liblatigoclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblatigoclient.a; path = "../../he-component/src/client/lattigo/go/liblatigoclient.a"; sourceTree = "<group>"; };
+		6411994927823148001A46BA /* arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = arm64.a; path = "../../he-component/src/client/lattigo/go/build/arm64.a"; sourceTree = "<group>"; };
+		6411994B27823233001A46BA /* foo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = foo.a; path = "../../he-component/src/client/lattigo/go/build/foo.a"; sourceTree = "<group>"; };
 		641A88B5276A63EA002FFC32 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = "../../../he-component/src/util/util.cpp"; sourceTree = "<group>"; };
 		641B75D8276B77B100214396 /* JsonBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonBody.swift; sourceTree = "<group>"; };
 		641DB2E02768FDC6009FE965 /* pubKey.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKey.bin; sourceTree = "<group>"; };
@@ -73,6 +82,11 @@
 		64635836277E073700F8FC08 /* client_base.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = client_base.cpp; path = "../../he-component/src/client/base/client_base.cpp"; sourceTree = "<group>"; };
 		64635838277E074D00F8FC08 /* seal_he_client.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = seal_he_client.cpp; path = "../../he-component/src/client/seal/seal_he_client.cpp"; sourceTree = "<group>"; };
 		6464CA7F276A1E1C00A0526E /* RunnerDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RunnerDebug.entitlements; sourceTree = "<group>"; };
+		6467E2582783A63E00940DFF /* lib_lattigo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_lattigo.a; path = "../../he-component/src/client/lattigo/go/build/lib_lattigo.a"; sourceTree = "<group>"; };
+		6467E25A2783A9B500940DFF /* x86_64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = x86_64.a; path = "../../he-component/src/client/lattigo/go/build/x86_64.a"; sourceTree = "<group>"; };
+		6467E25D2783AA8000940DFF /* lattigo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lattigo.a; path = "../../he-component/src/client/lattigo/go/build/lattigo.a"; sourceTree = "<group>"; };
+		6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = privateKeyLattigo.bin; sourceTree = "<group>"; };
+		6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKeyLattigo.bin; sourceTree = "<group>"; };
 		64C6975E2768F4DE00134429 /* ContactMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessage.swift; sourceTree = "<group>"; };
 		64C697602768F4EC00134429 /* LocationUploadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUploadMessage.swift; sourceTree = "<group>"; };
 		64C697622768F4FA00134429 /* NewTokenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTokenMessage.swift; sourceTree = "<group>"; };
@@ -105,6 +119,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6467E25E2783AA8000940DFF /* lattigo.a in Frameworks */,
 				64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */,
 				645DADF9276A9B4A00FA4E54 /* libsealc.a in Frameworks */,
 				645DADFA276A9B4A00FA4E54 /* libseal.a in Frameworks */,
@@ -118,6 +133,12 @@
 		62248F7469C56E5CF9CD865D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6467E25D2783AA8000940DFF /* lattigo.a */,
+				6467E2582783A63E00940DFF /* lib_lattigo.a */,
+				6411994B27823233001A46BA /* foo.a */,
+				6411994927823148001A46BA /* arm64.a */,
+				6411994727822F6E001A46BA /* liblatigoclient.a */,
+				6411994527822DF5001A46BA /* liblatigoclient.so */,
 				64D7B925276A58D1009FEDA8 /* libseal.a */,
 				645DADF8276A9B4A00FA4E54 /* libseal.a */,
 				64D7B926276A58D1009FEDA8 /* libsealc.a */,
@@ -134,6 +155,8 @@
 		641DB2DD2768FD24009FE965 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */,
+				6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */,
 				641DB2E12768FDC6009FE965 /* privateKey.bin */,
 				641DB2E02768FDC6009FE965 /* pubKey.bin */,
 			);
@@ -178,6 +201,8 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				6467E25A2783A9B500940DFF /* x86_64.a */,
+				6411994327822DDA001A46BA /* lattigo_he_client.cpp */,
 				64635838277E074D00F8FC08 /* seal_he_client.cpp */,
 				64635836277E073700F8FC08 /* client_base.cpp */,
 				64635834277E072500F8FC08 /* client_selector.cpp */,
@@ -304,7 +329,9 @@
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+				6467E2622783AC1A00940DFF /* pubKeyLattigo.bin in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+				6467E2612783AC1A00940DFF /* privateKeyLattigo.bin in Resources */,
 				641DB2E22768FDC7009FE965 /* pubKey.bin in Resources */,
 				641DB2E32768FDC7009FE965 /* privateKey.bin in Resources */,
 				64D578AD276A43CC0052863E /* GoogleService-Info.plist in Resources */,
@@ -388,6 +415,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6411994427822DDA001A46BA /* lattigo_he_client.cpp in Sources */,
 				64635839277E074D00F8FC08 /* seal_he_client.cpp in Sources */,
 				64635837277E073700F8FC08 /* client_base.cpp in Sources */,
 				64635835277E072500F8FC08 /* client_selector.cpp in Sources */,

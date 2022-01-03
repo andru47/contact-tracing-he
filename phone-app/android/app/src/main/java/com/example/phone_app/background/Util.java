@@ -27,7 +27,7 @@ public class Util {
 
   public static char[] getPublicKey(Context givenContext) {
     if (publicKey == null) {
-      publicKey = readKey("pubKey.bin", givenContext);
+      publicKey = readKey("pubKeyLattigo.bin", givenContext);
     }
 
     return publicKey;
@@ -35,7 +35,7 @@ public class Util {
 
   public static char[] getPrivateKey(Context givenContext) {
     if (privateKey == null) {
-      privateKey = readKey("privateKey.bin", givenContext);
+      privateKey = readKey("privateKeyLattigo.bin", givenContext);
     }
 
     return privateKey;

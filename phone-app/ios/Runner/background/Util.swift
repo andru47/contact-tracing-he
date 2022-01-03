@@ -29,7 +29,7 @@ class Util {
     
     public static func getPrivateKey() -> String {
         if (privateKey == nil) {
-            privateKey = readKey(fileName: "privateKey")
+            privateKey = readKey(fileName: "privateKeyLattigo")
         }
         
         return privateKey!
@@ -37,7 +37,7 @@ class Util {
     
     public static func getPublicKey() -> String {
         if (publicKey == nil) {
-            publicKey = readKey(fileName: "pubKey")
+            publicKey = readKey(fileName: "pubKeyLattigo")
         }
         
         return publicKey!
