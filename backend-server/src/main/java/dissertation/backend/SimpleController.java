@@ -70,7 +70,14 @@ public class SimpleController {
 
   @GetMapping("/get-computed-distances/{userId}")
   public String getDistances(@PathVariable String userId) {
-    List<ComputedDistanceMessage> givenCiphertexts = ContactTracingHelper.getComputedDistancesForUser(userId);
+    List<ComputedDistanceMessage> givenCiphertexts = ContactTracingHelper.getComputedDistancesForUser(userId, false);
+
+    return gson.toJson(givenCiphertexts);
+  }
+
+  @GetMapping("/get-computed-distances-for-partial/{userId}")
+  public String getDistancesForPartial(@PathVariable String userId) {
+    List<ComputedDistanceMessage> givenCiphertexts = ContactTracingHelper.getComputedDistancesForUser(userId, true);
 
     return gson.toJson(givenCiphertexts);
   }
@@ -79,6 +86,14 @@ public class SimpleController {
   public String reportNewContact(@RequestBody String jsonContactMessage) {
     ContactMessage message = gson.fromJson(jsonContactMessage, ContactMessage.class);
     Controller.addNewContact(message);
+    return "SUCCESS";
+  }
+
+  @PostMapping("/new-partial-distance")
+  public String addNewDistance(@RequestBody String jsonMessage) {
+    NewPartialMessage message = gson.fromJson(jsonMessage, NewPartialMessage.class);
+    Controller.addNewPartial(message);
+
     return "SUCCESS";
   }
 
@@ -100,6 +115,16 @@ public class SimpleController {
     bytes = givenKeys.getPrivateKey().getBytes(StandardCharsets.UTF_8);
     Files.write(pth, bytes);
     jniBridge.getAltitudeDifference(givenKeys.getRelinKey().toCharArray(), givenKeys.getPrivateKey().toCharArray());
+    return "SUCCESS";
+  }
+
+  @PostMapping("/new-user-keys")
+  public String newUserKeys(@RequestBody String keysString) {
+    NewKeysMessage keysMessage = gson.fromJson(keysString, NewKeysMessage.class);
+    System.out.println(keysMessage.getPubKey().length());
+    System.out.println(keysMessage.getRelinKey().length());
+    Controller.addNewKeys(keysMessage);
+
     return "SUCCESS";
   }
 }
