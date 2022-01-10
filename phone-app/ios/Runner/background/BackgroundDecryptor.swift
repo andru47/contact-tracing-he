@@ -39,10 +39,10 @@ class BackgroundDecryptor {
             
             if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
                 initialResult = Double(truncating: bridge.decryptMulti(distanceMessage.ciphertext,partialCipher: distanceMessage.partialDistance, privateKey: privateKey, isFinal: true) as! NSNumber)
-                altitudeDifference = Double(truncating: bridge.decryptMulti(distanceMessage.altitudeDifference,partialCipher: distanceMessage.partialAltitudeDifference, privateKey: privateKey, isFinal: true) as! NSNumber)
+                altitudeDifference = abs(Double(truncating: bridge.decryptMulti(distanceMessage.altitudeDifference,partialCipher: distanceMessage.partialAltitudeDifference, privateKey: privateKey, isFinal: true) as! NSNumber))
             } else {
                 initialResult = bridge.decrypt(distanceMessage.ciphertext, privateKey: privateKey)
-                altitudeDifference = bridge.decrypt(distanceMessage.altitudeDifference, privateKey: privateKey)
+                altitudeDifference = abs(bridge.decrypt(distanceMessage.altitudeDifference, privateKey: privateKey))
             }
             
             NSLog("Altitude difference was \(altitudeDifference)")

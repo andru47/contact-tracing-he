@@ -77,7 +77,7 @@ import Firebase
     locationManager.requestAlwaysAuthorization()
     locationManager.desiredAccuracy = kCLLocationAccuracyBest
     locationManager.allowsBackgroundLocationUpdates = true
-    locationManager.distanceFilter = 5000000
+    locationManager.distanceFilter = 5
     locationManager.startUpdatingLocation()
   }
   

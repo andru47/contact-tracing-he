@@ -37,14 +37,17 @@ public class ContactTracingHelper {
         if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK && !partial) {
           message = new ComputedDistanceMessage(rs.getString("partial_distance"), rs.getString("partial_altitude_difference"), rs.getString("distance_ciphertext1"), rs.getString("altitude_difference1"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
               Long.parseLong(rs.getString("timestamp_end")));
-        } else {
+        } else if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
           message = new ComputedDistanceMessage(rs.getString("distance_ciphertext2"), rs.getString("altitude_difference2"), rs.getString("row_id"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
+              Long.parseLong(rs.getString("timestamp_end")));
+        } else {
+          message = new ComputedDistanceMessage(rs.getString("distance_ciphertext1"), rs.getString("altitude_difference1"), rs.getString("row_id"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
               Long.parseLong(rs.getString("timestamp_end")));
         }
         result.add(message);
         if (!partial) {
           Controller.addNewProcessedLocationPair(rs.getString("infected_location_id"), rs.getString("location_id"));
-          //rs.deleteRow();
+          rs.deleteRow();
         } else {
           rs.updateBoolean("downloaded", true);
           rs.updateRow();

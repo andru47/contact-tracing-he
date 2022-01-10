@@ -60,11 +60,11 @@ public class BackgroundDecryptor {
         if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
           initialResult = (Double) bridge.decryptMulti(distanceMessage.getCiphertext().toCharArray(), distanceMessage.getPartialDistance().toCharArray(),
                   privateKey, true);
-          differenceInAltitude = (Double) bridge.decryptMulti(distanceMessage.getAltitudeDifference().toCharArray(), distanceMessage.getPartialAltitudeDifference().toCharArray(),
-                  privateKey, true);
+          differenceInAltitude = Math.abs((Double) bridge.decryptMulti(distanceMessage.getAltitudeDifference().toCharArray(), distanceMessage.getPartialAltitudeDifference().toCharArray(),
+                  privateKey, true));
         } else {
           initialResult = bridge.decrypt(distanceMessage.getCiphertext().toCharArray(), privateKey);
-          differenceInAltitude = bridge.decrypt(distanceMessage.getAltitudeDifference().toCharArray(), privateKey);
+          differenceInAltitude = Math.abs(bridge.decrypt(distanceMessage.getAltitudeDifference().toCharArray(), privateKey));
         }
         Log.d(BackgroundDecryptor.class.getName(), "Altitude difference was " + differenceInAltitude);
         if (initialResult < 0) {
