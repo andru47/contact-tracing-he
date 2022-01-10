@@ -10,6 +10,9 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
 		6411994427822DDA001A46BA /* lattigo_he_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6411994327822DDA001A46BA /* lattigo_he_client.cpp */; };
+		64175F90278857C000F89B3C /* NewKeysMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64175F8F278857C000F89B3C /* NewKeysMessage.swift */; };
+		64175F922788586300F89B3C /* NewPartialMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64175F912788586300F89B3C /* NewPartialMessage.swift */; };
+		64175F9427885ACF00F89B3C /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64175F9327885ACF00F89B3C /* Config.swift */; };
 		641A88B6276A63EA002FFC32 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 641A88B5276A63EA002FFC32 /* util.cpp */; };
 		641B75D9276B77B100214396 /* JsonBody.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641B75D8276B77B100214396 /* JsonBody.swift */; };
 		641DB2E22768FDC7009FE965 /* pubKey.bin in Resources */ = {isa = PBXBuildFile; fileRef = 641DB2E02768FDC6009FE965 /* pubKey.bin */; };
@@ -64,6 +67,9 @@
 		6411994727822F6E001A46BA /* liblatigoclient.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblatigoclient.a; path = "../../he-component/src/client/lattigo/go/liblatigoclient.a"; sourceTree = "<group>"; };
 		6411994927823148001A46BA /* arm64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = arm64.a; path = "../../he-component/src/client/lattigo/go/build/arm64.a"; sourceTree = "<group>"; };
 		6411994B27823233001A46BA /* foo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = foo.a; path = "../../he-component/src/client/lattigo/go/build/foo.a"; sourceTree = "<group>"; };
+		64175F8F278857C000F89B3C /* NewKeysMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewKeysMessage.swift; sourceTree = "<group>"; };
+		64175F912788586300F89B3C /* NewPartialMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPartialMessage.swift; sourceTree = "<group>"; };
+		64175F9327885ACF00F89B3C /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		641A88B5276A63EA002FFC32 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = util.cpp; path = "../../../he-component/src/util/util.cpp"; sourceTree = "<group>"; };
 		641B75D8276B77B100214396 /* JsonBody.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonBody.swift; sourceTree = "<group>"; };
 		641DB2E02768FDC6009FE965 /* pubKey.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKey.bin; sourceTree = "<group>"; };
@@ -170,6 +176,7 @@
 				6425E7C02768C6E6006BF2E9 /* BackgroundDecryptor.swift */,
 				6425E7C52768D08F006BF2E9 /* ConnectionService.swift */,
 				64C697642768F5B000134429 /* Util.swift */,
+				64175F9327885ACF00F89B3C /* Config.swift */,
 			);
 			path = background;
 			sourceTree = "<group>";
@@ -183,6 +190,8 @@
 				64C697622768F4FA00134429 /* NewTokenMessage.swift */,
 				64D7B91F276A4DAC009FEDA8 /* CiphertextWrapper.swift */,
 				641B75D8276B77B100214396 /* JsonBody.swift */,
+				64175F8F278857C000F89B3C /* NewKeysMessage.swift */,
+				64175F912788586300F89B3C /* NewPartialMessage.swift */,
 			);
 			path = serialization;
 			sourceTree = "<group>";
@@ -429,10 +438,13 @@
 				64584515271CBC62007C014D /* he_bridge.cpp in Sources */,
 				641B75D9276B77B100214396 /* JsonBody.swift in Sources */,
 				6425E7C12768C6E6006BF2E9 /* BackgroundDecryptor.swift in Sources */,
+				64175F922788586300F89B3C /* NewPartialMessage.swift in Sources */,
 				641A88B6276A63EA002FFC32 /* util.cpp in Sources */,
 				64C697632768F4FA00134429 /* NewTokenMessage.swift in Sources */,
+				64175F9427885ACF00F89B3C /* Config.swift in Sources */,
 				64EB114B271CC0070016C9DA /* he_bridge_wrapper.mm in Sources */,
 				64D7B920276A4DAC009FEDA8 /* CiphertextWrapper.swift in Sources */,
+				64175F90278857C000F89B3C /* NewKeysMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

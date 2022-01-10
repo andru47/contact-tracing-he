@@ -8,10 +8,19 @@
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://192.168.0.94:8080/"
+    private static let URL_STRING: String = "http://192.168.1.100:8080/"
     
-    public static func getDistances(userId: String) -> Array<NewDistanceMessage> {
-        let request: URLRequest = URLRequest(url: URL(string: URL_STRING + "get-computed-distances/" + userId)!)
+    public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
+        var url: String = URL_STRING
+        if (partial) {
+            url += "get-computed-distances-for-partial/"
+        } else {
+            url += "get-computed-distances/"
+        }
+        
+        url += userId
+        
+        let request: URLRequest = URLRequest(url: URL(string: url)!)
         var jsonResponse: Data = Data()
         let lock: NSLock = NSLock()
         lock.lock()
@@ -59,5 +68,17 @@ class ConnectionService {
         let json: Data = try! JSONEncoder().encode(contact)
         
         postObject(json: json, endpoint: "new-contact")
+    }
+    
+    public static func sendNewKeys(keys: NewKeysMessage) {
+        let json: Data = try! JSONEncoder().encode(keys)
+        
+        postObject(json: json, endpoint: "new-user-keys")
+    }
+    
+    public static func sendNewPartial(partialMessage: NewPartialMessage) {
+        let json: Data = try! JSONEncoder().encode(partialMessage)
+        
+        postObject(json: json, endpoint: "new-partial-distance")
     }
 }
