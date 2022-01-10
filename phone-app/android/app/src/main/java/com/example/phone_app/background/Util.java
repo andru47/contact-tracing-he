@@ -4,14 +4,25 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.phone_app.JNIBridge;
+import com.example.phone_app.background.serialization.NewKeysMessage;
+import com.example.phone_app.config.Config;
+import com.example.phone_app.config.EncryptionType;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.UUID;
 
 public class Util {
   protected final static String SHARED_PREFERENCES_FILENAME = "com.example.phone_app.PRIVATE_PREFS";
   private final static String SHARED_PREFERENCES_UID_KEY = "uuid";
   private final static String SHARED_PREFERENCES_ISO_END_KEY = "isolation-end";
+  private final static String SHARED_PREFERENCES_KEYS_CREATED = "are-keys-created";
   private static String uuid = null;
   private static char[] privateKey = null;
   private static char[] publicKey = null;
@@ -41,18 +52,75 @@ public class Util {
     return privateKey;
   }
 
-  private static char[] readKey(String fileName, Context context) {
-    try (InputStream stream = context.getAssets().open(fileName)) {
-      int size = stream.available();
+  private static char[] readFromInputStream(InputStream is, String fileName) {
+    try {
+      int size = is.available();
       Log.d(Util.class.getName(), "The size of the " + fileName + " is " + size);
       byte[] bytes = new byte[size];
-      stream.read(bytes);
+      is.read(bytes);
       return new String(bytes).toCharArray();
+    } catch (IOException e) {
+      Log.e(Util.class.getName(), e.toString());
+    }
+
+    Log.e(Util.class.getName(), "The " + fileName + "was not read.");
+    return null;
+  }
+
+  private static char[] readKey(String fileName, Context context) {
+    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+      if (getAreKeysCreated(context)) {
+        try (FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), "lattigo/" + fileName))) {
+          return readFromInputStream(fis, fileName);
+        } catch (FileNotFoundException e) {
+          Log.e(Util.class.getName(), "The " + fileName + "does not exist.");
+        } catch (IOException e) {
+          Log.e(Util.class.getName(), "The " + fileName + "cannot be opened.");
+        }
+        return null;
+      }
+      generateKeys(context);
+      return readKey(fileName, context);
+    }
+
+    try (InputStream stream = context.getAssets().open(fileName)) {
+      return readFromInputStream(stream, fileName);
     } catch (IOException e) {
       Log.e(Util.class.getName(), e.toString());
     }
     Log.e(Util.class.getName(), "The " + fileName + "was not read.");
     return null;
+  }
+
+  private static void writeKeyTo(Context context, String fileName, String contents) {
+    File directory = new File(context.getFilesDir(), "lattigo/");
+    if (!directory.exists()) {
+      directory.mkdir();
+    }
+    File file = new File(directory, fileName);
+    try {
+      Files.write(file.toPath(), contents.getBytes(StandardCharsets.UTF_8));
+    } catch (IOException e) {
+      Log.e(Util.class.getName(), "Couldn't write to " + fileName + " :" + e.toString());
+    }
+  }
+
+  private static synchronized void generateKeys(Context context) {
+    if (getAreKeysCreated(context)) {
+      return;
+    }
+
+    JNIBridge bridge = new JNIBridge();
+    bridge.generateKeys();
+    publicKey = bridge.getPublicKey();
+    privateKey = bridge.getPrivateKey();
+    char[] mkPubKey = bridge.getMKPublicKey();
+    char[] rlk = bridge.getRelinKeys();
+
+    writeKeyTo(context, "pubKey.bin", new String(publicKey));
+    writeKeyTo(context, "privateKey.bin", new String(privateKey));
+    ConnectionService.sendObject(new NewKeysMessage(new String(mkPubKey), new String(rlk), getUuid(context)), "new-user-keys");
+    setAreKeysCreated(context, true);
   }
 
   public static Long getIsolation(Context context) {
@@ -89,5 +157,17 @@ public class Util {
     editor.apply();
 
     return generatedId;
+  }
+
+  private static boolean getAreKeysCreated(Context context) {
+    SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
+    return sharedPreferences.getBoolean(SHARED_PREFERENCES_KEYS_CREATED, false);
+  }
+
+  public static void setAreKeysCreated(Context context, boolean value) {
+    SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
+    SharedPreferences.Editor editor = sharedPreferences.edit();
+    editor.putBoolean(SHARED_PREFERENCES_KEYS_CREATED, value);
+    editor.apply();
   }
 }

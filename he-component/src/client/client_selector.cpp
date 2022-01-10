@@ -4,5 +4,5 @@
 #include "client_selector.h"
 
 ClientHelper* getHelper() {
-    return new CKKSClientHelper(getCKKSParams());
+    return new LattigoClientHelper();
 }

@@ -1,6 +1,7 @@
 package com.example.phone_app.background.serialization;
 
 public class NewDistanceMessage {
+  private String partialDistance, partialAltitudeDifference, rowId;
   private String ciphertext, altitudeDifference, contactUserId;
   private long timestamp, timestampEnd;
 
@@ -22,5 +23,17 @@ public class NewDistanceMessage {
 
   public String getCiphertext() {
     return ciphertext;
+  }
+
+  public String getPartialAltitudeDifference() {
+    return partialAltitudeDifference;
+  }
+
+  public String getPartialDistance() {
+    return partialDistance;
+  }
+
+  public String getRowId() {
+    return rowId;
   }
 }

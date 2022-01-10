@@ -91,7 +91,9 @@ import Firebase
       }
       
       if (userInfo["he-server-message"] as? String == "new data") {
-        BackgroundDecryptor.getDistances(userId: Util.getUuid(), privateKey: Util.getPrivateKey())
+        BackgroundDecryptor.getDistances(userId: Util.getUuid(), privateKey: Util.getPrivateKey(), partial: false)
+      } else if (userInfo["he-server-message"] as? String == "new partial data") {
+        BackgroundDecryptor.getDistances(userId: Util.getUuid(), privateKey: Util.getPrivateKey(), partial: true)
       } else {
         let isolationEnd: UInt64 = UInt64((userInfo["he-server-message"] as? String)!)!
         sendNewNotification(isolationEnd: isolationEnd)
@@ -146,10 +148,11 @@ extension AppDelegate: CLLocationManagerDelegate {
   }
   
   private func getLocationJson(givenLocation: CLLocation) -> LocationUploadMessage {
-    let latitudeCos: Double = cos(givenLocation.coordinate.latitude)
-    let latitudeSin: Double = sin(givenLocation.coordinate.latitude)
-    let longitudeCos: Double = cos(givenLocation.coordinate.longitude)
-    let longitudeSin: Double = sin(givenLocation.coordinate.longitude)
+    let latitudeCos: Double = cos(Double.pi * givenLocation.coordinate.latitude / 180.0)
+    let latitudeSin: Double = sin(Double.pi * givenLocation.coordinate.latitude / 180.0)
+    let longitudeCos: Double = cos(Double.pi * givenLocation.coordinate.longitude / 180.0)
+    let longitudeSin: Double = sin(Double.pi * givenLocation.coordinate.longitude / 180.0)
+    
     let ciphers : Array<String> = bridge.encrypt(latitudeCos, latSin: latitudeSin, longCos: longitudeCos, longSin: longitudeSin, alt: givenLocation.altitude, pubKey: Util.getPublicKey())
     
     return LocationUploadMessage(latitudeCos: ciphers[0], latitudeSin: ciphers[1], longitudeCos: ciphers[2], longitudeSin: ciphers[3], altitude: ciphers[4], id: Util.getUuid(), timestamp:String(format: "%lu", UInt64(givenLocation.timestamp.timeIntervalSince1970)))

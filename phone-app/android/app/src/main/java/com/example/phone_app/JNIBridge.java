@@ -17,5 +17,11 @@ public class JNIBridge {
 
   public native char[] getPublicKey();
 
+  public native char[] getMKPublicKey();
+
+  public native void generateKeys();
+
   public native double decrypt(char[] cipher, char[] privateKey);
+
+  public native Object decryptMulti(char[] cipher, char[] partial, char[] privateKey, boolean finalDecryption);
 }

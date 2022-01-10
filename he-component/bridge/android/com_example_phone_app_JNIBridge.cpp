@@ -2,7 +2,7 @@
 #include <client_selector.h>
 #include <string>
 
-static ClientHelper* helper = getHelper();
+static ClientHelper *helper = getHelper();
 static bool loadedPrivate = false, loadedPublic = false;
 static mutex publicKeyMtx, privateKeyMtx;
 
@@ -100,6 +100,15 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPrivateKey
     return j_version_array;
 }
 
+JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getMKPublicKey(JNIEnv *env, jobject)
+{
+    string mkPubKey = helper->getMKPubKey();
+
+    jcharArray j_version_array = env->NewCharArray(mkPubKey.size());
+    env->SetCharArrayRegion(j_version_array, 0, mkPubKey.size(), getJCharArrFromString(mkPubKey));
+    return j_version_array;
+}
+
 JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey(JNIEnv *env, jobject)
 {
     string publicKey = helper->getPublicKey();
@@ -107,4 +116,55 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey(
     jcharArray j_version_array = env->NewCharArray(publicKey.size());
     env->SetCharArrayRegion(j_version_array, 0, publicKey.size(), getJCharArrFromString(publicKey));
     return j_version_array;
+}
+
+JNIEXPORT void JNICALL Java_com_example_phone_1app_JNIBridge_generateKeys(JNIEnv *, jobject)
+{
+    helper->generateKeys();
+}
+
+JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_decryptMulti(
+    JNIEnv *env, jobject, jcharArray to_decrypt, jcharArray partial, jcharArray givenPrivateKey,
+    jboolean finalDecryption)
+{
+    jchar *elements = env->GetCharArrayElements(to_decrypt, 0);
+    int len = env->GetArrayLength(to_decrypt);
+    privateKeyMtx.lock();
+    if (!loadedPrivate)
+    {
+        loadedPrivate = true;
+        jchar *privateKeyElements = env->GetCharArrayElements(givenPrivateKey, 0);
+        int privateKeyLen = env->GetArrayLength(givenPrivateKey);
+        string privateKey = getStringFromJCharArr(privateKeyElements, privateKeyLen);
+        helper->loadPrivateKeyFromClient(privateKey);
+
+        env->ReleaseCharArrayElements(givenPrivateKey, privateKeyElements, 0);
+    }
+    privateKeyMtx.unlock();
+
+    string cipherString = getStringFromJCharArr(elements, len);
+    string partialString = getStringFromJ(env, partial);
+
+    env->ReleaseCharArrayElements(to_decrypt, elements, 0);
+    bool finalDecryptionBool = (bool)finalDecryption;
+    jobject toReturn;
+
+    if (finalDecryptionBool)
+    {
+        double result = (helper->decryptMulti(cipherString, partialString)).result;
+        jclass cls = env->FindClass("java/lang/Double");
+        jmethodID methodId = env->GetMethodID(cls, "<init>", "(D)V");
+        toReturn = env->NewObject(cls, methodId, result);
+    }
+    else
+    {
+        string result = (helper->decryptMulti(cipherString, partialString)).halfCipher;
+        jclass cls = env->FindClass("com/example/phone_app/CiphertextWrapper");
+        toReturn = env->AllocObject(cls);
+        jcharArray resultJarray = env->NewCharArray(result.size());
+        env->SetCharArrayRegion(resultJarray, 0, result.size(), getJCharArrFromString(result));
+        env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setLatitudeCos", "([C)V"), resultJarray);
+    }
+
+    return toReturn;
 }

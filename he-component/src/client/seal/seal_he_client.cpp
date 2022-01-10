@@ -64,7 +64,7 @@ vector<string> CKKSClientHelper::encrypt(
     return result;
 }
 
-double CKKSClientHelper::decrypt(string cipherString)
+double CKKSClientHelper::decrypt(string &cipherString)
 {
     stringstream loadStream(cipherString);
     Ciphertext cipher;
@@ -103,4 +103,19 @@ void CKKSClientHelper::loadPublicKeyFromClient(string &publicKeyString)
 void CKKSClientHelper::loadPrivateKeyFromClient(string &privateKeyString)
 {
     loadPrivateKey(this->secretKey, privateKeyString, this->context);
+}
+
+void CKKSClientHelper::generateKeys()
+{
+    throw("NOT IMPLEMENTED");
+}
+
+MKResult CKKSClientHelper::decryptMulti(string &cipherString, string &partial)
+{
+    throw("NOT IMPLEMENTED");
+}
+
+string CKKSClientHelper::getMKPubKey()
+{
+    throw("NOT IMPLEMENTED");
 }

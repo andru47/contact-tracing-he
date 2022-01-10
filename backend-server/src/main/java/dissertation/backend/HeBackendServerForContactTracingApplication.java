@@ -38,6 +38,6 @@ public class HeBackendServerForContactTracingApplication {
 
   private static void startSchedulerForNotification() {
     ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    executorService.scheduleAtFixedRate(FCMNotificationManager::sendDataNotifications, 15, 30, TimeUnit.SECONDS);
+    executorService.scheduleAtFixedRate(FCMNotificationManager::sendDataNotifications, 6, 3000000, TimeUnit.SECONDS);
   }
 }

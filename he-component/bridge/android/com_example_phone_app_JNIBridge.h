@@ -41,11 +41,35 @@ JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getPublicKey
 
 /*
  * Class:     com_example_phone_app_JNIBridge
+ * Method:    getMKPublicKey
+ * Signature: ()[C
+ */
+JNIEXPORT jcharArray JNICALL Java_com_example_phone_1app_JNIBridge_getMKPublicKey
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_phone_app_JNIBridge
+ * Method:    generateKeys
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_example_phone_1app_JNIBridge_generateKeys
+  (JNIEnv *, jobject);
+
+/*
+ * Class:     com_example_phone_app_JNIBridge
  * Method:    decrypt
  * Signature: ([C[C)D
  */
 JNIEXPORT jdouble JNICALL Java_com_example_phone_1app_JNIBridge_decrypt
   (JNIEnv *, jobject, jcharArray, jcharArray);
+
+/*
+ * Class:     com_example_phone_app_JNIBridge
+ * Method:    decryptMulti
+ * Signature: ([C[C[CZ)Ljava/lang/Object;
+ */
+JNIEXPORT jobject JNICALL Java_com_example_phone_1app_JNIBridge_decryptMulti
+  (JNIEnv *, jobject, jcharArray, jcharArray, jcharArray, jboolean);
 
 #ifdef __cplusplus
 }

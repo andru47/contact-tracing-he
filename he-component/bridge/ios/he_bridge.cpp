@@ -40,3 +40,27 @@ vector<string> HeBridge::encrypt(double latitudeCos, double latitudeSin, double 
 double HeBridge::decrypt(string &givenCiphertext) {
     return this -> helper -> decrypt(givenCiphertext);
 }
+
+MKResult HeBridge::decryptMulti(string &cipher, string &partial) {
+    return this -> helper -> decryptMulti(cipher, partial);
+}
+
+string HeBridge::getPublicKey() {
+    return this -> helper -> getPublicKey();
+}
+
+string HeBridge::getPrivateKey() {
+    return this -> helper -> getPrivateKey();
+}
+
+string HeBridge::getRelinKeys() {
+    return this -> helper -> getRelinKeys();
+}
+
+void HeBridge::generateKeys() {
+    this -> helper -> generateKeys();
+}
+
+string HeBridge::getMKPubKey() {
+    return this -> helper -> getMKPubKey();
+}

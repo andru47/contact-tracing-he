@@ -4,6 +4,8 @@
 
 .idea/
 
+**/.DS_STORE
+
 **/*.class
 
 # Ignore Gradle GUI config

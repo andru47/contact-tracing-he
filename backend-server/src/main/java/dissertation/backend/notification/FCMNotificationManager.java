@@ -47,6 +47,10 @@ public class FCMNotificationManager {
   }
 
   public static void sendDataNotifications() {
+    for (String token : Controller.getInfectedUsersThatNeedToHalfDecrypt()) {
+      sendNotification("new partial data", token);
+    }
+
     for (String token : Controller.getUsersThatNeedToDownloadDistances()) {
       sendNotification("new data", token);
     }

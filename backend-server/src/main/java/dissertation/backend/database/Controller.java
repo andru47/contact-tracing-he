@@ -1,10 +1,16 @@
 package dissertation.backend.database;
 
+import dissertation.backend.CiphertextWrapper;
+import dissertation.backend.config.Config;
+import dissertation.backend.config.EncryptionType;
 import dissertation.backend.serialization.ContactMessage;
+import dissertation.backend.serialization.NewKeysMessage;
+import dissertation.backend.serialization.NewPartialMessage;
 import dissertation.backend.serialization.UploadDistanceMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Controller {
@@ -69,18 +75,25 @@ public class Controller {
     }
   }
 
-  public static void addNewContactDistance(String distance, String altitudeDifference, String userId, String infectedLocationId, String locationId, String infectedUserId,
+  public static void addNewContactDistance(CiphertextWrapper distance, CiphertextWrapper altitudeDifference, String userId, String infectedLocationId, String locationId, String infectedUserId,
                                            String timestamp, String timestampEnd) {
-    String sqlCommand = "INSERT INTO computed_distances(distance_ciphertext, altitude_difference, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    String sqlCommand = "INSERT INTO computed_distances(distance_ciphertext1, altitude_difference1, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+      sqlCommand = "INSERT INTO computed_distances(distance_ciphertext1, altitude_difference1, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id, distance_ciphertext2, altitude_difference2) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    }
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand)) {
-      statement.setString(1, distance);
-      statement.setString(2, altitudeDifference);
+      statement.setString(1, new String(distance.getComputedCiphertext1()));
+      statement.setString(2, new String(altitudeDifference.getComputedCiphertext1()));
       statement.setString(3, userId);
       statement.setString(4, infectedLocationId);
       statement.setString(5, locationId);
       statement.setInt(6, Integer.parseInt(timestamp));
       statement.setInt(7, Integer.parseInt(timestampEnd));
       statement.setString(8, infectedUserId);
+      if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        statement.setString(9, new String(distance.getComputedCiphertext2()));
+        statement.setString(10, new String(altitudeDifference.getComputedCiphertext2()));
+      }
       statement.executeUpdate();
     } catch (SQLException throwables) {
       throwables.printStackTrace();
@@ -118,11 +131,22 @@ public class Controller {
     return null;
   }
 
-  public static ResultSet getDistancesForUser(String userId) {
-    String sqlCommand = "SELECT row_id, distance_ciphertext, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, altitude_difference from computed_distances\n" +
+  public static ResultSet getDistancesForUser(String userId, boolean partial) {
+    String sqlCommand = "SELECT row_id, distance_ciphertext1, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, altitude_difference1 from computed_distances\n" +
         "where possible_contact_user_id = ? \n" +
         "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
         "LIMIT 10";
+    if (!partial && Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+      sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext1, altitude_difference1, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference from computed_distances\n" +
+          "where possible_contact_user_id = ? \n" +
+          "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
+          "LIMIT 10";
+    } else if (partial) {
+      sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext2, altitude_difference2, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
+          "where infected_user_id = ? and downloaded=0 \n" +
+          "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
+          "LIMIT 10";
+    }
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
       statement.setString(1, userId);
       return statement.executeQuery();
@@ -161,10 +185,8 @@ public class Controller {
     return null;
   }
 
-  public static List<String> getUsersThatNeedToDownloadDistances() {
+  private static List<String> getListFromSqlResult(String sqlCommand) {
     List<String> result = new ArrayList<>();
-    String sqlCommand = "SELECT unique cd.possible_contact_user_id, ft.token from computed_distances as cd\n" +
-        "join fcm_tokens as ft on ft.user_id = cd.possible_contact_user_id";
     try (ResultSet rs = connection.createStatement().executeQuery(sqlCommand)) {
       if (rs == null) {
         return result;
@@ -177,6 +199,33 @@ public class Controller {
     }
 
     return result;
+  }
+
+  public static List<String> getUsersThatNeedToDownloadDistances() {
+    String sqlCommand;
+
+    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+      sqlCommand = "SELECT unique cd.possible_contact_user_id, ft.token from computed_distances as cd\n" +
+          "join fcm_tokens as ft on ft.user_id = cd.possible_contact_user_id\n" +
+          "where cd.partial_altitude_difference is not null";
+    } else {
+      sqlCommand = "SELECT unique cd.possible_contact_user_id, ft.token from computed_distances as cd\n" +
+          "join fcm_tokens as ft on ft.user_id = cd.possible_contact_user_id";
+    }
+
+    return getListFromSqlResult(sqlCommand);
+  }
+
+  public static List<String> getInfectedUsersThatNeedToHalfDecrypt() {
+    if (Config.getEncryptionType() != EncryptionType.LATTIGO_MK) {
+      return new ArrayList<>();
+    }
+
+    String sqlCommand = "SELECT unique cd.infected_user_id, ft.token from computed_distances as cd\n" +
+        "join fcm_tokens as ft on ft.user_id = cd.infected_user_id\n" +
+        "where cd.partial_altitude_difference is null and cd.downloaded=false";
+
+    return getListFromSqlResult(sqlCommand);
   }
 
   public static void uploadNewLocation(UploadDistanceMessage message) {
@@ -229,5 +278,45 @@ public class Controller {
       throwables.printStackTrace();
     }
     return new String[]{};
+  }
+
+  public static void addNewKeys(NewKeysMessage message) {
+    String statement = "INSERT INTO `keys`(user_id, pub_key, relin_key) VALUES(?, ?, ?)";
+    try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+      preparedStatement.setString(1, message.getUserId());
+      preparedStatement.setString(2, message.getPubKey());
+      preparedStatement.setString(3, message.getRelinKey());
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static List<String> getKeysForUser(String userId) {
+    String statement = "SELECT pub_key, relin_key from `keys` WHERE user_id=?";
+    try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+      preparedStatement.setString(1, userId);
+      try (ResultSet rs = preparedStatement.executeQuery()) {
+        rs.first();
+        return Arrays.asList(rs.getString("pub_key"), rs.getString("relin_key"));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return null;
+  }
+
+  public static void addNewPartial(NewPartialMessage message) {
+    String statement = "UPDATE computed_distances set partial_distance = ?, partial_altitude_difference = ? where row_id=?";
+    try (PreparedStatement preparedStatement = connection.prepareStatement(statement)) {
+      preparedStatement.setString(1, message.getPartialDistance());
+      preparedStatement.setString(2, message.getPartialAltitudeDifference());
+      preparedStatement.setInt(3, Integer.parseInt(message.getRowId()));
+      preparedStatement.executeUpdate();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
   }
 }
