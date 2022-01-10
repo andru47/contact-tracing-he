@@ -1,5 +1,8 @@
 package com.example.phone_app;
 
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +28,7 @@ public class MainActivity extends FlutterActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, 1);
     Intent intent = new Intent(this, LocationService.class);
     startForegroundService(intent);
   }

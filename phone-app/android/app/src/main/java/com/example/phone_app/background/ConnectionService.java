@@ -20,7 +20,8 @@ public class ConnectionService {
   private final static String URL = "http://10.0.2.2:8080/";
   private final static Gson gson = new Gson();
   private final static OkHttpClient client = new OkHttpClient();
-  private static final Type distanceListType = new TypeToken<ArrayList<NewDistanceMessage>>(){}.getType();
+  private static final Type distanceListType = new TypeToken<ArrayList<NewDistanceMessage>>() {
+  }.getType();
 
   private static void sendJson(String json, String endpoint) {
     Request request = new Request.Builder()
@@ -35,9 +36,18 @@ public class ConnectionService {
     }
   }
 
-  protected static List<NewDistanceMessage> getDistances(String userId) {
+  protected static List<NewDistanceMessage> getDistances(String userId, boolean partial) {
+    String url = URL;
+    if (partial) {
+      url += "get-computed-distances-for-partial/";
+    } else {
+      url += "get-computed-distances/";
+    }
+
+    url += userId;
+
     Request request = new Request.Builder()
-            .url(URL + "get-computed-distances/" + userId)
+            .url(url)
             .get()
             .build();
     Log.d(ConnectionService.class.getName(), "Url is " + request.url().toString());
