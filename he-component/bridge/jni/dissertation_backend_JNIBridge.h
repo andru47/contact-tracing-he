@@ -17,11 +17,27 @@ JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistance
 
 /*
  * Class:     dissertation_backend_JNIBridge
+ * Method:    getMultiKeyDistance
+ * Signature: ([[C[[C[C[C[C[C)Ldissertation/backend/CiphertextWrapper;
+ */
+JNIEXPORT jobject JNICALL Java_dissertation_backend_JNIBridge_getMultiKeyDistance
+  (JNIEnv *, jobject, jobjectArray, jobjectArray, jcharArray, jcharArray, jcharArray, jcharArray);
+
+/*
+ * Class:     dissertation_backend_JNIBridge
  * Method:    getAltitudeDifference
  * Signature: ([C[C)[C
  */
 JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getAltitudeDifference
   (JNIEnv *, jobject, jcharArray, jcharArray);
+
+/*
+ * Class:     dissertation_backend_JNIBridge
+ * Method:    getMultiKeyAltitudeDifference
+ * Signature: ([C[C[C[C[C[C)Ldissertation/backend/CiphertextWrapper;
+ */
+JNIEXPORT jobject JNICALL Java_dissertation_backend_JNIBridge_getMultiKeyAltitudeDifference
+  (JNIEnv *, jobject, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray, jcharArray);
 
 #ifdef __cplusplus
 }

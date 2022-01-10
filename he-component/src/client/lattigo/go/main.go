@@ -3,7 +3,10 @@ package main
 import "C"
 import (
 	"github.com/ldsec/lattigo/v2/ckks"
+	"github.com/ldsec/lattigo/v2/mkrlwe"
+	"github.com/ldsec/lattigo/v2/ring"
 	"github.com/ldsec/lattigo/v2/rlwe"
+	"github.com/ldsec/lattigo/v2/utils"
 )
 
 func loadPublicKey(pubKeyString string, params ckks.Parameters) *rlwe.PublicKey {
@@ -114,6 +117,15 @@ func savePublicKeyToByte(pk *rlwe.PublicKey) []byte {
 	return data
 }
 
+func saveMKPublicKeyToByte(pk *mkrlwe.MKPublicKey) []byte {
+	data, err := pk.MarshalBinary()
+	if err != nil {
+		println("Error saving mk pubkey to string")
+	}
+
+	return data
+}
+
 func saveSecretKeyToByte(sk *rlwe.SecretKey) []byte {
 	data, err := sk.MarshalBinary()
 	if err != nil {
@@ -123,25 +135,54 @@ func saveSecretKeyToByte(sk *rlwe.SecretKey) []byte {
 	return data
 }
 
-func saveRelinKeyToByte(rlk *rlwe.RelinearizationKey) []byte {
-	data, err := rlk.MarshalBinary()
+func saveRingPolyToBytes(rp *ring.Poly) []byte {
+	data, err := rp.MarshalBinary()
 	if err != nil {
-		println("Error saving rlk to string")
+		println("Error saving ring poly to bytes")
 	}
 
 	return data
 }
 
-//export generateKeys
-func generateKeys(publicKey, privateKey, relinKey []byte) {
+func loadRingPolyFromBytes(data []byte) *ring.Poly {
+	rp := new(ring.Poly)
+	err := rp.UnmarshalBinary(data)
+	if err != nil {
+		println("Error unmarshalling ring poly", err.Error())
+	}
+
+	return rp
+}
+
+func saveMKRelinKeyToByte(rlk *mkrlwe.MKRelinearizationKey) []byte {
+	data, err := rlk.MarshalBinary()
+	if err != nil {
+		println("Error saving mk rlk to string")
+	}
+
+	return data
+}
+
+//export generateKeysNative
+func generateKeysNative(publicKey, privateKey, mkRelinKey, mkPublicKey []byte) {
 	params := getParams()
-	kgen := ckks.NewKeyGenerator(params)
-	sk := kgen.GenSecretKey()
-	pk := kgen.GenPublicKey(sk)
-	rlk := kgen.GenRelinearizationKey(sk)
-	copy(publicKey, savePublicKeyToByte(pk))
-	copy(privateKey, saveSecretKeyToByte(sk))
-	copy(relinKey, saveRelinKeyToByte(rlk))
+	prng, err := utils.NewKeyedPRNG([]byte("als.dissertation"))
+
+	if err != nil {
+		panic(err)
+	}
+
+	crs := mkrlwe.GenCommonPublicParam(&params.Parameters, prng)
+	kgen := mkrlwe.KeyGen(&params.Parameters, crs)
+	mkPub := kgen.PublicKey
+	simplePub := new(rlwe.PublicKey)
+	simplePub.Value[0] = mkPub.Key[0].Poly[0]
+	simplePub.Value[1] = mkPub.Key[1].Poly[0]
+
+	copy(publicKey, savePublicKeyToByte(simplePub))
+	copy(privateKey, saveSecretKeyToByte(kgen.SecretKey.Key))
+	copy(mkRelinKey, saveMKRelinKeyToByte(kgen.RelinKey))
+	copy(mkPublicKey, saveMKPublicKeyToByte(mkPub))
 }
 
 //export decryptNative
@@ -156,6 +197,40 @@ func decryptNative(givenCipher, givenPrivateKey string) float64 {
 	result := decoder.Decode(plaintext, params.LogSlots())
 
 	return real(result[0])
+}
+
+//export decryptHalfNative
+func decryptHalfNative(givenCipher, givenPrivateKey string, cipher []byte) {
+	params := getParams()
+	privateKey := loadPrivateKey(givenPrivateKey, params)
+	mkPrivateKey := new(mkrlwe.MKSecretKey)
+	mkPrivateKey.Key = privateKey
+	mkPrivateKey.PeerID = 2
+	decryptor := mkrlwe.NewMKDecryptor(&params.Parameters)
+	toBeDecrypted := loadCipher(givenCipher, params)
+	halfDecrypted := decryptor.PartDec(&toBeDecrypted.El().Element, 1, mkPrivateKey, 6.0)
+	copy(cipher, saveRingPolyToBytes(halfDecrypted))
+}
+
+//export decryptFullNative
+func decryptFullNative(givenCipher, givenPart2, givenPrivateKey string) float64 {
+	params := getParams()
+	privateKey := loadPrivateKey(givenPrivateKey, params)
+	mkPrivateKey := new(mkrlwe.MKSecretKey)
+	mkPrivateKey.Key = privateKey
+	mkPrivateKey.PeerID = 1
+	decryptor := mkrlwe.NewMKDecryptor(&params.Parameters)
+	toBeDecrypted := loadCipher(givenCipher, params)
+	halfResult := loadRingPolyFromBytes([]byte(givenPart2))
+	currentHalfResult := decryptor.PartDec(&toBeDecrypted.El().Element, 1, mkPrivateKey, 6.0)
+
+	polyResult := decryptor.MergeDec(&toBeDecrypted.El().Element, 1, []*ring.Poly{currentHalfResult, halfResult})
+	plainResult := ckks.NewPlaintext(params, 1, toBeDecrypted.Scale())
+	plainResult.SetValue(polyResult)
+
+	decoder := ckks.NewEncoder(params)
+
+	return real(decoder.Decode(plainResult, params.LogSlots())[0])
 }
 
 func main() {}

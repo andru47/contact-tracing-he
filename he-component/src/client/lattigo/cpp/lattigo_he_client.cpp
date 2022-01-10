@@ -36,18 +36,22 @@ vector<string> LattigoClientHelper::encrypt(
     return stringRet;
 }
 
-void LattigoClientHelper::generateKeysLocally()
+void LattigoClientHelper::generateKeys()
 {
-    vector<char> keys[3] = { vector<char>(1310726), vector<char>(655362), vector<char>(10485795) };
+    vector<char> keys[4] = { vector<char>(1310726), vector<char>(655362), vector<char>(10485795),
+                             vector<char>(5242928) };
     GoSlice publicKeyGo =
         GoSlice{ keys[0].data(), static_cast<GoInt>(keys[0].size()), static_cast<GoInt>(keys[0].size()) };
-    GoSlice secreKeyGo =
+    GoSlice secretKeyGo =
         GoSlice{ keys[1].data(), static_cast<GoInt>(keys[1].size()), static_cast<GoInt>(keys[1].size()) };
     GoSlice rlkGo = GoSlice{ keys[2].data(), static_cast<GoInt>(keys[2].size()), static_cast<GoInt>(keys[2].size()) };
-    generateKeys(publicKeyGo, secreKeyGo, rlkGo);
+    GoSlice mkPubKeyGo =
+        GoSlice{ keys[3].data(), static_cast<GoInt>(keys[3].size()), static_cast<GoInt>(keys[3].size()) };
+    generateKeysNative(publicKeyGo, secretKeyGo, rlkGo, mkPubKeyGo);
     publicKey = string(keys[0].begin(), keys[0].end());
     privateKey = string(keys[1].begin(), keys[1].end());
     relinKey = string(keys[2].begin(), keys[2].end());
+    mkPubKey = string(keys[3].begin(), keys[3].end());
 }
 
 string LattigoClientHelper::getPublicKey()
@@ -70,6 +74,11 @@ string LattigoClientHelper::getGaloisKeys()
     throw("NOT IMPLEMENTED");
 }
 
+string LattigoClientHelper::getMKPubKey()
+{
+    return this->mkPubKey;
+}
+
 void LattigoClientHelper::loadPrivateKeyFromClient(string &privateKey)
 {
     this->privateKey = privateKey;
@@ -80,12 +89,39 @@ void LattigoClientHelper::loadPublicKeyFromClient(string &pubKey)
     this->publicKey = pubKey;
 }
 
-double LattigoClientHelper::decrypt(string cipherString)
+double LattigoClientHelper::decrypt(string &cipherString)
 {
     GoString *goCipherString = getGoStringFromString(cipherString);
     GoString *goPrivateKey = getGoStringFromString(privateKey);
 
     double result = decryptNative(*goCipherString, *goPrivateKey);
+
+    delete goCipherString;
+    delete goPrivateKey;
+
+    return result;
+}
+
+MKResult LattigoClientHelper::decryptMulti(string &cipherString, string &partial)
+{
+    GoString *goCipherString = getGoStringFromString(cipherString);
+    GoString *goPrivateKey = getGoStringFromString(privateKey);
+    MKResult result;
+    if (partial.size())
+    {
+        GoString *goPartial = getGoStringFromString(partial);
+        result.result = decryptFullNative(*goCipherString, *goPartial, *goPrivateKey);
+        delete goPartial;
+    }
+    else
+    {
+        vector<char> halfDecrypted(262146);
+        decryptHalfNative(
+            *goCipherString, *goPrivateKey,
+            GoSlice{ halfDecrypted.data(), static_cast<GoInt>(halfDecrypted.size()),
+                     static_cast<GoInt>(halfDecrypted.size()) });
+        result.halfCipher = string(halfDecrypted.begin(), halfDecrypted.end());
+    }
 
     delete goCipherString;
     delete goPrivateKey;

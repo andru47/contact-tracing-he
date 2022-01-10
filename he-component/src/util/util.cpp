@@ -50,3 +50,14 @@ jchar *getJCharArrFromString(string givenString)
 
     return arr;
 }
+
+string getStringFromJ(JNIEnv *env, jcharArray arr)
+{
+    int len = env->GetArrayLength(arr);
+    jchar *elements = env->GetCharArrayElements(arr, 0);
+    string toRet = getStringFromJCharArr(elements, len);
+
+    env->ReleaseCharArrayElements(arr, elements, 0);
+
+    return toRet;
+}

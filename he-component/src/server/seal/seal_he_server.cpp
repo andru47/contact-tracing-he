@@ -33,7 +33,9 @@ void loadCipherToValues(
     sinLong.load(context, str3);
 }
 
-void loadAltitudesToCiphers(string &altitude1, string &altitude2, Ciphertext &cipher1, Ciphertext &cipher2, SEALContext &context) {
+void loadAltitudesToCiphers(
+    string &altitude1, string &altitude2, Ciphertext &cipher1, Ciphertext &cipher2, SEALContext &context)
+{
     stringstream stream1(altitude1);
     cipher1.load(context, stream1);
     stringstream stream2(altitude2);
@@ -128,8 +130,8 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     return resultStore.str();
 }
 
-
-string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2) {
+string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2)
+{
     Evaluator eval(context);
     Ciphertext altitude1Cipher, altitude2Cipher;
     loadAltitudesToCiphers(altitude1, altitude2, altitude1Cipher, altitude2Cipher, context);
@@ -139,4 +141,16 @@ string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &al
     altitude1Cipher.save(resultStream);
 
     return resultStream.str();
+}
+
+vector<string> CKKSServerHelper::computeMulti(
+    vector<string> &cipher1, vector<string> &cipher2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
+{
+    throw "NOT IMPLEMENTED";
+}
+
+vector<string> CKKSServerHelper::computeAltitudeDifferenceMulti(
+    string &altitude1, string &altitude2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
+{
+    throw "NOT IMPLEMENTED";
 }
