@@ -18,6 +18,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static java.lang.System.currentTimeMillis;
+
 public class ContactTracingHelper {
   private final static JNIBridge jniBridge = new JNIBridge();
   private final static Logger logger = LogManager.getLogger(ContactTracingHelper.class);
@@ -147,25 +149,30 @@ public class ContactTracingHelper {
   }
 
   public static void computeNewDistances() {
-    List<String> columnNames = Arrays.asList("loc.latitude_cos", "loc.latitude_sin", "loc.longitude_cos", "loc.longitude_sin",
-        "infected_user_locations.latitude_cos", "infected_user_locations.latitude_sin",
-        "infected_user_locations.longitude_cos", "infected_user_locations.longitude_sin",
+    List<String> columnNames = Arrays.asList("possible_data.latitude_cos", "possible_data.latitude_sin", "possible_data.longitude_cos", "possible_data.longitude_sin",
+        "infected_data.latitude_cos", "infected_data.latitude_sin",
+        "infected_data.longitude_cos", "infected_data.longitude_sin",
         "loc.timestamp", "loc.user_id", "infected_user_locations.id", "loc.id", "infected_user_locations.user_id",
         "loc.timestamp_end", "infected_user_locations.timestamp", "infected_user_locations.timestamp_end",
-        "loc.altitude", "infected_user_locations.altitude");
-    String sqlCommand = "SELECT *\n" +
-        "from locations as loc\n" +
-        "JOIN (SELECT * from locations where user_id IN (SELECT user_id from quarantined_users)) as infected_user_locations " +
-        "on ((infected_user_locations.timestamp >= loc.timestamp and infected_user_locations.timestamp <= loc.timestamp_end) or\n" +
-        "(loc.timestamp >= infected_user_locations.timestamp and loc.timestamp <= infected_user_locations.timestamp_end))\n" +
-        "and infected_user_locations.user_id != loc.user_id\n" +
-        "WHERE loc.id NOT IN (SELECT location_id from computed_distances where computed_distances.infected_location_id = infected_user_locations.id)\n" +
-        "AND loc.id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_user_locations.id)\n" +
-        "AND loc.user_id NOT IN (SELECT user_id from quarantined_users)\n" +
+        "possible_data.altitude", "infected_data.altitude");
+    String sqlCommand = "SELECT infected_user_locations.id, infected_user_locations.user_id, infected_user_locations.timestamp, infected_user_locations.timestamp_end,\n" +
+        "loc.id, loc.user_id, loc.timestamp, loc.timestamp_end,\n" +
+        "infected_data.*, possible_data.*\n" +
+        "from quarantined_users as infected_table\n" +
+        "INNER JOIN (select id, timestamp, timestamp_end, user_id from locations) as infected_user_locations on infected_user_locations.user_id = infected_table.user_id\n" +
+        "INNER JOIN (select id, timestamp, timestamp_end, user_id from locations where user_id not in (select user_id from quarantined_users)) as loc on\n" +
+        "((loc.timestamp between infected_user_locations.timestamp and infected_user_locations.timestamp_end) or (infected_user_locations.timestamp between loc.timestamp and loc.timestamp_end)) and\n" +
+        "loc.id not in (select contact_loc_id from processed_distances where infected_loc_id=infected_user_locations.id) and\n" +
+        "loc.id not in (select location_id from computed_distances where infected_location_id=infected_user_locations.id)\n" +
+        "INNER JOIN (select altitude, latitude_cos, latitude_sin, longitude_cos, longitude_sin, id from locations) as infected_data on infected_data.id=infected_user_locations.id\n" +
+        "INNER JOIN (select altitude, latitude_cos, latitude_sin, longitude_cos, longitude_sin, id from locations) as possible_data on possible_data.id=loc.id\n" +
         "LIMIT 100";
+
+    List<Long> timings = Config.isTimingEnabled() ? new ArrayList<>() : null;
 
     try (ResultSet rs = Controller.getResultSetFromStatement(sqlCommand)) {
       if (rs == null) {
+        logger.info("Didn't find anything for computing.");
         return;
       }
       Map<String, List<String>> keysMap = Config.getEncryptionType() == EncryptionType.LATTIGO_MK ? new HashMap<>() : null;
@@ -179,12 +186,35 @@ public class ContactTracingHelper {
           updateKeys(valueForColumn.get("loc.user_id"), keysMap);
           updateKeys(valueForColumn.get("infected_user_locations.user_id"), keysMap);
         }
-
+        long startTimestamp = 0;
+        if (Config.isTimingEnabled()) {
+          startTimestamp = currentTimeMillis();
+        }
         getDistanceAndUpdateDatabase(valueForColumn, keysMap);
+        if (Config.isTimingEnabled()) {
+          timings.add(currentTimeMillis() - startTimestamp);
+        }
       }
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     }
+
+    if (Config.isTimingEnabled()) {
+      logTimingMeasurements(timings);
+    }
+  }
+
+  private static void logTimingMeasurements(List<Long> timings) {
+    long sum = timings.stream().reduce(0L, Long::sum);
+    double mean = (1.0 * sum) / (1.0 * timings.size());
+    double stDev = 0;
+    for (Long currentTiming: timings) {
+      stDev += Math.pow(currentTiming - mean, 2);
+    }
+    stDev = Math.sqrt(stDev / (1.0 *timings.size()));
+
+    logger.info("Finished timing: MEAN {} ST DEV {} SAMPLES {}", mean, stDev, timings.size());
+
   }
 
   private static void updateKeys(String userId, Map<String, List<String>> keysMap) {
@@ -201,39 +231,39 @@ public class ContactTracingHelper {
 
     if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
       distanceCiphertext = jniBridge.getMultiKeyDistance(new char[][]{
-              valueForColumn.get("loc.latitude_cos").toCharArray(),
-              valueForColumn.get("loc.latitude_sin").toCharArray(),
-              valueForColumn.get("loc.longitude_cos").toCharArray(),
-              valueForColumn.get("loc.longitude_sin").toCharArray()
+              valueForColumn.get("possible_data.latitude_cos").toCharArray(),
+              valueForColumn.get("possible_data.latitude_sin").toCharArray(),
+              valueForColumn.get("possible_data.longitude_cos").toCharArray(),
+              valueForColumn.get("possible_data.longitude_sin").toCharArray()
           }, new char[][]{
-              valueForColumn.get("infected_user_locations.latitude_cos").toCharArray(),
-              valueForColumn.get("infected_user_locations.latitude_sin").toCharArray(),
-              valueForColumn.get("infected_user_locations.longitude_cos").toCharArray(),
-              valueForColumn.get("infected_user_locations.longitude_sin").toCharArray()
+              valueForColumn.get("infected_data.latitude_cos").toCharArray(),
+              valueForColumn.get("infected_data.latitude_sin").toCharArray(),
+              valueForColumn.get("infected_data.longitude_cos").toCharArray(),
+              valueForColumn.get("infected_data.longitude_sin").toCharArray()
           }, keysMap.get(userId).get(0).toCharArray(), keysMap.get(userId).get(1).toCharArray(),
           keysMap.get(infectedUserId).get(0).toCharArray(), keysMap.get(infectedUserId).get(1).toCharArray());
       altitudeDifferenceCiphertext = jniBridge.getMultiKeyAltitudeDifference(
-          valueForColumn.get("loc.altitude").toCharArray(),
-          valueForColumn.get("infected_user_locations.altitude").toCharArray(),
+          valueForColumn.get("possible_data.altitude").toCharArray(),
+          valueForColumn.get("infected_data.altitude").toCharArray(),
           keysMap.get(userId).get(0).toCharArray(), keysMap.get(userId).get(1).toCharArray(),
           keysMap.get(infectedUserId).get(0).toCharArray(), keysMap.get(infectedUserId).get(1).toCharArray());
     } else {
       distanceCiphertext = new CiphertextWrapper();
       altitudeDifferenceCiphertext = new CiphertextWrapper();
       distanceCiphertext.setComputedCiphertext1(jniBridge.getDistance(new char[][]{
-          valueForColumn.get("loc.latitude_cos").toCharArray(),
-          valueForColumn.get("loc.latitude_sin").toCharArray(),
-          valueForColumn.get("loc.longitude_cos").toCharArray(),
-          valueForColumn.get("loc.longitude_sin").toCharArray()
+          valueForColumn.get("possible_data.latitude_cos").toCharArray(),
+          valueForColumn.get("possible_data.latitude_sin").toCharArray(),
+          valueForColumn.get("possible_data.longitude_cos").toCharArray(),
+          valueForColumn.get("possible_data.longitude_sin").toCharArray()
       }, new char[][]{
-          valueForColumn.get("infected_user_locations.latitude_cos").toCharArray(),
-          valueForColumn.get("infected_user_locations.latitude_sin").toCharArray(),
-          valueForColumn.get("infected_user_locations.longitude_cos").toCharArray(),
-          valueForColumn.get("infected_user_locations.longitude_sin").toCharArray()
+          valueForColumn.get("infected_data.latitude_cos").toCharArray(),
+          valueForColumn.get("infected_data.latitude_sin").toCharArray(),
+          valueForColumn.get("infected_data.longitude_cos").toCharArray(),
+          valueForColumn.get("infected_data.longitude_sin").toCharArray()
       }));
       altitudeDifferenceCiphertext.setComputedCiphertext1(jniBridge.getAltitudeDifference(
-          valueForColumn.get("loc.altitude").toCharArray(),
-          valueForColumn.get("infected_user_locations.altitude").toCharArray()));
+          valueForColumn.get("possible_data.altitude").toCharArray(),
+          valueForColumn.get("infected_data.altitude").toCharArray()));
     }
 
     Controller.addNewContactDistance(distanceCiphertext, altitudeDifferenceCiphertext, userId, valueForColumn.get("infected_user_locations.id"),
