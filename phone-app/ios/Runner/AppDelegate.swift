@@ -33,8 +33,15 @@ import Firebase
   ) -> Bool {
     
     GeneratedPluginRegistrant.register(with: self)
-    registerForNotifications(application: application)
-    registerForLocation()
+
+    if (Config.isUploadTestLocationsEnabled()) {
+      TestLocationUploader.readLocationsAndUploadEncrypted()
+    } else if (Config.isAccuracyMeasurementEnabled()) {
+      TestLocationUploader.readLocationsAndCalculateAccuracy()
+    } else {
+      registerForNotifications(application: application)
+      registerForLocation()
+    }
     
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let heBridgeChannel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller.binaryMessenger)
@@ -75,7 +82,7 @@ import Firebase
     }
     locationManager.delegate = self
     locationManager.requestAlwaysAuthorization()
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest
+    locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     locationManager.allowsBackgroundLocationUpdates = true
     locationManager.distanceFilter = 5
     locationManager.startUpdatingLocation()

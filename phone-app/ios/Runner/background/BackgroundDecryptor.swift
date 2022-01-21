@@ -13,15 +13,23 @@ class BackgroundDecryptor {
     public static func getDistances(userId: String, privateKey: String, partial: Bool) {
         DispatchQueue.global(qos: .background).async {
             while(true) {
-                let givenCiphertexts : Array<NewDistanceMessage> = ConnectionService.getDistances(userId: userId, partial: partial)
-                if (givenCiphertexts.isEmpty) {
-                    return
+                var finished: Bool = false
+                autoreleasepool {
+                    var givenCiphertexts : Array<NewDistanceMessage> = ConnectionService.getDistances(userId: userId, partial: partial)
+                    if (givenCiphertexts.isEmpty) {
+                        finished = true
+                        return
+                    }
+                    NSLog("I have received %d ciphertexts", givenCiphertexts.count)
+                    if (partial) {
+                        computePartial(givenCiphertexts: givenCiphertexts, privateKey: privateKey, userId: userId)
+                    } else {
+                        wasInContact(givenCiphertexts: givenCiphertexts, privateKey: privateKey, userId: userId)
+                    }
+                    givenCiphertexts.removeAll()
                 }
-                NSLog("I have received %d ciphertexts", givenCiphertexts.count)
-                if (partial) {
-                    computePartial(givenCiphertexts: givenCiphertexts, privateKey: privateKey, userId: userId)
-                } else {
-                    wasInContact(givenCiphertexts: givenCiphertexts, privateKey: privateKey, userId: userId)
+                if (finished) {
+                    return
                 }
             }
         }
@@ -46,7 +54,7 @@ class BackgroundDecryptor {
             }
             
             NSLog("Altitude difference was \(altitudeDifference)")
-            initialResult = asin(sqrt(initialResult / 2.0)) * 6378.8 * 2.0 * 1000
+            initialResult = asin(sqrt(initialResult / 2.0)) * 6371 * 2.0 * 1000
             
             if (initialResult.isNaN) {
                 initialResult = 0

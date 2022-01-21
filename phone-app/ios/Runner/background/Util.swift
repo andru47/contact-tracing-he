@@ -30,7 +30,15 @@ class Util {
     
     public static func getPrivateKey() -> String {
         if (privateKey == nil) {
-            privateKey = readKey(fileName: "privateKey.bin")
+            var fileName: String = ""
+            if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+                fileName = "privateKey.bin"
+            } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
+                fileName = "privateKeyLattigo"
+            } else {
+                fileName = "privateKey"
+            }
+            privateKey = readKey(fileName: fileName)
         }
         
         return privateKey!
@@ -38,7 +46,15 @@ class Util {
     
     public static func getPublicKey() -> String {
         if (publicKey == nil) {
-            publicKey = readKey(fileName: "pubKey.bin")
+            var fileName: String = ""
+            if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+                fileName = "pubKey.bin"
+            } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
+                fileName = "pubKeyLattigo"
+            } else {
+                fileName = "pubKey"
+            }
+            publicKey = readKey(fileName: fileName)
         }
         
         return publicKey!

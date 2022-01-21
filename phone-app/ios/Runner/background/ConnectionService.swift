@@ -8,7 +8,7 @@
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://192.168.1.100:8080/"
+    private static let URL_STRING: String = "http://192.168.2.1:8080/"
     
     public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
         var url: String = URL_STRING
@@ -26,7 +26,7 @@ class ConnectionService {
         lock.lock()
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             jsonResponse = data!
-            NSLog("Received %@ from server for new distances", String(decoding: jsonResponse, as: UTF8.self))
+//            NSLog("Received %@ from server for new distances", String(decoding: jsonResponse, as: UTF8.self))
             lock.unlock()
         }
         task.resume()
@@ -39,6 +39,7 @@ class ConnectionService {
             var request: URLRequest = URLRequest(url: URL(string: URL_STRING + endpoint)!)
             request.httpMethod = "POST"
             request.httpBody = json
+            request.timeoutInterval = 180
             request.addValue("application/json", forHTTPHeaderField: "Content-Type")
             request.addValue("application/json", forHTTPHeaderField: "Accept")
             let lock: NSLock = NSLock()
