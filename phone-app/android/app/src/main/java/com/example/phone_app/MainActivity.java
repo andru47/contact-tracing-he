@@ -12,7 +12,9 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import com.example.phone_app.background.LocationService;
+import com.example.phone_app.background.TestLocationUploader;
 import com.example.phone_app.background.Util;
+import com.example.phone_app.config.Config;
 
 import java.util.Arrays;
 
@@ -29,8 +31,12 @@ public class MainActivity extends FlutterActivity {
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, 1);
-    Intent intent = new Intent(this, LocationService.class);
-    startForegroundService(intent);
+    if (Config.isUploadTestLocationsEnabled()) {
+      TestLocationUploader.readLocationsAndUploadEncrypted(this);
+    } else {
+      Intent intent = new Intent(this, LocationService.class);
+      startForegroundService(intent);
+    }
   }
 
   @Override
