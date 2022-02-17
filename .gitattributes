@@ -1,2 +1,2 @@
-*.bin -text diff
+**/*.bin -diff
 
