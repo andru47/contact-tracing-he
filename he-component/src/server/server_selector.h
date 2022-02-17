@@ -1,3 +1,3 @@
-#include <lattigo/cpp/lattigo_he_server.h>
+#include <smkhe/smkhe_he_server.h>
 
 ServerHelper* getHelper();

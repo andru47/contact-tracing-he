@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     dissertation_backend_JNIBridge
+ * Method:    getDistanceWithKey
+ * Signature: ([[C[[C[C)[C
+ */
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistanceWithKey
+  (JNIEnv *, jobject, jobjectArray, jobjectArray, jcharArray);
+
+/*
+ * Class:     dissertation_backend_JNIBridge
  * Method:    getDistance
  * Signature: ([[C[[C)[C
  */
