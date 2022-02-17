@@ -35,8 +35,10 @@ class Util {
                 fileName = "privateKey.bin"
             } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
                 fileName = "privateKeyLattigo"
-            } else {
+            } else if (Config.getEncryptionType() == EncryptionType.SEAL) {
                 fileName = "privateKey"
+            } else {
+                fileName = "privateKeySMKHE"
             }
             privateKey = readKey(fileName: fileName)
         }
@@ -51,8 +53,10 @@ class Util {
                 fileName = "pubKey.bin"
             } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
                 fileName = "pubKeyLattigo"
-            } else {
+            } else if (Config.getEncryptionType() == EncryptionType.SEAL) {
                 fileName = "pubKey"
+            } else {
+                fileName = "pubKeySMKHE"
             }
             publicKey = readKey(fileName: fileName)
         }

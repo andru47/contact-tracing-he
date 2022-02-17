@@ -1,6 +1,7 @@
 #include "dissertation_backend_JNIBridge.h"
 #include <server_selector.h>
 #include <util.h>
+#include <fstream>
 
 using namespace std;
 
@@ -12,6 +13,27 @@ vector<string> getCipherFromOjectArray(JNIEnv *env, jobjectArray &location)
     string longitudeSin = getStringFromJ(env, (jcharArray)env->GetObjectArrayElement(location, 3));
 
     return { latitudeCos, latitudeSin, longitudeCos, longitudeSin };
+}
+
+JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistanceWithKey
+  (JNIEnv *env, jobject, jobjectArray location1, jobjectArray location2, jcharArray rlk) {
+    vector<string> cipher1 = getCipherFromOjectArray(env, location1);
+    vector<string> cipher2 = getCipherFromOjectArray(env, location2);
+    string rlkString = getStringFromJ(env, rlk);
+    ofstream g("assets/relinKeySMKHE.bin", ios::binary);
+    stringstream stream(rlkString);
+    g << stream.rdbuf();
+    g.close();
+
+    ServerHelper *helper = getHelper();
+    string res = helper->compute(cipher1, cipher2);
+
+    jchar *cipherComputed = getJCharArrFromString(res);
+
+    jcharArray j_version_array = env->NewCharArray(res.size());
+    env->SetCharArrayRegion(j_version_array, 0, res.size(), cipherComputed);
+
+    return j_version_array;
 }
 
 JNIEXPORT jcharArray JNICALL
