@@ -3,9 +3,10 @@ package dissertation.backend.serialization;
 public class JSONBody {
   private final String latitudeCos1, latitudeSin1, longitudeCos1, longitudeSin1;
   private final String latitudeCos2, latitudeSin2, longitudeCos2, longitudeSin2;
+  private final String rlk;
 
   public JSONBody(String latitudeCos1, String latitudeSin1, String longitudeCos1, String longitudeSin1,
-                  String latitudeCos2, String latitudeSin2, String longitudeCos2, String longitudeSin2) {
+                  String latitudeCos2, String latitudeSin2, String longitudeCos2, String longitudeSin2, String rlk) {
     this.latitudeCos1 = latitudeCos1;
     this.latitudeSin1 = latitudeSin1;
     this.longitudeCos1 = longitudeCos1;
@@ -14,6 +15,7 @@ public class JSONBody {
     this.latitudeSin2 = latitudeSin2;
     this.longitudeCos2 = longitudeCos2;
     this.longitudeSin2 = longitudeSin2;
+    this.rlk = rlk;
   }
 
   public String getLatitudeCos1() {
@@ -46,5 +48,9 @@ public class JSONBody {
 
   public String getLongitudeSin2() {
     return longitudeSin2;
+  }
+
+  public String getRlk() {
+    return rlk;
   }
 }

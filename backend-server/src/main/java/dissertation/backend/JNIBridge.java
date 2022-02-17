@@ -12,6 +12,8 @@ public class JNIBridge {
     }
   }
 
+  public native char[] getDistanceWithKey(char[][] location1, char[][] location2, char[] rlk);
+
   public native char[] getDistance(char[][] location1, char[][] location2);
 
   public native CiphertextWrapper getMultiKeyDistance(char[][] location1, char[][] location2, char[] pubKey1, char[] relinKey1,
