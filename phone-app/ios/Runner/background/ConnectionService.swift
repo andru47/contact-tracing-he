@@ -8,7 +8,7 @@
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://192.168.2.1:8080/"
+    private static let URL_STRING: String = "http://10.4.1.86:8080/"
     
     public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
         var url: String = URL_STRING
