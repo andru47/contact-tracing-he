@@ -1,2 +1,2 @@
-**/*.bin -diff
+**/*.bin -diff linguist-detectable=false
 
