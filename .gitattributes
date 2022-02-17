@@ -1,2 +1,2 @@
-**/*.bin -diff linguist-detectable=false
+**/*.bin -diff linguist-generated=true
 
