@@ -1,3 +1,4 @@
 *.bin -diff
 *.bin binary linguist-generated
+backend-server/assets/relinKeySMKHE.bin binary linguist-generated
 
