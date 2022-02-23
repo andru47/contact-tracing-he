@@ -1,2 +1,3 @@
-**/*.bin linguist-generated
+*.bin -diff
+*.bin binary linguist-generated
 
