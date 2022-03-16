@@ -149,12 +149,12 @@ public class Controller {
         sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext2, altitude_difference2, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
             "where infected_user_id = ? and downloaded=0 \n" +
             "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
-            "LIMIT 60";
+            "LIMIT 10";
       } else {
         sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext1, altitude_difference1, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
             "where infected_user_id = ? and downloaded=0 \n" +
             "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
-            "LIMIT 60";
+            "LIMIT 10";
       }
     }
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
