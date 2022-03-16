@@ -7,7 +7,8 @@ private:
     smkhe::Parameters params;
     smkhe::PublicKey pubKey;
     smkhe::SecretKey secretKey;
-    smkhe::EvaluationKey evk;
+    smkhe::MKEvaluationKey evk;
+    smkhe::MKPublicKey mkPublicKey;
 
 public:
     SMKHEClientHelper();

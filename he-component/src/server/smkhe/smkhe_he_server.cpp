@@ -1,5 +1,6 @@
 #include "smkhe_he_server.h"
 #include "fstream"
+#include <unordered_map>
 
 SMKHEServerHelper::SMKHEServerHelper()
     : params(
@@ -41,11 +42,38 @@ void loadCipherToValues(
     sinLong.deserialize(cipher[3]);
 }
 
+void loadMKCipherToValues(
+    smkhe::MKCiphertext &cosLat, smkhe::MKCiphertext &sinLat, smkhe::MKCiphertext &cosLong, smkhe::MKCiphertext &sinLong,
+    vector<string> &cipher, uint64_t id)
+{
+    smkhe::Ciphertext cosLatSimple, sinLatSimple, cosLongSimple, sinLongSimple;
+    cosLatSimple.deserialize(cipher[0]);
+    sinLatSimple.deserialize(cipher[1]);
+    cosLongSimple.deserialize(cipher[2]);
+    sinLongSimple.deserialize(cipher[3]);
+
+    cosLat = smkhe::MKCiphertext(cosLatSimple, {id}, cosLatSimple.getLevel());
+    sinLat = smkhe::MKCiphertext(sinLatSimple, {id}, sinLatSimple.getLevel());
+    cosLong = smkhe::MKCiphertext(cosLongSimple, {id}, cosLongSimple.getLevel());
+    sinLong = smkhe::MKCiphertext(sinLongSimple, {id}, sinLongSimple.getLevel());
+}
+
 void loadAltitudesToCiphers(
     string &altitude1, string &altitude2, smkhe::Ciphertext &cipher1, smkhe::Ciphertext &cipher2)
 {
     cipher1.deserialize(altitude1);
     cipher2.deserialize(altitude2);
+}
+
+void loadMKAltitudesToCiphers(
+    string &altitude1, string &altitude2, smkhe::MKCiphertext &cipher1, smkhe::MKCiphertext &cipher2)
+{
+    smkhe::Ciphertext altitude1Simple, altitude2Simple;
+    altitude1Simple.deserialize(altitude1);
+    altitude2Simple.deserialize(altitude2);
+
+    cipher1 = smkhe::MKCiphertext(altitude1Simple, 1, altitude1Simple.getLevel());
+    cipher2 = smkhe::MKCiphertext(altitude2Simple, 2, altitude2Simple.getLevel());
 }
 
 string SMKHEServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2)
@@ -96,11 +124,70 @@ string SMKHEServerHelper::compute(vector<string> &cipher1, vector<string> &ciphe
     return result;
 }
 
+void loadMKRLKFromString(smkhe::MKEvaluationKey& key, string& str) {
+    key.deserialize(str);
+}
+
+void loadMKPubKeyFromString(smkhe::MKPublicKey& key, string& str) {
+    key.deserialize(str);
+}
+
 vector<string> SMKHEServerHelper::computeMulti(
     vector<string> &cipher1, vector<string> &cipher2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
 {
-    throw("Not implemented");
+    smkhe::MKCiphertext cosLat1, cosLat2;
+    smkhe::MKCiphertext sinLat1, sinLat2;
+    smkhe::MKCiphertext cosLong1, cosLong2;
+    smkhe::MKCiphertext sinLong1, sinLong2;
+
+    loadMKCipherToValues(cosLat1, sinLat1, cosLong1, sinLong1, cipher1, 1);
+    loadMKCipherToValues(cosLat2, sinLat2, cosLong2, sinLong2, cipher2, 2);
+
+    smkhe::MKEvaluationKey evk1, evk2;
+    smkhe::MKPublicKey pKey1, pKey2;
+
+    loadMKRLKFromString(evk1, rlk1);
+    loadMKRLKFromString(evk2, rlk2);
+    loadMKPubKeyFromString(pKey1, pubKey1);
+    loadMKPubKeyFromString(pKey2, pubKey2);
+
+    unordered_map<uint64_t, smkhe::MKEvaluationKey> idToEvk = {{1, evk1}, {2, evk2}};
+    unordered_map<uint64_t, smkhe::MKPublicKey> idToPubKey = {{1, pKey1}, {2, pKey2}};
+
+    smkhe::MKEvaluator eval(params, idToPubKey, idToEvk);
+    smkhe::Encoder enc(params);
+    smkhe::Plaintext one = enc.encode(vector<double>{ 1.0 });
+
+    smkhe::MKCiphertext cosLatProd = eval.multiplyAndRelinearize(cosLat1, cosLat2);
+    eval.rescaleInPlace(cosLatProd);
+    smkhe::MKCiphertext sinLatProd = eval.multiplyAndRelinearize(sinLat1, sinLat2);
+    eval.rescaleInPlace(sinLatProd);
+
+    smkhe::MKCiphertext havLat = eval.add(cosLatProd, sinLatProd);
+    eval.negateInPlace(havLat);
+    eval.addPlainInPlace(havLat, one);
+
+    smkhe::MKCiphertext cosLongProd = eval.multiplyAndRelinearize(cosLong1, cosLong2);
+    eval.rescaleInPlace(cosLongProd);
+
+    smkhe::MKCiphertext sinLongProd = eval.multiplyAndRelinearize(sinLong1, sinLong2);
+    eval.rescaleInPlace(sinLongProd);
+
+    smkhe::MKCiphertext havLong = eval.add(cosLongProd, sinLongProd);
+    eval.negateInPlace(havLong);
+    eval.addPlainInPlace(havLong, one);
+
+    havLong = eval.multiplyAndRelinearize(havLong, cosLatProd);
+    eval.rescaleInPlace(havLong);
+
+    havLat = eval.add(havLat, havLong);
+
+    string result;
+    havLat.serialize(result);
+
+    return {result};
 }
+
 string SMKHEServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2)
 {
     smkhe::Ciphertext altitude1Cipher, altitude2Cipher;
@@ -117,5 +204,27 @@ string SMKHEServerHelper::computeAltitudeDifference(string &altitude1, string &a
 vector<string> SMKHEServerHelper::computeAltitudeDifferenceMulti(
     string &altitude1, string &altitude2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
 {
-    throw("Not implemented");
+    smkhe::MKCiphertext altitude1Cipher, altitude2Cipher;
+    loadMKAltitudesToCiphers(altitude1, altitude2, altitude1Cipher, altitude2Cipher);
+
+    smkhe::MKEvaluationKey evk1, evk2;
+    smkhe::MKPublicKey pKey1, pKey2;
+
+    loadMKRLKFromString(evk1, rlk1);
+    loadMKRLKFromString(evk2, rlk2);
+    loadMKPubKeyFromString(pKey1, pubKey1);
+    loadMKPubKeyFromString(pKey2, pubKey2);
+
+    unordered_map<uint64_t, smkhe::MKEvaluationKey> idToEvk = {{1, evk1}, {2, evk2}};
+    unordered_map<uint64_t, smkhe::MKPublicKey> idToPubKey = {{1, pKey1}, {2, pKey2}};
+
+    smkhe::MKEvaluator eval(params, idToPubKey, idToEvk);
+    eval.negateInPlace(altitude2Cipher);
+
+    smkhe::MKCiphertext added = eval.add(altitude1Cipher, altitude2Cipher);
+
+    string result;
+    added.serialize(result);
+
+    return {result};
 }
