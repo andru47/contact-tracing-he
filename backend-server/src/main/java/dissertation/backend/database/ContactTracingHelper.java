@@ -36,7 +36,7 @@ public class ContactTracingHelper {
       }
       while (rs.next()) {
         ComputedDistanceMessage message;
-        if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK && !partial) {
+        if (Config.getEncryptionType() != EncryptionType.SINGLE && !partial) {
           message = new ComputedDistanceMessage(rs.getString("partial_distance"), rs.getString("partial_altitude_difference"), rs.getString("distance_ciphertext1"), rs.getString("altitude_difference1"), rs.getString("infected_user_id"), Long.parseLong(rs.getString("timestamp")),
               Long.parseLong(rs.getString("timestamp_end")));
         } else if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
@@ -169,20 +169,21 @@ public class ContactTracingHelper {
         "LIMIT 100";
 
     List<Long> timings = Config.isTimingEnabled() ? new ArrayList<>() : null;
+    ExecutorService service = Executors.newFixedThreadPool(10);
 
     try (ResultSet rs = Controller.getResultSetFromStatement(sqlCommand)) {
       if (rs == null) {
         logger.info("Didn't find anything for computing.");
         return;
       }
-      Map<String, List<String>> keysMap = Config.getEncryptionType() == EncryptionType.LATTIGO_MK ? new HashMap<>() : null;
+      Map<String, List<String>> keysMap = Config.getEncryptionType() != EncryptionType.SINGLE ? new HashMap<>() : null;
       while (rs.next()) {
         Map<String, String> valueForColumn = new HashMap<>();
         for (String columnName : columnNames) {
           valueForColumn.put(columnName, rs.getString(columnName));
         }
 
-        if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        if (Config.getEncryptionType() != EncryptionType.SINGLE) {
           updateKeys(valueForColumn.get("loc.user_id"), keysMap);
           updateKeys(valueForColumn.get("infected_user_locations.user_id"), keysMap);
         }
@@ -190,7 +191,7 @@ public class ContactTracingHelper {
         if (Config.isTimingEnabled()) {
           startTimestamp = currentTimeMillis();
         }
-        getDistanceAndUpdateDatabase(valueForColumn, keysMap);
+        service.submit(() -> getDistanceAndUpdateDatabase(valueForColumn, keysMap));
         if (Config.isTimingEnabled()) {
           timings.add(currentTimeMillis() - startTimestamp);
         }
@@ -229,7 +230,7 @@ public class ContactTracingHelper {
     String infectedUserId = valueForColumn.get("infected_user_locations.user_id");
     CiphertextWrapper distanceCiphertext, altitudeDifferenceCiphertext;
 
-    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+    if (Config.getEncryptionType() != EncryptionType.SINGLE) {
       distanceCiphertext = jniBridge.getMultiKeyDistance(new char[][]{
               valueForColumn.get("possible_data.latitude_cos").toCharArray(),
               valueForColumn.get("possible_data.latitude_sin").toCharArray(),
