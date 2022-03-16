@@ -90,9 +90,12 @@ public class Controller {
       statement.setInt(6, Integer.parseInt(timestamp));
       statement.setInt(7, Integer.parseInt(timestampEnd));
       statement.setString(8, infectedUserId);
-      if (Config.getEncryptionType() != EncryptionType.SINGLE) {
+      if (Config.getEncryptionType() == EncryptionType.SMKHE_MK) {
         statement.setString(9, "");
         statement.setString(10, "");
+      } else if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        statement.setString(9, new String(distance.getComputedCiphertext2()));
+        statement.setString(10, new String(altitudeDifference.getComputedCiphertext2()));
       }
       statement.executeUpdate();
     } catch (SQLException throwables) {
