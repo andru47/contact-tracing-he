@@ -9,10 +9,11 @@ SMKHEClientHelper::SMKHEClientHelper()
 
 void SMKHEClientHelper::generateKeys()
 {
-    smkhe::Keygen keygen(params);
-    this->secretKey = keygen.generateSecretKey();
-    this->pubKey = keygen.generatePublicKey();
-    this->evk = keygen.generateEvaluationKey();
+    smkhe::MKKeygen keygen(params, 59431639);
+    this -> secretKey = keygen.generateSecretKey();
+    this -> mkPublicKey = keygen.generatePublicKey();
+    this -> pubKey = this -> mkPublicKey.getPublicKey();
+    this -> evk = keygen.generateEvaluationKey(mkPublicKey);
 }
 
 string SMKHEClientHelper::getRelinKeys()
@@ -46,7 +47,10 @@ string SMKHEClientHelper::getPublicKey()
 
 string SMKHEClientHelper::getMKPubKey()
 {
-    throw("Not implemented");
+    string result;
+    this->mkPublicKey.serialize(result);
+
+    return result;
 }
 
 void SMKHEClientHelper::loadPublicKeyFromClient(string &publicKeyString)
@@ -95,5 +99,30 @@ double SMKHEClientHelper::decrypt(string &cipherString)
 
 MKResult SMKHEClientHelper::decryptMulti(string &cipherString, string &partial)
 {
-    throw("Not implemented");
+    MKResult result;
+
+    smkhe::Encoder encoder(params);
+    smkhe::MKCiphertext ciphertext;
+    smkhe::MKDecryptor decrytor(params);
+
+    ciphertext.deserialize(cipherString);
+
+    if (partial.size()) {
+        smkhe::PartialCiphertext partialCipher;
+        partialCipher.deserialize(partial);
+
+        smkhe::PartialCiphertext myPartial = decrytor.partialDecryption(ciphertext, 1, this -> secretKey);
+
+        vector<smkhe::PartialCiphertext> allPartials = {myPartial, partialCipher};
+        smkhe::Plaintext returnedPlaintext = decrytor.mergeDecryptions(ciphertext, allPartials);
+        result.result = encoder.decode(returnedPlaintext)[0].real();
+    } else {
+        smkhe::PartialCiphertext partialCipher = decrytor.partialDecryption(ciphertext, 2, this -> secretKey);
+        string serialized;
+        partialCipher.serialize(serialized);
+
+        result.halfCipher = serialized;
+    }
+ 
+    return result;
 }

@@ -1,5 +1,5 @@
 package dissertation.backend.config;
 
 public enum EncryptionType {
-  SEAL, LATTIGO, LATTIGO_MK
+  SINGLE, LATTIGO_MK, SMKHE_MK
 }

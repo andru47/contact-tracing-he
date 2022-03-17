@@ -89,12 +89,13 @@ JNIEXPORT jobject JNICALL Java_dissertation_backend_JNIBridge_getMultiKeyDistanc
 
     jcharArray computedCiphertext1 = env->NewCharArray(returned[0].size());
     env->SetCharArrayRegion(computedCiphertext1, 0, returned[0].size(), getJCharArrFromString(returned[0]));
-
-    jcharArray computedCiphertext2 = env->NewCharArray(returned[1].size());
-    env->SetCharArrayRegion(computedCiphertext2, 0, returned[1].size(), getJCharArrFromString(returned[1]));
-
     env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext1", "([C)V"), computedCiphertext1);
-    env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext2", "([C)V"), computedCiphertext2);
+
+    if (returned.size() > 1) {
+        jcharArray computedCiphertext2 = env->NewCharArray(returned[1].size());
+        env->SetCharArrayRegion(computedCiphertext2, 0, returned[1].size(), getJCharArrFromString(returned[1]));
+        env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext2", "([C)V"), computedCiphertext2);
+    }
 
     return toReturn;
 }
@@ -120,12 +121,13 @@ JNIEXPORT jobject JNICALL Java_dissertation_backend_JNIBridge_getMultiKeyAltitud
 
     jcharArray computedCiphertext1 = env->NewCharArray(returned[0].size());
     env->SetCharArrayRegion(computedCiphertext1, 0, returned[0].size(), getJCharArrFromString(returned[0]));
-
-    jcharArray computedCiphertext2 = env->NewCharArray(returned[1].size());
-    env->SetCharArrayRegion(computedCiphertext2, 0, returned[1].size(), getJCharArrFromString(returned[1]));
-
     env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext1", "([C)V"), computedCiphertext1);
-    env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext2", "([C)V"), computedCiphertext2);
+
+    if (returned.size() > 1) {
+        jcharArray computedCiphertext2 = env->NewCharArray(returned[1].size());
+        env->SetCharArrayRegion(computedCiphertext2, 0, returned[1].size(), getJCharArrFromString(returned[1]));
+        env->CallVoidMethod(toReturn, env->GetMethodID(cls, "setComputedCiphertext2", "([C)V"), computedCiphertext2);
+    }
 
     return toReturn;
 }

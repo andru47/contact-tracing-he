@@ -78,7 +78,7 @@ public class Controller {
   public static void addNewContactDistance(CiphertextWrapper distance, CiphertextWrapper altitudeDifference, String userId, String infectedLocationId, String locationId, String infectedUserId,
                                            String timestamp, String timestampEnd) {
     String sqlCommand = "INSERT INTO computed_distances(distance_ciphertext1, altitude_difference1, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
-    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+    if (Config.getEncryptionType() != EncryptionType.SINGLE) {
       sqlCommand = "INSERT INTO computed_distances(distance_ciphertext1, altitude_difference1, possible_contact_user_id, infected_location_id, location_id, timestamp, timestamp_end, infected_user_id, distance_ciphertext2, altitude_difference2) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     }
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand)) {
@@ -90,7 +90,10 @@ public class Controller {
       statement.setInt(6, Integer.parseInt(timestamp));
       statement.setInt(7, Integer.parseInt(timestampEnd));
       statement.setString(8, infectedUserId);
-      if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+      if (Config.getEncryptionType() == EncryptionType.SMKHE_MK) {
+        statement.setString(9, "");
+        statement.setString(10, "");
+      } else if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
         statement.setString(9, new String(distance.getComputedCiphertext2()));
         statement.setString(10, new String(altitudeDifference.getComputedCiphertext2()));
       }
@@ -136,16 +139,23 @@ public class Controller {
         "where possible_contact_user_id = ? \n" +
         "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
         "LIMIT 10";
-    if (!partial && Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+    if (!partial && Config.getEncryptionType() != EncryptionType.SINGLE) {
       sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext1, altitude_difference1, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference from computed_distances\n" +
           "where possible_contact_user_id = ? \n" +
           "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
           "LIMIT 10";
     } else if (partial) {
-      sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext2, altitude_difference2, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
-          "where infected_user_id = ? and downloaded=0 \n" +
-          "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
-          "LIMIT 10";
+      if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext2, altitude_difference2, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
+            "where infected_user_id = ? and downloaded=0 \n" +
+            "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
+            "LIMIT 10";
+      } else {
+        sqlCommand = "SELECT row_id, partial_distance, distance_ciphertext1, altitude_difference1, location_id, infected_location_id, infected_user_id, timestamp, timestamp_end, partial_altitude_difference, downloaded from computed_distances\n" +
+            "where infected_user_id = ? and downloaded=0 \n" +
+            "and location_id NOT IN(SELECT contact_loc_id from processed_distances where infected_loc_id = infected_location_id)\n" +
+            "LIMIT 10";
+      }
     }
     try (PreparedStatement statement = connection.prepareStatement(sqlCommand, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
       statement.setString(1, userId);
@@ -204,7 +214,7 @@ public class Controller {
   public static List<String> getUsersThatNeedToDownloadDistances() {
     String sqlCommand;
 
-    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+    if (Config.getEncryptionType() != EncryptionType.SINGLE) {
       sqlCommand = "SELECT unique cd.possible_contact_user_id, ft.token from computed_distances as cd\n" +
           "join fcm_tokens as ft on ft.user_id = cd.possible_contact_user_id\n" +
           "where cd.partial_altitude_difference is not null";
@@ -217,7 +227,7 @@ public class Controller {
   }
 
   public static List<String> getInfectedUsersThatNeedToHalfDecrypt() {
-    if (Config.getEncryptionType() != EncryptionType.LATTIGO_MK) {
+    if (Config.getEncryptionType() == EncryptionType.SINGLE) {
       return new ArrayList<>();
     }
 
