@@ -6,7 +6,7 @@ CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params
 
 void loadRelin(RelinKeys &relinKeys, SEALContext &context)
 {
-    ifstream f("assets/relinKey.bin", ios::binary);
+    ifstream f("assets/newRelinSEAL.bin", ios::binary);
     stringstream stream;
     stream << f.rdbuf();
     f.close();
@@ -82,6 +82,7 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     eval.rescale_to_next_inplace(sinLatProd);
     eval.relinearize_inplace(sinLatProd, relinKeys);
 
+    cout << "Intra2\n";
     Ciphertext havLat;
     cosLatProd.scale() = sinLatProd.scale();
     eval.mod_switch_to_inplace(cosLatProd, sinLatProd.parms_id());
@@ -94,6 +95,7 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     eval.add_plain_inplace(havLat, oneLat);
 
     Ciphertext cosLongProd;
+    cout << cosLong1.scale() << " " << cosLong2.scale() << '\n';
     eval.multiply(cosLong1, cosLong2, cosLongProd);
     eval.rescale_to_next_inplace(cosLongProd);
     eval.relinearize_inplace(cosLongProd, relinKeys);
@@ -103,6 +105,7 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     eval.rescale_to_next_inplace(sinLongProd);
     eval.relinearize_inplace(sinLongProd, relinKeys);
 
+    cout << "Intra3\n";
     Ciphertext havLong;
     cosLongProd.scale() = sinLongProd.scale();
     eval.mod_switch_to_inplace(cosLongProd, sinLongProd.parms_id());
@@ -113,16 +116,19 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     encoder.encode(1.0, havLong.scale(), oneLong);
     eval.mod_switch_to_inplace(oneLong, havLong.parms_id());
     eval.add_plain_inplace(havLong, oneLong);
-
+    cout << havLong.scale() << " " << cosLatProd.scale() << " " <<  havLong.coeff_modulus_size() << '\n';
     eval.multiply_inplace(havLong, cosLatProd);
+    cout << "DA\n";
     eval.rescale_to_next_inplace(havLong);
     eval.relinearize_inplace(havLong, relinKeys);
 
+    cout << "Intra4\n";
     Ciphertext result;
     havLat.scale() = havLong.scale();
     eval.mod_switch_to_inplace(havLat, havLong.parms_id());
     eval.add(havLat, havLong, result);
 
+    cout << "Intra5\n";
     stringstream resultStore;
 
     result.save(resultStore);

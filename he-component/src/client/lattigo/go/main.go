@@ -32,7 +32,7 @@ func loadPrivateKey(privateKeyString string, params ckks.Parameters) *rlwe.Secre
 }
 
 func loadCipher(cipherString string, params ckks.Parameters) *ckks.Ciphertext {
-	ciphertext := ckks.NewCiphertext(params, 1, 1, float64(1<<114))
+	ciphertext := ckks.NewCiphertext(params, 1, 0, float64(1<<60))
 	err := ciphertext.UnmarshalBinary([]byte(cipherString))
 
 	if err != nil {
@@ -44,12 +44,12 @@ func loadCipher(cipherString string, params ckks.Parameters) *ckks.Ciphertext {
 
 func getParams() ckks.Parameters {
 	params, err := ckks.NewParametersFromLiteral(ckks.ParametersLiteral{
-		LogN:     14,
-		Q:        []uint64{1152921504606748673, 576460752308273153, 576460752302473217, 576460752304439297},
-		P:        []uint64{576460752302080001},
+		LogN:     13,
+		Q:        []uint64{1152921504605962241, 1152921504606584833, 1152921504606683137},
+		P:        []uint64{0x7fffffffe0001, 0x80000001c0001, 0x80000002c0001, 0x7ffffffd20001},
 		Sigma:    rlwe.DefaultSigma,
 		LogSlots: 12,
-		Scale:    float64(1 << 57)})
+		Scale:    float64(1 << 60)})
 
 	if err != nil {
 		println("Error creating parameters")
@@ -74,7 +74,7 @@ func saveCipherToBytes(givenCipher *ckks.Ciphertext) []byte {
 }
 
 func loadRelin(relinString string, params ckks.Parameters) *rlwe.RelinearizationKey {
-	relinKey := rlwe.NewRelinKey(params.Parameters, 2)
+	relinKey := rlwe.NewRelinKey(params.Parameters, 1)
 
 	err := relinKey.UnmarshalBinary([]byte(relinString))
 
@@ -163,6 +163,15 @@ func saveMKRelinKeyToByte(rlk *mkrlwe.MKRelinearizationKey) []byte {
 	return data
 }
 
+func saveRelinKeyToByte(rlk *rlwe.RelinearizationKey) []byte {
+	data, err := rlk.MarshalBinary()
+	if err != nil {
+		println("Error saving mk rlk to string")
+	}
+
+	return data
+}
+
 //export generateKeysNative
 func generateKeysNative(publicKey, privateKey, mkRelinKey, mkPublicKey []byte) {
 	params := getParams()
@@ -183,6 +192,15 @@ func generateKeysNative(publicKey, privateKey, mkRelinKey, mkPublicKey []byte) {
 	copy(privateKey, saveSecretKeyToByte(kgen.SecretKey.Key))
 	copy(mkRelinKey, saveMKRelinKeyToByte(kgen.RelinKey))
 	copy(mkPublicKey, saveMKPublicKeyToByte(mkPub))
+	// kgen := ckks.NewKeyGenerator(params)
+
+	// sk := kgen.GenSecretKey()
+	// pubKeys := kgen.GenPublicKey(sk)
+	// evalKeys := kgen.GenRelinearizationKey(sk)
+
+	// copy(publicKey, savePublicKeyToByte(pubKeys))
+	// copy(privateKey, saveSecretKeyToByte(sk))
+	// copy(mkRelinKey, saveRelinKeyToByte(evalKeys))
 }
 
 //export decryptNative
@@ -208,7 +226,7 @@ func decryptHalfNative(givenCipher, givenPrivateKey string, cipher []byte) {
 	mkPrivateKey.PeerID = 2
 	decryptor := mkrlwe.NewMKDecryptor(&params.Parameters)
 	toBeDecrypted := loadCipher(givenCipher, params)
-	halfDecrypted := decryptor.PartDec(&toBeDecrypted.El().Element, 1, mkPrivateKey, 6.0)
+	halfDecrypted := decryptor.PartDec(&toBeDecrypted.El().Element, 0, mkPrivateKey, 6.0)
 	copy(cipher, saveRingPolyToBytes(halfDecrypted))
 }
 
@@ -222,10 +240,10 @@ func decryptFullNative(givenCipher, givenPart2, givenPrivateKey string) float64 
 	decryptor := mkrlwe.NewMKDecryptor(&params.Parameters)
 	toBeDecrypted := loadCipher(givenCipher, params)
 	halfResult := loadRingPolyFromBytes([]byte(givenPart2))
-	currentHalfResult := decryptor.PartDec(&toBeDecrypted.El().Element, 1, mkPrivateKey, 6.0)
+	currentHalfResult := decryptor.PartDec(&toBeDecrypted.El().Element, 0, mkPrivateKey, 6.0)
 
-	polyResult := decryptor.MergeDec(&toBeDecrypted.El().Element, 1, []*ring.Poly{currentHalfResult, halfResult})
-	plainResult := ckks.NewPlaintext(params, 1, toBeDecrypted.Scale())
+	polyResult := decryptor.MergeDec(&toBeDecrypted.El().Element, 0, []*ring.Poly{currentHalfResult, halfResult})
+	plainResult := ckks.NewPlaintext(params, 0, toBeDecrypted.Scale())
 	plainResult.SetValue(polyResult)
 
 	decoder := ckks.NewEncoder(params)

@@ -20,7 +20,7 @@ JNIEXPORT jcharArray JNICALL Java_dissertation_backend_JNIBridge_getDistanceWith
     vector<string> cipher1 = getCipherFromOjectArray(env, location1);
     vector<string> cipher2 = getCipherFromOjectArray(env, location2);
     string rlkString = getStringFromJ(env, rlk);
-    ofstream g("assets/relinKeySMKHE.bin", ios::binary);
+    ofstream g("assets/newRelinKeySMKHE.bin", ios::binary);
     stringstream stream(rlkString);
     g << stream.rdbuf();
     g.close();
