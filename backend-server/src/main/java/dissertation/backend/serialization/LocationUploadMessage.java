@@ -1,6 +1,6 @@
 package dissertation.backend.serialization;
 
-public class UploadDistanceMessage {
+public class LocationUploadMessage {
   private String id, latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude, timestamp;
 
   public String getLongitudeSin() {

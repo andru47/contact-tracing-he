@@ -6,7 +6,7 @@ import dissertation.backend.config.EncryptionType;
 import dissertation.backend.serialization.ContactMessage;
 import dissertation.backend.serialization.NewKeysMessage;
 import dissertation.backend.serialization.NewPartialMessage;
-import dissertation.backend.serialization.UploadDistanceMessage;
+import dissertation.backend.serialization.LocationUploadMessage;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -238,7 +238,7 @@ public class Controller {
     return getListFromSqlResult(sqlCommand);
   }
 
-  public static void uploadNewLocation(UploadDistanceMessage message) {
+  public static void uploadNewLocation(LocationUploadMessage message) {
     updateEndTimestampForLastRecord(message.getId(), message.getTimestamp());
     try (PreparedStatement statement = connection.prepareStatement(SQL_INSERT_QUERY)) {
       statement.setString(1, message.getLatitudeCos());
