@@ -6,7 +6,7 @@ CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params
 
 void loadRelin(RelinKeys &relinKeys, SEALContext &context)
 {
-    ifstream f("assets/newRelinSEAL.bin", ios::binary);
+    ifstream f("assets/relinKey.bin", ios::binary);
     stringstream stream;
     stream << f.rdbuf();
     f.close();
