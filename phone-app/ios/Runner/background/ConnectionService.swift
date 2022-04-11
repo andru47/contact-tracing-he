@@ -8,7 +8,7 @@
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://127.0.0.1:8080/"
+    private static let URL_STRING: String = "http://192.168.1.149:8080/"
     
     public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
         var url: String = URL_STRING
@@ -54,7 +54,6 @@ class ConnectionService {
     }
     
     private static func postObjectWithResp(json: Data, endpoint: String) -> String {
-        print("intra")
         var request: URLRequest = URLRequest(url: URL(string: URL_STRING + endpoint)!)
         var resp:String = ""
         request.httpMethod = "POST"

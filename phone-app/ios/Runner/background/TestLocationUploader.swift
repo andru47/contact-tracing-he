@@ -75,6 +75,7 @@ class TestLocationUploader {
             }
             
             if (Config.isAccuracyMeasurementEnabled()) {
+                var outputCSV: String = "distance,dec_distance,abs_diff\n"
                 let partialDecryption: Bool = false
                 let cipher = bridge.encrypt(0, latSin: 0, longCos: 0, longSin: 0, alt: 1.0, pubKey: pubKey)[0] // Used to load pubKey
                 bridge.decrypt(cipher, privateKey: privateKey) // Used to load privateKey
@@ -84,11 +85,14 @@ class TestLocationUploader {
                 for ciphertext in givenCiphertexts {
                     if (!partialDecryption) {
                         var initialResult: Double = 0
+                        var alt: Double = 0
                         startTimestampDecrypt = Date().timeIntervalSince1970 * 1000
                         if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
                             initialResult = Double(truncating: bridge.decryptMulti(ciphertext.ciphertext, partialCipher: ciphertext.partialDistance, privateKey: privateKey, isFinal: true) as! NSNumber)
+                            alt = Double(truncating: bridge.decryptMulti(ciphertext.altitudeDifference, partialCipher: ciphertext.partialAltitudeDifference, privateKey: privateKey, isFinal: true) as! NSNumber)
                         } else {
                             initialResult = bridge.decrypt(ciphertext.ciphertext, privateKey: privateKey)
+                            alt = bridge.decrypt(ciphertext.altitudeDifference, privateKey: privateKey)
                         }
                         timingsDecrypt.append(Date().timeIntervalSince1970 * 1000 - startTimestampDecrypt)
                         initialResult = asin(sqrt(initialResult / 2.0)) * 6371 * 2.0 * 1000
@@ -96,6 +100,7 @@ class TestLocationUploader {
                         if (initialResult.isNaN) {
                             initialResult = 0
                         }
+                        outputCSV += "\(locations[Int(ciphertext.timestamp)].distance),\(initialResult),\(abs(initialResult - locations[Int(ciphertext.timestamp)].distance))\n"
                         measurements.append(abs(initialResult - locations[Int(ciphertext.timestamp)].distance))
                     } else {
                         startTimestampDecrypt = Date().timeIntervalSince1970 * 1000
@@ -108,6 +113,7 @@ class TestLocationUploader {
                         ConnectionService.sendNewPartial(partialMessage: NewPartialMessage(partialDistance: partialStringDistance, partialAltitudeDifference: partialStringAltitudeDifference, rowId: ciphertext.rowId))
                     }
                 }
+                print(outputCSV)
             }
             
             logMeasurements(timings: timingsEncrypt, name: "ENCRYPT")

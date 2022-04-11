@@ -34,53 +34,15 @@ import Firebase
     
     GeneratedPluginRegistrant.register(with: self)
 
-//    if (Config.isUploadTestLocationsEnabled()) {
-//      TestLocationUploader.readLocationsAndUploadEncrypted()
-//    } else if (Config.isAccuracyMeasurementEnabled()) {
-//      TestLocationUploader.readLocationsAndCalculateAccuracy()
-//    } else {
-//      registerForNotifications(application: application)
-//      registerForLocation()
-//    }
-    let latitudeCos: Double = cos(Double.pi * 54.13557822 / 180.0)
-    let latitudeSin: Double = sin(Double.pi * 54.13557822 / 180.0)
-    let longitudeCos: Double = cos(Double.pi * -1.281623256 / 180.0)
-    let longitudeSin: Double = sin(Double.pi * -1.281623256 / 180.0)
-    let latitudeCos2: Double = cos(Double.pi * 54.13571531 / 180.0)
-    let latitudeSin2: Double = sin(Double.pi * 54.13571531 / 180.0)
-    let longitudeCos2: Double = cos(Double.pi * -1.281632508 / 180.0)
-    let longitudeSin2: Double = sin(Double.pi * -1.281632508 / 180.0)
-    DispatchQueue.global(qos: .background).async {
-//      while (true) {
-        let wrapper: HeBridgeWrapper = HeBridgeWrapper()
-////        wrapper.generateKeys()
-////        let priv: String = wrapper.getPrivateKey()
-////        let pub: String = wrapper.getPublicKey()
-////        let rlk: String = wrapper.getRelinKey()
-////        Util.writeKeyTo(name: "privs.bin", value: priv)
-////        Util.writeKeyTo(name: "pubs.bin", value: pub)
-        let ciphers : Array<String> = wrapper.encrypt(latitudeCos, latSin: latitudeSin, longCos: longitudeCos, longSin: longitudeSin, alt: 0, pubKey: Util.getPublicKey())
-        let ciphers2 : Array<String> = wrapper.encrypt(latitudeCos2, latSin: latitudeSin2, longCos: longitudeCos2, longSin: longitudeSin2, alt: 5, pubKey: Util.getPublicKey())
-//  
-        let ret: String = ConnectionService.sendJSONBody(message: JSONBody(latitudeCos1: ciphers[0], latitudeSin1: ciphers[1], longitudeCos1: ciphers[2], longitudeSin1: ciphers[3], latitudeCos2: ciphers2[0], latitudeSin2: ciphers2[1], longitudeCos2: ciphers2[2], longitudeSin2: ciphers2[3], rlk: ""))
-        var res: Double = wrapper.decrypt(ret, privateKey: Util.getPrivateKey())
-        res = asin(sqrt(res / 2.0)) * 6371 * 2.0 * 1000
-        print("GOT \(res)")
-//        if (abs(res - 11.02) < 1) {
-//          break
-//        }
-//      }
+    if (Config.isUploadTestLocationsEnabled()) {
+      TestLocationUploader.readLocationsAndUploadEncrypted()
+    } else if (Config.isAccuracyMeasurementEnabled()) {
+      TestLocationUploader.readLocationsAndCalculateAccuracy()
+    } else {
+      registerForNotifications(application: application)
+      registerForLocation()
     }
-//    let givenCiphertexts : Array<NewDistanceMessage> = ConnectionService.getDistances(userId: "first", partial: false)
-//    var initialResult = Double(truncating: bridge.decryptMulti(givenCiphertexts[0].ciphertext, partialCipher: givenCiphertexts[0].partialDistance, privateKey: Util.getPrivateKey(), isFinal: true) as! NSNumber)
-//    initialResult = asin(sqrt(initialResult / 2.0)) * 6371 * 2.0 * 1000
-//    print(initialResult)
-//    var altitude = Double(truncating: bridge.decryptMulti(givenCiphertexts[0].altitudeDifference, partialCipher: givenCiphertexts[0].partialAltitudeDifference, privateKey: Util.getPrivateKey(), isFinal: true) as! NSNumber)
-//    print(altitude)
-//    let partialStringDistance: String = bridge.decryptMulti(givenCiphertexts[0].ciphertext, partialCipher: "", privateKey: Util.getPrivateKey(), isFinal: false) as! String
-//    let partialStringAltitudeDifference: String = bridge.decryptMulti(givenCiphertexts[0].altitudeDifference, partialCipher: "", privateKey: Util.getPrivateKey(), isFinal: false) as! String
-//    ConnectionService.sendNewPartial(partialMessage: NewPartialMessage(partialDistance: partialStringDistance, partialAltitudeDifference: partialStringAltitudeDifference, rowId: givenCiphertexts[0].rowId))
-//    ConnectionService.sendNewLocation(message: LocationUploadMessage(latitudeCos: ciphers2[0], latitudeSin: ciphers2[1], longitudeCos: ciphers2[2], longitudeSin: ciphers2[3], altitude: ciphers2[4], id: Util.getUuid(), timestamp:String(format: "%lu", UInt64(NSDate().timeIntervalSince1970))))
+
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let heBridgeChannel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller.binaryMessenger)
     
