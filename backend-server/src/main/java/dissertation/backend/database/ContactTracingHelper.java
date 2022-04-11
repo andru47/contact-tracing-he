@@ -192,6 +192,7 @@ public class ContactTracingHelper {
           startTimestamp = currentTimeMillis();
         }
         service.submit(() -> getDistanceAndUpdateDatabase(valueForColumn, keysMap));
+//        getDistanceAndUpdateDatabase(valueForColumn, keysMap);
         if (Config.isTimingEnabled()) {
           timings.add(currentTimeMillis() - startTimestamp);
         }

@@ -42,7 +42,7 @@ import Firebase
       registerForNotifications(application: application)
       registerForLocation()
     }
-    
+
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
     let heBridgeChannel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller.binaryMessenger)
     

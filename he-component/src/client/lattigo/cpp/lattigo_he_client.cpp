@@ -21,7 +21,7 @@ LattigoClientHelper::LattigoClientHelper()
 vector<string> LattigoClientHelper::encrypt(
     double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin, double altitude)
 {
-    vector<vector<char>> ret(5, vector<char>(1048591));
+    vector<vector<char>> ret(5, vector<char>(393231));
     vector<GoSlice> goSliceVec = { getGoSlice(ret[0]), getGoSlice(ret[1]), getGoSlice(ret[2]), getGoSlice(ret[3]),
                                    getGoSlice(ret[4]) };
     GoString *pubKeyGo = getGoStringFromString(publicKey);
@@ -38,8 +38,8 @@ vector<string> LattigoClientHelper::encrypt(
 
 void LattigoClientHelper::generateKeys()
 {
-    vector<char> keys[4] = { vector<char>(1310726), vector<char>(655362), vector<char>(10485795),
-                             vector<char>(5242928) };
+    vector<char> keys[4] = { vector<char>(917508), vector<char>(458754), vector<char>(1376296),
+                             vector<char>(917542) };
     GoSlice publicKeyGo =
         GoSlice{ keys[0].data(), static_cast<GoInt>(keys[0].size()), static_cast<GoInt>(keys[0].size()) };
     GoSlice secretKeyGo =
@@ -115,7 +115,7 @@ MKResult LattigoClientHelper::decryptMulti(string &cipherString, string &partial
     }
     else
     {
-        vector<char> halfDecrypted(262146);
+        vector<char> halfDecrypted(65538);
         decryptHalfNative(
             *goCipherString, *goPrivateKey,
             GoSlice{ halfDecrypted.data(), static_cast<GoInt>(halfDecrypted.size()),

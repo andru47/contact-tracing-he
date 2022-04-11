@@ -5,7 +5,7 @@ import java.io.File;
 public class JNIBridge {
   static {
     try {
-      File libraryFile = new File(System.getProperty("user.dir") + "/../he-component/bridge/jni/" + System.mapLibraryName("HELib"));
+      File libraryFile = new File(System.getProperty("user.dir") + "/../he-component/bridge/server/" + System.mapLibraryName("HELib"));
       System.load(libraryFile.getAbsolutePath());
     } catch (Error | Exception e) {
       e.printStackTrace();

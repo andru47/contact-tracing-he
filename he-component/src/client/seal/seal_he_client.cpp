@@ -107,7 +107,10 @@ void CKKSClientHelper::loadPrivateKeyFromClient(string &privateKeyString)
 
 void CKKSClientHelper::generateKeys()
 {
-    throw("NOT IMPLEMENTED");
+    KeyGenerator generator(context);
+    this->secretKey = generator.secret_key();
+    generator.create_public_key(this->publicKey);
+    generator.create_relin_keys(this->relinKeys);
 }
 
 MKResult CKKSClientHelper::decryptMulti(string &cipherString, string &partial)

@@ -51,7 +51,7 @@ string LattigoServerHelper::compute(vector<string> &cipher1, vector<string> &cip
     GoSlice goCiphers2 = getGoSliceFromVector(cipher2);
     GoString *rlkGo = getGoStringFromString(rlk);
 
-    vector<char> outputCipher(524303);
+    vector<char> outputCipher(131087);
 
     computeNative(
         goCiphers1, goCiphers2, *rlkGo,
@@ -70,7 +70,7 @@ string LattigoServerHelper::computeAltitudeDifference(string &cipher1, string &c
     GoString *goCipher1 = getGoStringFromString(cipher1);
     GoString *goCipher2 = getGoStringFromString(cipher2);
     GoString *rlkGo = getGoStringFromString(rlk);
-    vector<char> outputCipher(1048591);
+    vector<char> outputCipher(393231);
 
     computeAltitudeDifferenceNative(
         *goCipher1, *goCipher2, *rlkGo,
@@ -93,7 +93,7 @@ vector<string> LattigoServerHelper::computeMulti(
     GoString *goRlk1 = getGoStringFromString(rlk1);
     GoString *goPubKey2 = getGoStringFromString(pubKey2);
     GoString *goRlk2 = getGoStringFromString(rlk2);
-    vector<char> outputCipher1(524303), outputCipher2(524303);
+    vector<char> outputCipher1(131087), outputCipher2(131087);
 
     computeMultiNative(
         goCiphers1, goCiphers2, *goPubKey1, *goRlk1, *goPubKey2, *goRlk2,
@@ -121,7 +121,7 @@ vector<string> LattigoServerHelper::computeAltitudeDifferenceMulti(
     GoString *goRlk1 = getGoStringFromString(rlk1);
     GoString *goPubKey2 = getGoStringFromString(pubKey2);
     GoString *goRlk2 = getGoStringFromString(rlk2);
-    vector<char> outputCipher1(1048591), outputCipher2(1048591);
+    vector<char> outputCipher1(393231), outputCipher2(393231);
 
     computeAltitudeDifferenceMultiNative(
         *goCipher1, *goCipher2, *goPubKey1, *goRlk1, *goPubKey2, *goRlk2,

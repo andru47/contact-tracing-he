@@ -10,7 +10,7 @@ import (
 )
 
 func loadCipher(cipherString string, params ckks.Parameters) *ckks.Ciphertext {
-	ciphertext := ckks.NewCiphertext(params, 1, 3, float64(1<<57))
+	ciphertext := ckks.NewCiphertext(params, 1, 2, float64(1<<60))
 	err := ciphertext.UnmarshalBinary([]byte(cipherString))
 
 	//TODO - Add logging
@@ -22,7 +22,7 @@ func loadCipher(cipherString string, params ckks.Parameters) *ckks.Ciphertext {
 }
 
 func loadRelin(relinString string, params ckks.Parameters) *rlwe.RelinearizationKey {
-	relinKey := rlwe.NewRelinKey(params.Parameters, 2)
+	relinKey := rlwe.NewRelinKey(params.Parameters, 1)
 
 	err := relinKey.UnmarshalBinary([]byte(relinString))
 
@@ -44,12 +44,12 @@ func loadCiphers(cipherArray []string, params ckks.Parameters) []*ckks.Ciphertex
 
 func getParams() ckks.Parameters {
 	params, err := ckks.NewParametersFromLiteral(ckks.ParametersLiteral{
-		LogN:     14,
-		Q:        []uint64{1152921504606748673, 576460752308273153, 576460752302473217, 576460752304439297},
-		P:        []uint64{576460752302080001},
+		LogN:     13,
+		Q:        []uint64{1152921504605962241, 1152921504606584833, 1152921504606683137},
+		P:        []uint64{0x7fffffffe0001, 0x80000001c0001, 0x80000002c0001, 0x7ffffffd20001},
 		Sigma:    rlwe.DefaultSigma,
 		LogSlots: 12,
-		Scale:    float64(1 << 57)})
+		Scale:    float64(1 << 60)})
 
 	if err != nil {
 		println("Error creating parameters")
@@ -176,6 +176,7 @@ func computeMultiNative(cipher1, cipher2 []string, pubKey1S, rlk1S, pubKey2S, rl
 
 	newHavLong := evaluator.Mul(havLong, cosLatProd)
 	evaluator.RelinInPlace(newHavLong, evalKeys, pubKeys)
+	evaluator.DropLevel(newHavLong, 1)
 	evaluator.Rescale(newHavLong, newHavLong)
 
 	res := evaluator.Add(newHavLong, havLat)
