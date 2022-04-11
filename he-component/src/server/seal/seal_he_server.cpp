@@ -113,7 +113,7 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     encoder.encode(1.0, havLong.scale(), oneLong);
     eval.mod_switch_to_inplace(oneLong, havLong.parms_id());
     eval.add_plain_inplace(havLong, oneLong);
- 
+
     eval.multiply_inplace(havLong, cosLatProd);
     eval.rescale_to_next_inplace(havLong);
     eval.relinearize_inplace(havLong, relinKeys);
