@@ -53,6 +53,19 @@ public class SimpleController {
     return "Location uploaded successfully";
   }
 
+  @PostMapping("/upload-location-history")
+  public String uploadLocationHistory(@RequestBody String jsonBody) {
+    LocationHistoryMessage[] locations = gson.fromJson(jsonBody, LocationHistoryMessage[].class);
+    Controller.addNewLocationHistory(locations);
+    return "Location history uploaded successfully";
+  }
+
+  @GetMapping("/get-infection-index")
+  @ResponseBody
+  public String getInfectionIndex(@RequestParam Double latitude, @RequestParam Double longitude) {
+    return String.valueOf(Controller.getNumberOfNearbyLocations(latitude, longitude));
+  }
+
   @PostMapping("/upload-fcm-token")
   public String uploadFCMToken(@RequestBody String jsonBody) {
     NewTokenMessage tokenMessage = gson.fromJson(jsonBody, NewTokenMessage.class);

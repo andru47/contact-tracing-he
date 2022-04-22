@@ -3,10 +3,7 @@ package dissertation.backend.database;
 import dissertation.backend.CiphertextWrapper;
 import dissertation.backend.config.Config;
 import dissertation.backend.config.EncryptionType;
-import dissertation.backend.serialization.ContactMessage;
-import dissertation.backend.serialization.NewKeysMessage;
-import dissertation.backend.serialization.NewPartialMessage;
-import dissertation.backend.serialization.UploadDistanceMessage;
+import dissertation.backend.serialization.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -165,6 +162,39 @@ public class Controller {
     }
 
     return null;
+  }
+
+  public static void addNewLocationHistory(LocationHistoryMessage[] givenLocations) {
+    try (Statement statement = connection.createStatement()) {
+      for (int index = 0; index < givenLocations.length; ++index) {
+        System.out.println(givenLocations[index].getLongitude());
+        System.out.println(givenLocations[index].getLatitude());
+        String sqlCommand = "INSERT INTO location_history(location, timestamp) VALUES(ST_GeomFromText('POINT(%.16f %.16f)'), %d)";
+        System.out.println(String.format(sqlCommand, givenLocations[index].getLongitude(), givenLocations[index].getLatitude(), givenLocations[index].getLocationTimestamp()));
+        statement.addBatch(String.format(sqlCommand, givenLocations[index].getLongitude(), givenLocations[index].getLatitude(), givenLocations[index].getLocationTimestamp()));
+      }
+      statement.executeBatch();
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+  }
+
+  public static int getNumberOfNearbyLocations(double latitude, double longitude) {
+    System.out.println(longitude);
+    System.out.println(latitude);
+    String sqlSetCommand = String.format("SET @currentPoint = ST_GeomFromText('POINT(%.16f %.16f)')", longitude, latitude);
+    String sqlCommand = "SELECT COUNT(*) from location_history\n" +
+                        "where ST_Distance_Sphere(location, @currentPoint) <= 105";
+    try (Statement statement = connection.createStatement()) {
+      statement.execute(sqlSetCommand);
+      try (ResultSet resultSet = statement.executeQuery(sqlCommand)) {
+        resultSet.next();
+        return resultSet.getInt(1);
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+    }
+    return 0;
   }
 
   public static void addNewContact(ContactMessage message) {
