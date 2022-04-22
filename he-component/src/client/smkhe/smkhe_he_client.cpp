@@ -3,7 +3,7 @@
 
 SMKHEClientHelper::SMKHEClientHelper()
     : params(
-          (1ULL << 60), 16384, { 1152921504605962241, 1152921504606584833, 1152921504606683137 },
+          (1ULL << 60), 8192, { 1152921504605962241, 1152921504606584833, 1152921504606683137 },
           { 0x7fffffffe0001, 0x80000001c0001, 0x80000002c0001, 0x7ffffffd20001 })
 {}
 
@@ -14,6 +14,10 @@ void SMKHEClientHelper::generateKeys()
     this -> mkPublicKey = keygen.generatePublicKey();
     this -> pubKey = this -> mkPublicKey.getPublicKey();
     this -> evk = keygen.generateEvaluationKey(mkPublicKey);
+    // smkhe::Keygen keygen(params);
+    // this -> secretKey = keygen.generateSecretKey();
+    // this -> pubKey = keygen.generatePublicKey();
+    // this -> evkSingle = keygen.generateEvaluationKey();
 }
 
 string SMKHEClientHelper::getRelinKeys()

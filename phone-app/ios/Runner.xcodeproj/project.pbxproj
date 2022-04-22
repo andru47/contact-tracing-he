@@ -29,15 +29,14 @@
 		64635837277E073700F8FC08 /* client_base.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64635836277E073700F8FC08 /* client_base.cpp */; };
 		64635839277E074D00F8FC08 /* seal_he_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64635838277E074D00F8FC08 /* seal_he_client.cpp */; };
 		6467E25E2783AA8000940DFF /* lattigo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6467E25D2783AA8000940DFF /* lattigo.a */; };
-		6467E2612783AC1A00940DFF /* privateKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */; };
-		6467E2622783AC1A00940DFF /* pubKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */; };
 		648247A2278F5E7F009F1C51 /* test-locations.json in Resources */ = {isa = PBXBuildFile; fileRef = 648247A1278F5E7F009F1C51 /* test-locations.json */; };
 		648247A4278F5F1D009F1C51 /* NewSavedLocations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648247A3278F5F1D009F1C51 /* NewSavedLocations.swift */; };
 		648247A6278F5FD9009F1C51 /* TestLocationUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648247A5278F5FD9009F1C51 /* TestLocationUploader.swift */; };
-		649B53EE2790890F002B3934 /* test-locations-15-75m.json in Resources */ = {isa = PBXBuildFile; fileRef = 649B53ED2790890F002B3934 /* test-locations-15-75m.json */; };
 		649B53F027908C8F002B3934 /* test-locations-75m-more.json in Resources */ = {isa = PBXBuildFile; fileRef = 649B53EF27908C8F002B3934 /* test-locations-75m-more.json */; };
 		649C759127E3E9C2002AC994 /* LocationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759027E3E9C2002AC994 /* LocationEntity.swift */; };
 		649C759327E3F53C002AC994 /* StorageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759227E3F53C002AC994 /* StorageController.swift */; };
+		64C4F41B27EE06F4001A8139 /* privateKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64C4F41927EE06F4001A8139 /* privateKeyLattigo.bin */; };
+		64C4F41C27EE06F4001A8139 /* pubKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64C4F41A27EE06F4001A8139 /* pubKeyLattigo.bin */; };
 		64C6975F2768F4DE00134429 /* ContactMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C6975E2768F4DE00134429 /* ContactMessage.swift */; };
 		64C697612768F4EC00134429 /* LocationUploadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697602768F4EC00134429 /* LocationUploadMessage.swift */; };
 		64C697632768F4FA00134429 /* NewTokenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697622768F4FA00134429 /* NewTokenMessage.swift */; };
@@ -45,6 +44,8 @@
 		64D578AD276A43CC0052863E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 64D578AC276A43CB0052863E /* GoogleService-Info.plist */; };
 		64D7B920276A4DAC009FEDA8 /* CiphertextWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D7B91F276A4DAC009FEDA8 /* CiphertextWrapper.swift */; };
 		64DC9D3B2772258800478A4C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */; };
+		64DB458527F4E76F002F0A47 /* test-locations-10-75m.json in Resources */ = {isa = PBXBuildFile; fileRef = 64DB458427F4E76F002F0A47 /* test-locations-10-75m.json */; };
+		64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* FirebaseMessaging */; };
 		64EB114B271CC0070016C9DA /* he_bridge_wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 64EB114A271CC0070016C9DA /* he_bridge_wrapper.mm */; };
 		64EB74002804987400489654 /* LocationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EB73FF2804987400489654 /* LocationModifier.swift */; };
 		64F07A6927BDB2C300B329A5 /* privateKeySMKHE.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64F07A6727BDB2C300B329A5 /* privateKeySMKHE.bin */; };
@@ -110,15 +111,14 @@
 		6467E2582783A63E00940DFF /* lib_lattigo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lib_lattigo.a; path = "../../he-component/src/client/lattigo/go/build/lib_lattigo.a"; sourceTree = "<group>"; };
 		6467E25A2783A9B500940DFF /* x86_64.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = x86_64.a; path = "../../he-component/src/client/lattigo/go/build/x86_64.a"; sourceTree = "<group>"; };
 		6467E25D2783AA8000940DFF /* lattigo.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = lattigo.a; path = "../../he-component/src/client/lattigo/go/build/lattigo.a"; sourceTree = "<group>"; };
-		6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = privateKeyLattigo.bin; sourceTree = "<group>"; };
-		6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKeyLattigo.bin; sourceTree = "<group>"; };
 		648247A1278F5E7F009F1C51 /* test-locations.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations.json"; sourceTree = "<group>"; };
 		648247A3278F5F1D009F1C51 /* NewSavedLocations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewSavedLocations.swift; sourceTree = "<group>"; };
 		648247A5278F5FD9009F1C51 /* TestLocationUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLocationUploader.swift; sourceTree = "<group>"; };
-		649B53ED2790890F002B3934 /* test-locations-15-75m.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-15-75m.json"; sourceTree = "<group>"; };
 		649B53EF27908C8F002B3934 /* test-locations-75m-more.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-75m-more.json"; sourceTree = "<group>"; };
 		649C759027E3E9C2002AC994 /* LocationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEntity.swift; sourceTree = "<group>"; };
 		649C759227E3F53C002AC994 /* StorageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageController.swift; sourceTree = "<group>"; };
+		64C4F41927EE06F4001A8139 /* privateKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = privateKeyLattigo.bin; sourceTree = "<group>"; };
+		64C4F41A27EE06F4001A8139 /* pubKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKeyLattigo.bin; sourceTree = "<group>"; };
 		64C6975E2768F4DE00134429 /* ContactMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessage.swift; sourceTree = "<group>"; };
 		64C697602768F4EC00134429 /* LocationUploadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUploadMessage.swift; sourceTree = "<group>"; };
 		64C697622768F4FA00134429 /* NewTokenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTokenMessage.swift; sourceTree = "<group>"; };
@@ -129,6 +129,7 @@
 		64D7B923276A5449009FEDA8 /* example */ = {isa = PBXFileReference; lastKnownFileType = folder; name = example; path = ../android/app/src/main/java/com/example; sourceTree = "<group>"; };
 		64D7B925276A58D1009FEDA8 /* libseal.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libseal.a; path = ../../../SEAL/build/lib/libseal.a; sourceTree = "<group>"; };
 		64D7B926276A58D1009FEDA8 /* libsealc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsealc.a; path = ../../../SEAL/build/lib/libsealc.a; sourceTree = "<group>"; };
+		64DB458427F4E76F002F0A47 /* test-locations-10-75m.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-10-75m.json"; sourceTree = "<group>"; };
 		64EB1149271CBF1E0016C9DA /* he_bridge_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = he_bridge_wrapper.h; path = "../../../he-component/bridge/ios/he_bridge_wrapper.h"; sourceTree = "<group>"; };
 		64EB114A271CC0070016C9DA /* he_bridge_wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = he_bridge_wrapper.mm; path = "../../../he-component/bridge/ios/he_bridge_wrapper.mm"; sourceTree = "<group>"; };
 		64EB73FF2804987400489654 /* LocationModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModifier.swift; sourceTree = "<group>"; };
@@ -197,13 +198,13 @@
 		641DB2DD2768FD24009FE965 /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				64DB458427F4E76F002F0A47 /* test-locations-10-75m.json */,
+				64C4F41927EE06F4001A8139 /* privateKeyLattigo.bin */,
+				64C4F41A27EE06F4001A8139 /* pubKeyLattigo.bin */,
 				64F07A6727BDB2C300B329A5 /* privateKeySMKHE.bin */,
 				64F07A6827BDB2C300B329A5 /* pubKeySMKHE.bin */,
 				649B53EF27908C8F002B3934 /* test-locations-75m-more.json */,
-				649B53ED2790890F002B3934 /* test-locations-15-75m.json */,
 				648247A1278F5E7F009F1C51 /* test-locations.json */,
-				6467E25F2783AC1A00940DFF /* privateKeyLattigo.bin */,
-				6467E2602783AC1A00940DFF /* pubKeyLattigo.bin */,
 				641DB2E12768FDC6009FE965 /* privateKey.bin */,
 				641DB2E02768FDC6009FE965 /* pubKey.bin */,
 			);
@@ -405,17 +406,17 @@
 			files = (
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
+				64C4F41B27EE06F4001A8139 /* privateKeyLattigo.bin in Resources */,
 				648247A2278F5E7F009F1C51 /* test-locations.json in Resources */,
 				64F07A6927BDB2C300B329A5 /* privateKeySMKHE.bin in Resources */,
 				649B53F027908C8F002B3934 /* test-locations-75m-more.json in Resources */,
 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
-				649B53EE2790890F002B3934 /* test-locations-15-75m.json in Resources */,
-				6467E2622783AC1A00940DFF /* pubKeyLattigo.bin in Resources */,
 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
-				6467E2612783AC1A00940DFF /* privateKeyLattigo.bin in Resources */,
 				641DB2E22768FDC7009FE965 /* pubKey.bin in Resources */,
 				641DB2E32768FDC7009FE965 /* privateKey.bin in Resources */,
 				64F07A6A27BDB2C300B329A5 /* pubKeySMKHE.bin in Resources */,
+				64DB458527F4E76F002F0A47 /* test-locations-10-75m.json in Resources */,
+				64C4F41C27EE06F4001A8139 /* pubKeyLattigo.bin in Resources */,
 				64D578AD276A43CC0052863E /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
