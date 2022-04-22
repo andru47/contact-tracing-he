@@ -15,7 +15,7 @@
         android:largeHeap="true"
         android:networkSecurityConfig="@xml/network_security_config">
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBgdmnrdV3KMxa2V_2S7rYKIqx4unIi53U"/>
+            android:value=""/>
         <service
             android:name=".background.NotificationService"
             android:exported="false">

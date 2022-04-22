@@ -4,7 +4,7 @@ import 'package:he_contact_tracing/util/suggested_place.dart';
 import 'package:http/http.dart' as http;
 
 class GooglePlaces {
-  static const GOOGLE_API_KEY = "AIzaSyBgdmnrdV3KMxa2V_2S7rYKIqx4unIi53U";
+  static const GOOGLE_API_KEY = "";
   static const AUTOCOMPLETE_URL =
       "https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${GOOGLE_API_KEY}&input=";
   static const REVERSE_LOC_URL =

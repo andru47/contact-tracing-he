@@ -33,7 +33,7 @@ import GoogleMaps
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    GMSServices.provideAPIKey("AIzaSyBgdmnrdV3KMxa2V_2S7rYKIqx4unIi53U")
+    GMSServices.provideAPIKey("")
     GeneratedPluginRegistrant.register(with: self)
 
     if (Config.isUploadTestLocationsEnabled()) {
