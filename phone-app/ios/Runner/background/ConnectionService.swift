@@ -8,7 +8,7 @@
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://10.4.1.86:8080/"
+    private static let URL_STRING: String = "http://127.0.0.1:8080/"
     
     public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
         var url: String = URL_STRING
@@ -81,5 +81,11 @@ class ConnectionService {
         let json: Data = try! JSONEncoder().encode(partialMessage)
         
         postObject(json: json, endpoint: "new-partial-distance")
+    }
+    
+    public static func sendLocationHistory(message: [LocationEntity]) {
+        let json: Data = try! JSONEncoder().encode(message)
+        print("Sending \(String(decoding:json, as: UTF8.self))")
+        postObject(json: json, endpoint: "upload-location-history")
     }
 }

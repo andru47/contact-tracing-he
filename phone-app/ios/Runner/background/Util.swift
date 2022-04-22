@@ -132,7 +132,7 @@ class Util {
         }
     }
     
-    public static func getIsolationEnd() -> UInt64 {
+    public static func getIsolationEnd(appDelegate: AppDelegate) -> UInt64 {
         if (isolationEnd == nil) {
             isolationEnd = UserDefaults.standard.object(forKey: SHARED_PREFERENCES_ISO_END_KEY) as? UInt64
         }
@@ -140,6 +140,11 @@ class Util {
         if (isolationEnd == nil) {
             return 0
         } else {
+            if (isolationEnd! < UInt64(NSDate().timeIntervalSince1970)) {
+                setIsolationEnd(isolationEnd: 0)
+                isolationEnd = 0
+                appDelegate.registerForLocation()
+            }
             return isolationEnd!
         }
     }

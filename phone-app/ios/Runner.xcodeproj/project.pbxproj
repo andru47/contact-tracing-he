@@ -36,21 +36,26 @@
 		648247A6278F5FD9009F1C51 /* TestLocationUploader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648247A5278F5FD9009F1C51 /* TestLocationUploader.swift */; };
 		649B53EE2790890F002B3934 /* test-locations-15-75m.json in Resources */ = {isa = PBXBuildFile; fileRef = 649B53ED2790890F002B3934 /* test-locations-15-75m.json */; };
 		649B53F027908C8F002B3934 /* test-locations-75m-more.json in Resources */ = {isa = PBXBuildFile; fileRef = 649B53EF27908C8F002B3934 /* test-locations-75m-more.json */; };
+		649C759127E3E9C2002AC994 /* LocationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759027E3E9C2002AC994 /* LocationEntity.swift */; };
+		649C759327E3F53C002AC994 /* StorageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759227E3F53C002AC994 /* StorageController.swift */; };
 		64C6975F2768F4DE00134429 /* ContactMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C6975E2768F4DE00134429 /* ContactMessage.swift */; };
 		64C697612768F4EC00134429 /* LocationUploadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697602768F4EC00134429 /* LocationUploadMessage.swift */; };
 		64C697632768F4FA00134429 /* NewTokenMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697622768F4FA00134429 /* NewTokenMessage.swift */; };
 		64C697652768F5B000134429 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697642768F5B000134429 /* Util.swift */; };
 		64D578AD276A43CC0052863E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 64D578AC276A43CB0052863E /* GoogleService-Info.plist */; };
 		64D7B920276A4DAC009FEDA8 /* CiphertextWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D7B91F276A4DAC009FEDA8 /* CiphertextWrapper.swift */; };
-		64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* FirebaseMessaging */; };
+		64DC9D3B2772258800478A4C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */; };
 		64EB114B271CC0070016C9DA /* he_bridge_wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 64EB114A271CC0070016C9DA /* he_bridge_wrapper.mm */; };
+		64EB74002804987400489654 /* LocationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EB73FF2804987400489654 /* LocationModifier.swift */; };
 		64F07A6927BDB2C300B329A5 /* privateKeySMKHE.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64F07A6727BDB2C300B329A5 /* privateKeySMKHE.bin */; };
 		64F07A6A27BDB2C300B329A5 /* pubKeySMKHE.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64F07A6827BDB2C300B329A5 /* pubKeySMKHE.bin */; };
+		64F1F5EC2804CB0100C80E8E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8C23707B8B69132F36FD38DA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 727B31004C5A1408F26C790A /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		99E3FD3A832E1338B4A5F34E /* EntityInfo-Runner.generated.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95E6517926410B20DC617B4D /* EntityInfo-Runner.generated.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -112,6 +117,8 @@
 		648247A5278F5FD9009F1C51 /* TestLocationUploader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestLocationUploader.swift; sourceTree = "<group>"; };
 		649B53ED2790890F002B3934 /* test-locations-15-75m.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-15-75m.json"; sourceTree = "<group>"; };
 		649B53EF27908C8F002B3934 /* test-locations-75m-more.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-75m-more.json"; sourceTree = "<group>"; };
+		649C759027E3E9C2002AC994 /* LocationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEntity.swift; sourceTree = "<group>"; };
+		649C759227E3F53C002AC994 /* StorageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageController.swift; sourceTree = "<group>"; };
 		64C6975E2768F4DE00134429 /* ContactMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessage.swift; sourceTree = "<group>"; };
 		64C697602768F4EC00134429 /* LocationUploadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationUploadMessage.swift; sourceTree = "<group>"; };
 		64C697622768F4FA00134429 /* NewTokenMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTokenMessage.swift; sourceTree = "<group>"; };
@@ -124,12 +131,14 @@
 		64D7B926276A58D1009FEDA8 /* libsealc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsealc.a; path = ../../../SEAL/build/lib/libsealc.a; sourceTree = "<group>"; };
 		64EB1149271CBF1E0016C9DA /* he_bridge_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = he_bridge_wrapper.h; path = "../../../he-component/bridge/ios/he_bridge_wrapper.h"; sourceTree = "<group>"; };
 		64EB114A271CC0070016C9DA /* he_bridge_wrapper.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; name = he_bridge_wrapper.mm; path = "../../../he-component/bridge/ios/he_bridge_wrapper.mm"; sourceTree = "<group>"; };
+		64EB73FF2804987400489654 /* LocationModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationModifier.swift; sourceTree = "<group>"; };
 		64F07A6727BDB2C300B329A5 /* privateKeySMKHE.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = privateKeySMKHE.bin; sourceTree = "<group>"; };
 		64F07A6827BDB2C300B329A5 /* pubKeySMKHE.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKeySMKHE.bin; sourceTree = "<group>"; };
 		727B31004C5A1408F26C790A /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; tabWidth = 2; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
+		95E6517926410B20DC617B4D /* EntityInfo-Runner.generated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "EntityInfo-Runner.generated.swift"; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -147,8 +156,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				644CECB527BD6F0C003F37B0 /* libsmkhe-archived.a in Frameworks */,
+				64F1F5EC2804CB0100C80E8E /* BuildFile in Frameworks */,
 				6467E25E2783AA8000940DFF /* lattigo.a in Frameworks */,
-				64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */,
+				64DC9D3B2772258800478A4C /* BuildFile in Frameworks */,
 				645DADF9276A9B4A00FA4E54 /* libsealc.a in Frameworks */,
 				645DADFA276A9B4A00FA4E54 /* libseal.a in Frameworks */,
 				8C23707B8B69132F36FD38DA /* Pods_Runner.framework in Frameworks */,
@@ -203,12 +213,14 @@
 		6425E7BF2768C6BC006BF2E9 /* background */ = {
 			isa = PBXGroup;
 			children = (
+				649C758F27E3E82D002AC994 /* storage */,
 				6425E7C22768CF67006BF2E9 /* serialization */,
 				6425E7C02768C6E6006BF2E9 /* BackgroundDecryptor.swift */,
 				6425E7C52768D08F006BF2E9 /* ConnectionService.swift */,
 				64C697642768F5B000134429 /* Util.swift */,
 				64175F9327885ACF00F89B3C /* Config.swift */,
 				648247A5278F5FD9009F1C51 /* TestLocationUploader.swift */,
+				64EB73FF2804987400489654 /* LocationModifier.swift */,
 			);
 			path = background;
 			sourceTree = "<group>";
@@ -227,6 +239,15 @@
 				648247A3278F5F1D009F1C51 /* NewSavedLocations.swift */,
 			);
 			path = serialization;
+			sourceTree = "<group>";
+		};
+		649C758F27E3E82D002AC994 /* storage */ = {
+			isa = PBXGroup;
+			children = (
+				649C759027E3E9C2002AC994 /* LocationEntity.swift */,
+				649C759227E3F53C002AC994 /* StorageController.swift */,
+			);
+			path = storage;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -252,6 +273,7 @@
 				64D578AC276A43CB0052863E /* GoogleService-Info.plist */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
+				EA70B7B9A80E9E3A79FA4279 /* generated */,
 				97C146EF1CF9000F007C117D /* Products */,
 				FA351F874DB374F1540854BE /* Pods */,
 				62248F7469C56E5CF9CD865D /* Frameworks */,
@@ -290,6 +312,14 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		EA70B7B9A80E9E3A79FA4279 /* generated */ = {
+			isa = PBXGroup;
+			children = (
+				95E6517926410B20DC617B4D /* EntityInfo-Runner.generated.swift */,
+			);
+			path = generated;
+			sourceTree = "<group>";
+		};
 		FA351F874DB374F1540854BE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -309,12 +339,14 @@
 			buildPhases = (
 				03E15F1F98C23683476B4EFB /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
+				237240B42BDEFDE0D5DB7AB9 /* [OBX] Update Sourcery Generated Files */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				97C146EC1CF9000F007C117D /* Resources */,
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				9247D6BE28F0D97D619E631C /* [CP] Embed Pods Frameworks */,
+				4F232FF4331E11BFD29E8E84 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -322,7 +354,8 @@
 			);
 			name = Runner;
 			packageProductDependencies = (
-				64DC9D3A2772258800478A4C /* FirebaseMessaging */,
+				64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */,
+				64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -353,7 +386,8 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				64DC9D392772258800478A4C /* RemoteSwiftPackageReference */,
+				64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -411,6 +445,24 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		237240B42BDEFDE0D5DB7AB9 /* [OBX] Update Sourcery Generated Files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "[OBX] Update Sourcery Generated Files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$PODS_ROOT/ObjectBox/generate_sources.sh\" -- --output \"$PROJECT_DIR/generated/EntityInfo-Runner.generated.swift\" --model-json \"$PROJECT_DIR/model-Runner.json\"";
+		};
 		3B06AD1E1E4923F5004D2608 /* Thin Binary */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -424,6 +476,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
+		};
+		4F232FF4331E11BFD29E8E84 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		9247D6BE28F0D97D619E631C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -464,6 +533,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6411994427822DDA001A46BA /* lattigo_he_client.cpp in Sources */,
+				64EB74002804987400489654 /* LocationModifier.swift in Sources */,
 				64635839277E074D00F8FC08 /* seal_he_client.cpp in Sources */,
 				64635837277E073700F8FC08 /* client_base.cpp in Sources */,
 				64635835277E072500F8FC08 /* client_selector.cpp in Sources */,
@@ -474,6 +544,7 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				6425E7C42768CFE4006BF2E9 /* NewDistanceMessage.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
+				649C759127E3E9C2002AC994 /* LocationEntity.swift in Sources */,
 				64584515271CBC62007C014D /* he_bridge.cpp in Sources */,
 				641B75D9276B77B100214396 /* JsonBody.swift in Sources */,
 				6425E7C12768C6E6006BF2E9 /* BackgroundDecryptor.swift in Sources */,
@@ -487,6 +558,8 @@
 				64175F90278857C000F89B3C /* NewKeysMessage.swift in Sources */,
 				644CECB727BD7038003F37B0 /* smkhe_he_client.cpp in Sources */,
 				648247A4278F5F1D009F1C51 /* NewSavedLocations.swift in Sources */,
+				99E3FD3A832E1338B4A5F34E /* EntityInfo-Runner.generated.swift in Sources */,
+				649C759327E3F53C002AC994 /* StorageController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -814,7 +887,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+		64DC9D392772258800478A4C /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -822,13 +895,26 @@
 				minimumVersion = 8.10.0;
 			};
 		};
+		64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googlemaps/google-maps-ios-utils.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 4.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		64DC9D3A2772258800478A4C /* FirebaseMessaging */ = {
+		64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			package = 64DC9D392772258800478A4C /* RemoteSwiftPackageReference */;
 			productName = FirebaseMessaging;
+		};
+		64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */;
+			productName = GoogleMapsUtils;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

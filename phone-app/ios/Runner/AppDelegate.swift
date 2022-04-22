@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import CoreLocation
 import Firebase
+import GoogleMaps
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -9,6 +10,7 @@ import Firebase
   private final let bridge: HeBridgeWrapper = HeBridgeWrapper()
   let locationManager = CLLocationManager()
   var lastTimestamp: Date? = nil
+  var lastStoredTimestamp: Date? = nil
   
   override func application(
     _ application: UIApplication,
@@ -31,7 +33,7 @@ import Firebase
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    
+    GMSServices.provideAPIKey("AIzaSyBgdmnrdV3KMxa2V_2S7rYKIqx4unIi53U")
     GeneratedPluginRegistrant.register(with: self)
 
     if (Config.isUploadTestLocationsEnabled()) {
@@ -40,7 +42,9 @@ import Firebase
       TestLocationUploader.readLocationsAndCalculateAccuracy()
     } else {
       registerForNotifications(application: application)
-      registerForLocation()
+      if (Util.getIsolationEnd(appDelegate: self) <= UInt64(NSDate().timeIntervalSince1970)) {
+         registerForLocation()
+      }
     }
     
     let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
@@ -51,14 +55,21 @@ import Firebase
       
       let args = call.arguments as? Dictionary<String, String> ?? [:]
       if (call.method == "get-isolation") {
-        result(Util.getIsolationEnd())
+        result(Util.getIsolationEnd(appDelegate: self))
       } else if (call.method == "get-uid") {
         result(Util.getUuid())
       } else if (call.method == "set-positive") {
         let timestampEnd: UInt64 = UInt64(args["end"]!)!
         Util.setIsolationEnd(isolationEnd: timestampEnd)
+        StorageController.sendLocationsToServer(timestamp: UInt64(Date().timeIntervalSince1970))
         result("success")
-      } else {
+      } else if (call.method == "perturb") {
+        let latitude: Double = Double(args["lat"]!)!
+        let longitude: Double = Double(args["long"]!)!
+        let perturbedLocation: CLLocationCoordinate2D = LocationModifier.perturbLocation(location: CLLocationCoordinate2D(latitude: latitude, longitude: longitude))
+        result(["lat": perturbedLocation.latitude, "long": perturbedLocation.longitude])
+      }
+        else {
         result(HeBridgeWrapper().hello(args["name"]))
       }
     })
@@ -76,10 +87,7 @@ import Firebase
     application.registerForRemoteNotifications()
   }
   
-  private func registerForLocation() {
-    if (Util.getIsolationEnd() > UInt64(NSDate().timeIntervalSince1970)) {
-      return
-    }
+  public func registerForLocation() {
     locationManager.delegate = self
     locationManager.requestAlwaysAuthorization()
     locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
@@ -104,6 +112,7 @@ import Firebase
       } else {
         let isolationEnd: UInt64 = UInt64((userInfo["he-server-message"] as? String)!)!
         sendNewNotification(isolationEnd: isolationEnd)
+        StorageController.sendLocationsToServer(timestamp: UInt64(Date().timeIntervalSince1970))
         Util.setIsolationEnd(isolationEnd: isolationEnd)
         locationManager.stopUpdatingLocation()
       }
@@ -113,7 +122,7 @@ import Firebase
     let dateFormatter = DateFormatter()
     dateFormatter.timeZone = TimeZone.current
     dateFormatter.locale = NSLocale.current
-    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+    dateFormatter.dateFormat = "E dd/MM/yyyy"
     
     return dateFormatter.string(from: Date(timeIntervalSince1970: TimeInterval(unixSeconds)))
   }
@@ -145,12 +154,21 @@ extension AppDelegate: CLLocationManagerDelegate {
   
   func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
     let lastLocation: CLLocation = locations.last!
-    let difference: TimeInterval = (self.lastTimestamp != nil) ? lastLocation.timestamp.timeIntervalSince(self.lastTimestamp!) : 0;
+    let difference: TimeInterval = (self.lastTimestamp != nil) ? lastLocation.timestamp.timeIntervalSince(self.lastTimestamp!) : 0
+    let storageDifference: TimeInterval = (lastStoredTimestamp != nil) ? lastLocation.timestamp.timeIntervalSince(lastStoredTimestamp!) : 0
     if (difference == 0 || difference >= 5) {
       NSLog("Got new location \(lastLocation.coordinate) \(lastLocation.timestamp)")
       self.lastTimestamp = lastLocation.timestamp;
       let message: LocationUploadMessage = getLocationJson(givenLocation: lastLocation)
       ConnectionService.sendNewLocation(message: message)
+    }
+    if (storageDifference == 0 || storageDifference >= 30) {
+      NSLog("Got new location \(lastLocation.coordinate) \(lastLocation.timestamp)")
+      NSLog("Storing new location")
+      self.lastStoredTimestamp = lastLocation.timestamp
+      let perturbedLocation: CLLocationCoordinate2D = LocationModifier.perturbLocation(location: lastLocation.coordinate)
+      StorageController.addLocation(latitude: perturbedLocation.latitude, longitude: perturbedLocation.longitude,
+                                    timestamp: UInt64(self.lastStoredTimestamp!.timeIntervalSince1970))
     }
   }
   
