@@ -20,7 +20,6 @@
 		6425E7C12768C6E6006BF2E9 /* BackgroundDecryptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6425E7C02768C6E6006BF2E9 /* BackgroundDecryptor.swift */; };
 		6425E7C42768CFE4006BF2E9 /* NewDistanceMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6425E7C32768CFE4006BF2E9 /* NewDistanceMessage.swift */; };
 		6425E7C62768D08F006BF2E9 /* ConnectionService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6425E7C52768D08F006BF2E9 /* ConnectionService.swift */; };
-		644CECB527BD6F0C003F37B0 /* libsmkhe-archived.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 644CECB427BD6F0C003F37B0 /* libsmkhe-archived.a */; };
 		644CECB727BD7038003F37B0 /* smkhe_he_client.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 644CECB627BD7038003F37B0 /* smkhe_he_client.cpp */; };
 		64584515271CBC62007C014D /* he_bridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 64584513271CBC62007C014D /* he_bridge.cpp */; };
 		645DADF9276A9B4A00FA4E54 /* libsealc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 645DADF7276A9B4A00FA4E54 /* libsealc.a */; };
@@ -35,6 +34,7 @@
 		649B53F027908C8F002B3934 /* test-locations-75m-more.json in Resources */ = {isa = PBXBuildFile; fileRef = 649B53EF27908C8F002B3934 /* test-locations-75m-more.json */; };
 		649C759127E3E9C2002AC994 /* LocationEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759027E3E9C2002AC994 /* LocationEntity.swift */; };
 		649C759327E3F53C002AC994 /* StorageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 649C759227E3F53C002AC994 /* StorageController.swift */; };
+		64B84D28281B011900DCF29C /* libsmkhe-archived.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 64B84D27281B011900DCF29C /* libsmkhe-archived.a */; };
 		64C4F41B27EE06F4001A8139 /* privateKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64C4F41927EE06F4001A8139 /* privateKeyLattigo.bin */; };
 		64C4F41C27EE06F4001A8139 /* pubKeyLattigo.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64C4F41A27EE06F4001A8139 /* pubKeyLattigo.bin */; };
 		64C6975F2768F4DE00134429 /* ContactMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C6975E2768F4DE00134429 /* ContactMessage.swift */; };
@@ -43,14 +43,13 @@
 		64C697652768F5B000134429 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C697642768F5B000134429 /* Util.swift */; };
 		64D578AD276A43CC0052863E /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 64D578AC276A43CB0052863E /* GoogleService-Info.plist */; };
 		64D7B920276A4DAC009FEDA8 /* CiphertextWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D7B91F276A4DAC009FEDA8 /* CiphertextWrapper.swift */; };
-		64DC9D3B2772258800478A4C /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */; };
 		64DB458527F4E76F002F0A47 /* test-locations-10-75m.json in Resources */ = {isa = PBXBuildFile; fileRef = 64DB458427F4E76F002F0A47 /* test-locations-10-75m.json */; };
 		64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 64DC9D3A2772258800478A4C /* FirebaseMessaging */; };
 		64EB114B271CC0070016C9DA /* he_bridge_wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 64EB114A271CC0070016C9DA /* he_bridge_wrapper.mm */; };
 		64EB74002804987400489654 /* LocationModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EB73FF2804987400489654 /* LocationModifier.swift */; };
 		64F07A6927BDB2C300B329A5 /* privateKeySMKHE.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64F07A6727BDB2C300B329A5 /* privateKeySMKHE.bin */; };
 		64F07A6A27BDB2C300B329A5 /* pubKeySMKHE.bin in Resources */ = {isa = PBXBuildFile; fileRef = 64F07A6827BDB2C300B329A5 /* pubKeySMKHE.bin */; };
-		64F1F5EC2804CB0100C80E8E /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = 64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */; };
+		64F1F5EC2804CB0100C80E8E /* GoogleMapsUtils in Frameworks */ = {isa = PBXBuildFile; productRef = 64F1F5EB2804CB0100C80E8E /* GoogleMapsUtils */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
 		8C23707B8B69132F36FD38DA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 727B31004C5A1408F26C790A /* Pods_Runner.framework */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
@@ -96,7 +95,6 @@
 		6425E7C02768C6E6006BF2E9 /* BackgroundDecryptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundDecryptor.swift; sourceTree = "<group>"; };
 		6425E7C32768CFE4006BF2E9 /* NewDistanceMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewDistanceMessage.swift; sourceTree = "<group>"; };
 		6425E7C52768D08F006BF2E9 /* ConnectionService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionService.swift; sourceTree = "<group>"; };
-		644CECB427BD6F0C003F37B0 /* libsmkhe-archived.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsmkhe-archived.a"; path = "../../../smkhe/lib/releases/libsmkhe-archived.a"; sourceTree = "<group>"; };
 		644CECB627BD7038003F37B0 /* smkhe_he_client.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = smkhe_he_client.cpp; path = "../../he-component/src/client/smkhe/smkhe_he_client.cpp"; sourceTree = "<group>"; };
 		64584513271CBC62007C014D /* he_bridge.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = he_bridge.cpp; path = "../../../he-component/bridge/ios/he_bridge.cpp"; sourceTree = "<group>"; };
 		64584514271CBC62007C014D /* he_bridge.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; name = he_bridge.hpp; path = "../../../he-component/bridge/ios/he_bridge.hpp"; sourceTree = "<group>"; };
@@ -117,6 +115,7 @@
 		649B53EF27908C8F002B3934 /* test-locations-75m-more.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "test-locations-75m-more.json"; sourceTree = "<group>"; };
 		649C759027E3E9C2002AC994 /* LocationEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEntity.swift; sourceTree = "<group>"; };
 		649C759227E3F53C002AC994 /* StorageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageController.swift; sourceTree = "<group>"; };
+		64B84D27281B011900DCF29C /* libsmkhe-archived.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libsmkhe-archived.a"; path = "../../../smkhe/lib/releases/ios/libsmkhe-archived.a"; sourceTree = "<group>"; };
 		64C4F41927EE06F4001A8139 /* privateKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = privateKeyLattigo.bin; sourceTree = "<group>"; };
 		64C4F41A27EE06F4001A8139 /* pubKeyLattigo.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = pubKeyLattigo.bin; sourceTree = "<group>"; };
 		64C6975E2768F4DE00134429 /* ContactMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactMessage.swift; sourceTree = "<group>"; };
@@ -156,10 +155,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				644CECB527BD6F0C003F37B0 /* libsmkhe-archived.a in Frameworks */,
-				64F1F5EC2804CB0100C80E8E /* BuildFile in Frameworks */,
+				64B84D28281B011900DCF29C /* libsmkhe-archived.a in Frameworks */,
+				64F1F5EC2804CB0100C80E8E /* GoogleMapsUtils in Frameworks */,
 				6467E25E2783AA8000940DFF /* lattigo.a in Frameworks */,
-				64DC9D3B2772258800478A4C /* BuildFile in Frameworks */,
+				64DC9D3B2772258800478A4C /* FirebaseMessaging in Frameworks */,
 				645DADF9276A9B4A00FA4E54 /* libsealc.a in Frameworks */,
 				645DADFA276A9B4A00FA4E54 /* libseal.a in Frameworks */,
 				8C23707B8B69132F36FD38DA /* Pods_Runner.framework in Frameworks */,
@@ -172,7 +171,7 @@
 		62248F7469C56E5CF9CD865D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				644CECB427BD6F0C003F37B0 /* libsmkhe-archived.a */,
+				64B84D27281B011900DCF29C /* libsmkhe-archived.a */,
 				641DE54327BD0F8800C35DA3 /* libsmkhe2.a */,
 				641DE54127BD0DF000C35DA3 /* libprotobuf.a */,
 				641DE53D27BD0C4B00C35DA3 /* libsmkhe.a */,
@@ -355,8 +354,8 @@
 			);
 			name = Runner;
 			packageProductDependencies = (
-				64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */,
-				64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */,
+				64DC9D3A2772258800478A4C /* FirebaseMessaging */,
+				64F1F5EB2804CB0100C80E8E /* GoogleMapsUtils */,
 			);
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
@@ -387,8 +386,8 @@
 			);
 			mainGroup = 97C146E51CF9000F007C117D;
 			packageReferences = (
-				64DC9D392772258800478A4C /* RemoteSwiftPackageReference */,
-				64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */,
+				64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				64F1F5EA2804CB0100C80E8E /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */,
 			);
 			productRefGroup = 97C146EF1CF9000F007C117D /* Products */;
 			projectDirPath = "";
@@ -665,7 +664,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/Users/andru/Desktop/seal_nou/SEAL/buildios/lib,
-					/Users/andru/Desktop/smkhe/lib/releases,
+					/Users/andru/Desktop/smkhe/lib/releases/ios,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = als.dissertation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -814,7 +813,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/Users/andru/Desktop/seal_nou/SEAL/buildios/lib,
-					/Users/andru/Desktop/smkhe/lib/releases,
+					/Users/andru/Desktop/smkhe/lib/releases/ios,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = als.dissertation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -852,7 +851,7 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					/Users/andru/Desktop/seal_nou/SEAL/buildios/lib,
-					/Users/andru/Desktop/smkhe/lib/releases,
+					/Users/andru/Desktop/smkhe/lib/releases/ios,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = als.dissertation;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -888,7 +887,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		64DC9D392772258800478A4C /* RemoteSwiftPackageReference */ = {
+		64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
 			requirement = {
@@ -896,7 +895,7 @@
 				minimumVersion = 8.10.0;
 			};
 		};
-		64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */ = {
+		64F1F5EA2804CB0100C80E8E /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/googlemaps/google-maps-ios-utils.git";
 			requirement = {
@@ -907,14 +906,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		64DC9D3A2772258800478A4C /* SwiftPackageProductDependency */ = {
+		64DC9D3A2772258800478A4C /* FirebaseMessaging */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 64DC9D392772258800478A4C /* RemoteSwiftPackageReference */;
+			package = 64DC9D392772258800478A4C /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseMessaging;
 		};
-		64F1F5EB2804CB0100C80E8E /* SwiftPackageProductDependency */ = {
+		64F1F5EB2804CB0100C80E8E /* GoogleMapsUtils */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 64F1F5EA2804CB0100C80E8E /* RemoteSwiftPackageReference */;
+			package = 64F1F5EA2804CB0100C80E8E /* XCRemoteSwiftPackageReference "google-maps-ios-utils" */;
 			productName = GoogleMapsUtils;
 		};
 /* End XCSwiftPackageProductDependency section */

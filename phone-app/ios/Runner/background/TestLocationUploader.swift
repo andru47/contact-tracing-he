@@ -1,10 +1,3 @@
-//
-//  TestLocationUploader.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 12.01.2022.
-//
-
 import Foundation
 
 class TestLocationUploader {
@@ -87,7 +80,7 @@ class TestLocationUploader {
                         var initialResult: Double = 0
                         var alt: Double = 0
                         startTimestampDecrypt = Date().timeIntervalSince1970 * 1000
-                        if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+                        if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
                             initialResult = Double(truncating: bridge.decryptMulti(ciphertext.ciphertext, partialCipher: ciphertext.partialDistance, privateKey: privateKey, isFinal: true) as! NSNumber)
                             alt = Double(truncating: bridge.decryptMulti(ciphertext.altitudeDifference, partialCipher: ciphertext.partialAltitudeDifference, privateKey: privateKey, isFinal: true) as! NSNumber)
                         } else {

@@ -1,10 +1,3 @@
-//
-//  JsonBody.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 16.12.2021.
-//
-
 import Foundation
 
 struct JSONBody: Codable {

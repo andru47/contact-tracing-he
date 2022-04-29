@@ -3,8 +3,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 
 class ConnectionService {
-  static const INFECTION_URL = "http://127.0.0.1:8080/report-positive-case";
-  static const INDEX_URL = "http://127.0.0.1:8080/get-infection-index?";
+  static const INFECTION_URL = "http://10.4.1.86:8080/report-positive-case";
+  static const INDEX_URL = "http://10.4.1.86:8080/get-infection-index?";
 
   static Future<void> reportInfection(
       String userId, DateTime givenDateTime) async {

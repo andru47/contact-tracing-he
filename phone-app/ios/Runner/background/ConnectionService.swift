@@ -1,10 +1,3 @@
-//
-//  ConnectionService.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 14.12.2021.
-//
-
 import Foundation
 
 class ConnectionService {
@@ -111,7 +104,6 @@ class ConnectionService {
     
     public static func sendLocationHistory(message: [LocationEntity]) {
         let json: Data = try! JSONEncoder().encode(message)
-        print("Sending \(String(decoding:json, as: UTF8.self))")
         postObject(json: json, endpoint: "upload-location-history")
     }
 }

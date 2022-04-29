@@ -1,10 +1,3 @@
-//
-//  NewSavedLocations.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 12.01.2022.
-//
-
 import Foundation
 
 struct NewSavedLocations : Codable {

@@ -1,10 +1,3 @@
-//
-//  Config.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 07.01.2022.
-//
-
 import Foundation
 
 class Config {
@@ -35,7 +28,6 @@ class Config {
     }
 }
 
-// TODO: Refactor names
 enum EncryptionType {
-    case SEAL, LATTIGO, LATTIGO_MK, SMKHE
+    case SEAL, LATTIGO, SMKHE, MULTI_KEY
 }

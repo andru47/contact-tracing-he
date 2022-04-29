@@ -46,7 +46,7 @@ class LocationModifier {
             let new: Double = last - (last * exp(last) - givenNumber) / (exp(last) * (1 + last))
             if (abs(last - new) < 1e-10) {
                 NSLog("iter is \(iter)")
-                return round(last * 1e7) / (1e7)
+                return round(new * 1e7) / (1e7)
             }
             last = new
         }
