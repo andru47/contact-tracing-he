@@ -17,3 +17,4 @@
 **/lattigobuild
 **/go/build
 
+!src/client/lattigo/go/Makefile
