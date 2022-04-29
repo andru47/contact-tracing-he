@@ -28,6 +28,7 @@ class LocationModifier {
         
         latitude = asin(sin(latitude) * cos(angularDistance) + cos(latitude) * sin(angularDistance) * cos(bearing))
         longitude = longitude + atan2(sin(bearing) * sin(angularDistance) * cos(lastLatitude), cos(angularDistance) - sin(latitude) * sin(lastLatitude))
+        longitude = (longitude + 540).truncatingRemainder(dividingBy: 360) - 180
         
         latitude = latitude * 180 / Double.pi
         longitude = longitude * 180 / Double.pi

@@ -134,8 +134,6 @@ public class RequestsController {
   @PostMapping("/new-user-keys")
   public String newUserKeys(@RequestBody String keysString) {
     NewKeysMessage keysMessage = gson.fromJson(keysString, NewKeysMessage.class);
-    System.out.println(keysMessage.getPubKey().length());
-    System.out.println(keysMessage.getRelinKey().length());
     Controller.addNewKeys(keysMessage);
 
     return "SUCCESS";

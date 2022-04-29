@@ -34,7 +34,7 @@ public class LocationModifier {
 
     latitude = Math.asin(Math.sin(latitude) * Math.cos(angularDistance) + Math.cos(latitude) * Math.sin(angularDistance) * Math.cos(bearing));
     longitude = longitude + Math.atan2(Math.sin(bearing) * Math.sin(angularDistance) * Math.cos(lastLatitude), Math.cos(angularDistance) - Math.sin(latitude) * Math.sin(lastLatitude));
-
+    longitude = (longitude + 540) % 360 - 180;
     latitude = Math.toDegrees(latitude);
     longitude = Math.toDegrees(longitude);
 

@@ -92,7 +92,7 @@ import GoogleMaps
     locationManager.requestAlwaysAuthorization()
     locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
     locationManager.allowsBackgroundLocationUpdates = true
-    locationManager.distanceFilter = 5
+    locationManager.distanceFilter = Config.getDistance()
     locationManager.startUpdatingLocation()
   }
   
@@ -156,13 +156,13 @@ extension AppDelegate: CLLocationManagerDelegate {
     let lastLocation: CLLocation = locations.last!
     let difference: TimeInterval = (self.lastTimestamp != nil) ? lastLocation.timestamp.timeIntervalSince(self.lastTimestamp!) : 0
     let storageDifference: TimeInterval = (lastStoredTimestamp != nil) ? lastLocation.timestamp.timeIntervalSince(lastStoredTimestamp!) : 0
-    if (difference == 0 || difference >= 5) {
+    if (difference == 0 || difference >= Config.getMovementTime()) {
       NSLog("Got new location \(lastLocation.coordinate) \(lastLocation.timestamp)")
       self.lastTimestamp = lastLocation.timestamp;
       let message: LocationUploadMessage = getLocationJson(givenLocation: lastLocation)
       ConnectionService.sendNewLocation(message: message)
     }
-    if (storageDifference == 0 || storageDifference >= 30) {
+    if (storageDifference == 0 || storageDifference >= Config.getMovementTime()) {
       NSLog("Got new location \(lastLocation.coordinate) \(lastLocation.timestamp)")
       NSLog("Storing new location")
       self.lastStoredTimestamp = lastLocation.timestamp

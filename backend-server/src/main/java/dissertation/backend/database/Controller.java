@@ -167,10 +167,7 @@ public class Controller {
   public static void addNewLocationHistory(LocationHistoryMessage[] givenLocations) {
     try (Statement statement = connection.createStatement()) {
       for (int index = 0; index < givenLocations.length; ++index) {
-        System.out.println(givenLocations[index].getLongitude());
-        System.out.println(givenLocations[index].getLatitude());
         String sqlCommand = "INSERT INTO location_history(location, timestamp) VALUES(ST_GeomFromText('POINT(%.16f %.16f)'), %d)";
-        System.out.println(String.format(sqlCommand, givenLocations[index].getLongitude(), givenLocations[index].getLatitude(), givenLocations[index].getLocationTimestamp()));
         statement.addBatch(String.format(sqlCommand, givenLocations[index].getLongitude(), givenLocations[index].getLatitude(), givenLocations[index].getLocationTimestamp()));
       }
       statement.executeBatch();
