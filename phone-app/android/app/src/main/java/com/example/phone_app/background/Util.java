@@ -38,7 +38,15 @@ public class Util {
 
   public static char[] getPublicKey(Context givenContext) {
     if (publicKey == null) {
-      publicKey = readKey("pubKeySMKHE.bin", givenContext);
+      String fileName;
+      if (Config.getEncryptionType() == EncryptionType.SEAL || Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
+        fileName = "pubKey.bin";
+      } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
+        fileName = "pubKeyLattigo.bin";
+      } else {
+        fileName = "pubKeySMKHE.bin";
+      }
+      publicKey = readKey(fileName, givenContext);
     }
 
     return publicKey;
@@ -46,7 +54,15 @@ public class Util {
 
   public static char[] getPrivateKey(Context givenContext) {
     if (privateKey == null) {
-      privateKey = readKey("privateKeySMKHE.bin", givenContext);
+      String fileName;
+      if (Config.getEncryptionType() == EncryptionType.SEAL || Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
+        fileName = "privateKey.bin";
+      } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
+        fileName = "privateKeyLattigo.bin";
+      } else {
+        fileName = "privateKeySMKHE.bin";
+      }
+      privateKey = readKey(fileName, givenContext);
     }
 
     return privateKey;
@@ -68,9 +84,9 @@ public class Util {
   }
 
   private static char[] readKey(String fileName, Context context) {
-    if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+    if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
       if (getAreKeysCreated(context)) {
-        try (FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), "lattigo/" + fileName))) {
+        try (FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), "generated_key/" + fileName))) {
           return readFromInputStream(fis, fileName);
         } catch (FileNotFoundException e) {
           Log.e(Util.class.getName(), "The " + fileName + "does not exist.");
@@ -93,7 +109,7 @@ public class Util {
   }
 
   private static void writeKeyTo(Context context, String fileName, String contents) {
-    File directory = new File(context.getFilesDir(), "lattigo/");
+    File directory = new File(context.getFilesDir(), "generated_key/");
     if (!directory.exists()) {
       directory.mkdir();
     }
@@ -119,7 +135,7 @@ public class Util {
 
     writeKeyTo(context, "pubKey.bin", new String(publicKey));
     writeKeyTo(context, "privateKey.bin", new String(privateKey));
-    ConnectionService.sendObject(new NewKeysMessage(new String(mkPubKey), new String(rlk), getUuid(context)), "new-user-keys");
+    new Thread(() -> ConnectionService.sendObject(new NewKeysMessage(new String(mkPubKey), new String(rlk), getUuid(context)), "new-user-keys")).start();
     setAreKeysCreated(context, true);
   }
 
@@ -131,6 +147,10 @@ public class Util {
     if (isolationEnd == null) {
       SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREFERENCES_FILENAME, Context.MODE_PRIVATE);
       isolationEnd = sharedPreferences.getLong(SHARED_PREFERENCES_ISO_END_KEY, 0L);
+      if (isolationEnd < System.currentTimeMillis() / 1000L) {
+        isolationEnd = 0L;
+        setIsolationStatus(context, 0L);
+      }
     }
 
     return isolationEnd;

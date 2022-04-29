@@ -3,6 +3,7 @@ package com.example.phone_app.background;
 import android.util.Log;
 
 import com.example.phone_app.background.serialization.NewDistanceMessage;
+import com.example.phone_app.background.storage.LocationEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -21,6 +22,8 @@ public class ConnectionService {
   private final static Gson gson = new Gson();
   private final static OkHttpClient client = new OkHttpClient();
   private static final Type distanceListType = new TypeToken<ArrayList<NewDistanceMessage>>() {
+  }.getType();
+  private static final Type locationEntityListType = new TypeToken<List<LocationEntity>>() {
   }.getType();
 
   private static void sendJson(String json, String endpoint) {
@@ -63,5 +66,11 @@ public class ConnectionService {
 
   protected static void sendObject(Object givenObject, String endpoint) {
     sendJson(gson.toJson(givenObject), endpoint);
+  }
+
+  public static void sendLocationHistory(List<LocationEntity> givenList) {
+    String jsonString = gson.toJson(givenList, locationEntityListType);
+    Log.i(ConnectionService.class.getName(), "Sending history " + jsonString);
+    sendJson(jsonString, "upload-location-history");
   }
 }

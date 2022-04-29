@@ -6,36 +6,50 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import com.example.phone_app.background.LocationModifier;
 import com.example.phone_app.background.LocationService;
 import com.example.phone_app.background.TestLocationUploader;
 import com.example.phone_app.background.Util;
+import com.example.phone_app.background.storage.LocationEntity;
+import com.example.phone_app.background.storage.MyObjectBox;
+import com.example.phone_app.background.storage.StorageController;
 import com.example.phone_app.config.Config;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.flutter.embedding.android.FlutterActivity;
 import io.flutter.embedding.engine.FlutterEngine;
 import io.flutter.plugin.common.MethodChannel;
+import io.objectbox.Box;
 
 public class MainActivity extends FlutterActivity {
   private final String CHANNEL = "BRIDGE";
   private final JNIBridge bridge = new JNIBridge();
+  private Box<LocationEntity> box;
+  private StorageController controller;
 
   @RequiresApi(api = Build.VERSION_CODES.O)
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE}, 1);
+    box = MyObjectBox.builder().androidContext(this).build().boxFor(LocationEntity.class);
+    controller = new StorageController(box);
+    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, 1);
     if (Config.isUploadTestLocationsEnabled()) {
       TestLocationUploader.readLocationsAndUploadEncrypted(this);
     } else {
-      Intent intent = new Intent(this, LocationService.class);
-      startForegroundService(intent);
+      if (Util.getIsolation(this) == 0L) {
+        Intent intent = new Intent(this, LocationService.class);
+        startForegroundService(intent);
+      }
     }
   }
 
@@ -70,7 +84,16 @@ public class MainActivity extends FlutterActivity {
                       } else if (call.method.equals("set-positive")) {
                         Long givenTimestamp = Long.parseLong(call.argument("end"));
                         Util.setIsolationStatus(this, givenTimestamp);
+                        controller.sendLocationsToServer(System.currentTimeMillis() / 1000L);
                         result.success("SUCCESS");
+                      } else if (call.method.equals("perturb")) {
+                        Double latitude = Double.parseDouble(call.argument("lat"));
+                        Double longitude = Double.parseDouble(call.argument("long"));
+                        Pair<Double, Double> newLocation = LocationModifier.perturbLocation(new Pair<>(latitude, longitude));
+                        Map<String, Double> ret = new HashMap<>();
+                        ret.put("lat", newLocation.first);
+                        ret.put("long", newLocation.second);
+                        result.success(ret);
                       }
                     }
             );

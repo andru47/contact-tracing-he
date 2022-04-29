@@ -15,8 +15,15 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import com.example.phone_app.MainActivity;
+import com.example.phone_app.background.storage.LocationEntity;
+import com.example.phone_app.background.storage.MyObjectBox;
+import com.example.phone_app.background.storage.StorageController;
+import com.example.phone_app.config.Config;
+
+import io.objectbox.Box;
 
 public class LocationService extends Service {
+  Box<LocationEntity> box;
   private boolean isStarted = false;
 
   public LocationService() {
@@ -31,6 +38,7 @@ public class LocationService extends Service {
   @Override
   public void onCreate() {
     super.onCreate();
+    box = MyObjectBox.builder().androidContext(this).build().boxFor(LocationEntity.class);
     startForeground(1, createNotification());
   }
 
@@ -49,7 +57,6 @@ public class LocationService extends Service {
     notificationManager.createNotificationChannel(channel);
     return new Notification.Builder(this, "HE-CONTACT-TRACING")
             .setContentTitle("HE location getter")
-            .setPriority(Notification.PRIORITY_HIGH)
             .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(this, MainActivity.class), 0))
             .build();
   }
@@ -63,9 +70,10 @@ public class LocationService extends Service {
     isStarted = true;
 
     LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 2.5F,
-            new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this)));
-//    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000 * 5 * 60, 0F,
-//            new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this)));
+    StorageController controller = new StorageController(box);
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.getMovementTime(), Config.getDistance(),
+            new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this), controller));
+    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Config.getInactivityTime(), 0F,
+            new CTLocationListener(Util.getUuid(this), Util.getPublicKey(this), controller));
   }
 }

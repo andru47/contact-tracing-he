@@ -10,6 +10,9 @@ import androidx.core.app.NotificationManagerCompat;
 import com.example.phone_app.MainActivity;
 import com.example.phone_app.R;
 import com.example.phone_app.background.serialization.NewTokenMessage;
+import com.example.phone_app.background.storage.LocationEntity;
+import com.example.phone_app.background.storage.MyObjectBox;
+import com.example.phone_app.background.storage.StorageController;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -18,7 +21,10 @@ import java.util.Date;
 import io.flutter.Log;
 
 public class NotificationService extends FirebaseMessagingService {
+  private StorageController controller;
+
   public NotificationService() {
+    controller = new StorageController(MyObjectBox.builder().androidContext(this).build().boxFor(LocationEntity.class));
   }
 
   @Override
@@ -41,6 +47,7 @@ public class NotificationService extends FirebaseMessagingService {
     } else {
       long unixSeconds = Long.parseLong(remoteMessage.getData().get("he-server-message"));
       showContactNotification(unixSeconds);
+      controller.sendLocationsToServer(unixSeconds - 7 * 60 * 24);
       Util.setIsolationStatus(this, unixSeconds);
     }
   }
