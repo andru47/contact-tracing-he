@@ -1,10 +1,3 @@
-//
-//  he_bridge_wrapper.m
-//  Runner
-//
-//  Created by Andru Stefanescu on 17.10.2021.
-//
-
 #import "he_bridge_wrapper.h"
 #import "he_bridge.hpp"
 

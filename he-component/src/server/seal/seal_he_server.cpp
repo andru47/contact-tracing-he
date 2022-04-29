@@ -1,7 +1,7 @@
 #include "seal_he_server.h"
 #include <fstream>
 
-CKKSServerHelper::CKKSServerHelper(EncryptionParameters params) : context(params)
+SEALServerHelper::SEALServerHelper(EncryptionParameters params) : context(params)
 {}
 
 void loadRelin(RelinKeys &relinKeys, SEALContext &context)
@@ -42,7 +42,7 @@ void loadAltitudesToCiphers(
     cipher2.load(context, stream2);
 }
 
-string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2)
+string SEALServerHelper::compute(vector<string> &cipher1, vector<string> &cipher2)
 {
     RelinKeys relinKeys;
     // SecretKey secret;
@@ -130,7 +130,7 @@ string CKKSServerHelper::compute(vector<string> &cipher1, vector<string> &cipher
     return resultStore.str();
 }
 
-string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2)
+string SEALServerHelper::computeAltitudeDifference(string &altitude1, string &altitude2)
 {
     Evaluator eval(context);
     Ciphertext altitude1Cipher, altitude2Cipher;
@@ -143,13 +143,13 @@ string CKKSServerHelper::computeAltitudeDifference(string &altitude1, string &al
     return resultStream.str();
 }
 
-vector<string> CKKSServerHelper::computeMulti(
+vector<string> SEALServerHelper::computeMulti(
     vector<string> &cipher1, vector<string> &cipher2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
 {
     throw "NOT IMPLEMENTED";
 }
 
-vector<string> CKKSServerHelper::computeAltitudeDifferenceMulti(
+vector<string> SEALServerHelper::computeAltitudeDifferenceMulti(
     string &altitude1, string &altitude2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2)
 {
     throw "NOT IMPLEMENTED";

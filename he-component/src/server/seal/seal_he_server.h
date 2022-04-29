@@ -1,11 +1,11 @@
 #include "base/server_base.h"
 
-class CKKSServerHelper : public ServerHelper
+class SEALServerHelper : public ServerHelper
 {
     SEALContext context;
 
 public:
-    CKKSServerHelper(EncryptionParameters params);
+    SEALServerHelper(EncryptionParameters params);
     string compute(vector<string> &cipher1, vector<string> &cipher2);
     vector<string> computeMulti(
         vector<string> &cipher1, vector<string> &cipher2, string &pubKey1, string &rlk1, string &pubKey2, string &rlk2);
