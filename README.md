@@ -27,6 +27,7 @@ As in the case of the server, the first step is to build the three libraries for
 
 ### Android
 After building the binaries, you need to:
+ - Modify lines `24-26` from [Makefile](he-component/src/client/lattigo/go/Makefile) to point to the right paths
  - Run `make android` inside `he-component/src/client/lattigo/go`
  - Change lines `5, 6, 8, 9` from this [CMakeLists.txt](he-component/bridge/android/CMakeLists.txt) file to point to the binaries created for SEAL/SMKHE
  - Run the application
