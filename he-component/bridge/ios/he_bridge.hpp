@@ -1,10 +1,3 @@
-//
-//  he_bridge.hpp
-//  Runner
-//
-//  Created by Andru Stefanescu on 17.10.2021.
-//
-
 #ifndef he_bridge_hpp
 #define he_bridge_hpp
 

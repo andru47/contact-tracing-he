@@ -1,10 +1,3 @@
-//
-//  BackgroundDecryptor.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 14.12.2021.
-//
-
 import Foundation
 
 class BackgroundDecryptor {
@@ -45,7 +38,7 @@ class BackgroundDecryptor {
             var initialResult: Double
             var altitudeDifference: Double
             
-            if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+            if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
                 initialResult = Double(truncating: bridge.decryptMulti(distanceMessage.ciphertext,partialCipher: distanceMessage.partialDistance, privateKey: privateKey, isFinal: true) as! NSNumber)
                 altitudeDifference = abs(Double(truncating: bridge.decryptMulti(distanceMessage.altitudeDifference,partialCipher: distanceMessage.partialAltitudeDifference, privateKey: privateKey, isFinal: true) as! NSNumber))
             } else {

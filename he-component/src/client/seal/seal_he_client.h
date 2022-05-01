@@ -1,6 +1,6 @@
 #include "base/client_base.h"
 
-class CKKSClientHelper : public ClientHelper
+class SEALClientHelper : public ClientHelper
 {
 private:
     double scale = pow(2.0, 60);
@@ -11,7 +11,7 @@ private:
     GaloisKeys galoisKeys;
 
 public:
-    CKKSClientHelper(EncryptionParameters params);
+    SEALClientHelper(EncryptionParameters params);
     void generateKeys();
     string getRelinKeys();
     string getGaloisKeys();

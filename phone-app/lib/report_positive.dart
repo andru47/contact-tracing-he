@@ -1,9 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:he_contact_tracing/drawer.dart';
 import 'package:he_contact_tracing/util/connection_service.dart';
 import 'package:he_contact_tracing/util/util.dart';
+import 'package:intl/intl.dart';
 
 import 'main.dart';
 
@@ -15,31 +15,24 @@ class ReportPositive extends StatefulWidget {
 }
 
 class ReportPositiveState extends State<ReportPositive> {
+  TextEditingController dateInputController = TextEditingController();
+  DateTime pickedDateTime = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
-    final formKey = new GlobalKey<FormState>();
-    final responseFieldController = TextEditingController();
-
-    var responseField = TextFormField(
-        controller: responseFieldController,
-        validator: responseFieldValidator,
-        autocorrect: false,
-        enableSuggestions: false,
-        decoration: const InputDecoration(
-            hintText: "Have you got a positive test?", errorMaxLines: 3));
+    final formKey = GlobalKey<FormState>();
 
     validate() async {
       formKey.currentState!.save();
-      if (formKey.currentState!.validate()) {
+      if (dateInputController.value.text.isNotEmpty) {
         String userId =
             await const MethodChannel("BRIDGE").invokeMethod("get-uid");
         await const MethodChannel("BRIDGE").invokeMethod("set-positive", {
-          "end": ((DateTime.now().millisecondsSinceEpoch / 1000).floor() +
+          "end": ((pickedDateTime.millisecondsSinceEpoch / 1000).floor() +
                   10 * 24 * 60 * 60)
               .toString()
         });
-        ConnectionService.reportInfection(
-            "http://10.0.2.2:8080/report-positive-case", userId);
+        ConnectionService.reportInfection(userId, pickedDateTime);
         while (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
@@ -60,7 +53,34 @@ class ReportPositiveState extends State<ReportPositive> {
               const SizedBox(
                 height: 100,
               ),
-              ListTile(leading: const Icon(Icons.info), title: responseField),
+              TextField(
+                controller: dateInputController,
+                decoration: const InputDecoration(
+                    icon: Icon(Icons.calendar_today),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                    label: Text("Date of positive test / first symptoms",
+                        maxLines: 2),
+                    hintMaxLines: 3,
+                    hintText: "Tap to open the date picker"),
+                autofocus: true,
+                readOnly: true,
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate:
+                          DateTime.now().subtract(const Duration(days: 10)),
+                      lastDate: DateTime.now());
+
+                  if (pickedDate != null) {
+                    setState(() {
+                      dateInputController.text =
+                          DateFormat("EEE, d/M/y").format(pickedDate);
+                      pickedDateTime = pickedDate;
+                    });
+                  }
+                },
+              ),
               const SizedBox(height: 20),
               longButtons("Validate", validate)
             ]),

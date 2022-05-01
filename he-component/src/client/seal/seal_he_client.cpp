@@ -1,6 +1,6 @@
 #include "seal_he_client.h"
 
-CKKSClientHelper::CKKSClientHelper(EncryptionParameters params) : context(params)
+SEALClientHelper::SEALClientHelper(EncryptionParameters params) : context(params)
 {
     // KeyGenerator generator(context);
     // this->secretKey = generator.secret_key();
@@ -25,21 +25,21 @@ void loadPrivateKey(SecretKey &secretKey, string &givenSecretKey, SEALContext &c
     return;
 }
 
-string CKKSClientHelper::getGaloisKeys()
+string SEALClientHelper::getGaloisKeys()
 {
     stringstream ret;
     galoisKeys.save(ret);
     return ret.str();
 }
 
-string CKKSClientHelper::getRelinKeys()
+string SEALClientHelper::getRelinKeys()
 {
     stringstream ret;
     relinKeys.save(ret);
     return ret.str();
 }
 
-vector<string> CKKSClientHelper::encrypt(
+vector<string> SEALClientHelper::encrypt(
     double latitudeCos, double latitudeSin, double longitudeCos, double longitudeSin, double altitude)
 {
     vector<double> toEncrypt = { latitudeCos, latitudeSin, longitudeCos, longitudeSin, altitude };
@@ -64,7 +64,7 @@ vector<string> CKKSClientHelper::encrypt(
     return result;
 }
 
-double CKKSClientHelper::decrypt(string &cipherString)
+double SEALClientHelper::decrypt(string &cipherString)
 {
     stringstream loadStream(cipherString);
     Ciphertext cipher;
@@ -81,31 +81,31 @@ double CKKSClientHelper::decrypt(string &cipherString)
     return decrypted[0];
 }
 
-string CKKSClientHelper::getPrivateKey()
+string SEALClientHelper::getPrivateKey()
 {
     stringstream ret;
     secretKey.save(ret);
     return ret.str();
 }
 
-string CKKSClientHelper::getPublicKey()
+string SEALClientHelper::getPublicKey()
 {
     stringstream ret;
     publicKey.save(ret);
     return ret.str();
 }
 
-void CKKSClientHelper::loadPublicKeyFromClient(string &publicKeyString)
+void SEALClientHelper::loadPublicKeyFromClient(string &publicKeyString)
 {
     loadPublicKey(this->publicKey, publicKeyString, this->context);
 }
 
-void CKKSClientHelper::loadPrivateKeyFromClient(string &privateKeyString)
+void SEALClientHelper::loadPrivateKeyFromClient(string &privateKeyString)
 {
     loadPrivateKey(this->secretKey, privateKeyString, this->context);
 }
 
-void CKKSClientHelper::generateKeys()
+void SEALClientHelper::generateKeys()
 {
     KeyGenerator generator(context);
     this->secretKey = generator.secret_key();
@@ -113,12 +113,12 @@ void CKKSClientHelper::generateKeys()
     generator.create_relin_keys(this->relinKeys);
 }
 
-MKResult CKKSClientHelper::decryptMulti(string &cipherString, string &partial)
+MKResult SEALClientHelper::decryptMulti(string &cipherString, string &partial)
 {
     throw("NOT IMPLEMENTED");
 }
 
-string CKKSClientHelper::getMKPubKey()
+string SEALClientHelper::getMKPubKey()
 {
     throw("NOT IMPLEMENTED");
 }

@@ -14,11 +14,14 @@ public class Cleaner {
       "? - locations.timestamp >= 1209600";
   private static final String SQL_DELETE_STATEMENT_QUARANTINED = "DELETE from quarantined_users where\n" +
       "? - quarantined_users.end >= 1209600";
+  private static final String SQL_DELETE_STATEMENT_LOC_HISTORY = "DELETE from location_history where\n" +
+      "? - location_history.timestamp >= 604800";
 
   public static void deleteOldData() {
     logger.info("I have received command to clean stale data");
     Controller.executeDeleteStaleStatement(SQL_DELETE_STATEMENT_LOCATIONS, Instant.now().getEpochSecond());
     Controller.executeDeleteStaleStatement(SQL_DELETE_STATEMENT_QUARANTINED, Instant.now().getEpochSecond());
+    Controller.executeDeleteStaleStatement(SQL_DELETE_STATEMENT_LOC_HISTORY, Instant.now().getEpochSecond());
     Controller.executeDeleteOldContacts();
     logger.info("I have finished cleaning stale data");
   }

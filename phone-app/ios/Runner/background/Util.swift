@@ -1,10 +1,3 @@
-//
-//  Util.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 14.12.2021.
-//
-
 import Foundation
 
 class Util {
@@ -31,7 +24,7 @@ class Util {
     public static func getPrivateKey() -> String {
         if (privateKey == nil) {
             var fileName: String = ""
-            if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+            if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
                 fileName = "privateKey.bin"
             } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
                 fileName = "privateKeyLattigo"
@@ -49,7 +42,7 @@ class Util {
     public static func getPublicKey() -> String {
         if (publicKey == nil) {
             var fileName: String = ""
-            if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+            if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
                 fileName = "pubKey.bin"
             } else if (Config.getEncryptionType() == EncryptionType.LATTIGO) {
                 fileName = "pubKeyLattigo"
@@ -106,7 +99,7 @@ class Util {
     }
     
     private static func readKey(fileName: String) -> String {
-        if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
             if (getAreKeysCreated()) {
                 return readGeneratedKey(name: fileName)
             }
@@ -132,7 +125,7 @@ class Util {
         }
     }
     
-    public static func getIsolationEnd() -> UInt64 {
+    public static func getIsolationEnd(appDelegate: AppDelegate) -> UInt64 {
         if (isolationEnd == nil) {
             isolationEnd = UserDefaults.standard.object(forKey: SHARED_PREFERENCES_ISO_END_KEY) as? UInt64
         }
@@ -140,6 +133,10 @@ class Util {
         if (isolationEnd == nil) {
             return 0
         } else {
+            if (isolationEnd! < UInt64(NSDate().timeIntervalSince1970)) {
+                setIsolationEnd(isolationEnd: 0)
+                isolationEnd = 0
+            }
             return isolationEnd!
         }
     }

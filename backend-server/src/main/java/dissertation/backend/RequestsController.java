@@ -28,22 +28,6 @@ public class RequestsController {
   @PostMapping("/distance-calculator")
   public String returnDistance(@RequestBody String jsonBody) {
     JSONBody body = gson.fromJson(jsonBody, JSONBody.class);
-    //String[] fromDb = controller.getElement();
-//    return new String(jniBridge.getDistance(new char[][]{
-//        body.getLatitudeCos1().toCharArray(),
-//        body.getLatitudeSin1().toCharArray(),
-//        body.getLongitudeCos1().toCharArray(),
-//        body.getLongitudeSin1().toCharArray()
-//        //fromDb[0].toCharArray(),
-//        //fromDb[1].toCharArray(),
-//        //fromDb[2].toCharArray(),
-//        //fromDb[3].toCharArray()
-//    }, new char[][]{
-//        body.getLatitudeCos2().toCharArray(),
-//        body.getLatitudeSin2().toCharArray(),
-//        body.getLongitudeCos2().toCharArray(),
-//        body.getLongitudeSin2().toCharArray()
-//    }));
     return new String(jniBridge.getDistance(new char[][]{
         body.getLatitudeCos1().toCharArray(),
         body.getLatitudeSin1().toCharArray(),
@@ -66,6 +50,20 @@ public class RequestsController {
     LocationUploadMessage message = gson.fromJson(jsonBody, LocationUploadMessage.class);
     Controller.uploadNewLocation(message);
     return "Location uploaded successfully";
+  }
+
+  @PostMapping("/upload-location-history")
+  public String uploadLocationHistory(@RequestBody String jsonBody) {
+    System.out.println(jsonBody);
+    LocationHistoryMessage[] locations = gson.fromJson(jsonBody, LocationHistoryMessage[].class);
+    Controller.addNewLocationHistory(locations);
+    return "Location history uploaded successfully";
+  }
+
+  @GetMapping("/get-infection-index")
+  @ResponseBody
+  public String getInfectionIndex(@RequestParam Double latitude, @RequestParam Double longitude) {
+    return String.valueOf(Controller.getNumberOfNearbyLocations(latitude, longitude));
   }
 
   @PostMapping("/upload-fcm-token")
@@ -136,8 +134,6 @@ public class RequestsController {
   @PostMapping("/new-user-keys")
   public String newUserKeys(@RequestBody String keysString) {
     NewKeysMessage keysMessage = gson.fromJson(keysString, NewKeysMessage.class);
-    System.out.println(keysMessage.getPubKey().length());
-    System.out.println(keysMessage.getRelinKey().length());
     Controller.addNewKeys(keysMessage);
 
     return "SUCCESS";

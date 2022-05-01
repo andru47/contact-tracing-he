@@ -57,7 +57,7 @@ public class BackgroundDecryptor {
         double initialResult;
         double differenceInAltitude;
 
-        if (Config.getEncryptionType() == EncryptionType.LATTIGO_MK) {
+        if (Config.getEncryptionType() == EncryptionType.MULTI_KEY) {
           initialResult = (Double) bridge.decryptMulti(distanceMessage.getCiphertext().toCharArray(), distanceMessage.getPartialDistance().toCharArray(),
                   privateKey, true);
           differenceInAltitude = Math.abs((Double) bridge.decryptMulti(distanceMessage.getAltitudeDifference().toCharArray(), distanceMessage.getPartialAltitudeDifference().toCharArray(),
@@ -70,7 +70,7 @@ public class BackgroundDecryptor {
         if (initialResult < 0) {
           Log.d(BackgroundDecryptor.class.getName(), "The location was very close");
         }
-        initialResult = Math.asin(Math.sqrt(initialResult / 2.0)) * 6378.8 * 2.0 * 1000;
+        initialResult = Math.asin(Math.sqrt(initialResult / 2.0)) * 6371 * 2.0 * 1000;
         Log.d(BackgroundDecryptor.class.getName(), "The distance was " + initialResult + " meters.");
         if ((initialResult <= 6 || Double.isNaN(initialResult)) && differenceInAltitude * 100 < 210) {
           Log.d(BackgroundDecryptor.class.getName(), "Found contact " + distanceMessage.getContactUserId());

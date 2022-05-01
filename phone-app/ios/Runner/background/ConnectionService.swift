@@ -1,14 +1,7 @@
-//
-//  ConnectionService.swift
-//  Runner
-//
-//  Created by Andru Stefanescu on 14.12.2021.
-//
-
 import Foundation
 
 class ConnectionService {
-    private static let URL_STRING: String = "http://192.168.1.149:8080/"
+    private static let URL_STRING: String = "http://127.0.0.1:8080/"
     
     public static func getDistances(userId: String, partial: Bool) -> Array<NewDistanceMessage> {
         var url: String = URL_STRING
@@ -107,5 +100,10 @@ class ConnectionService {
         let json: Data = try! JSONEncoder().encode(partialMessage)
         
         postObject(json: json, endpoint: "new-partial-distance")
+    }
+    
+    public static func sendLocationHistory(message: [LocationEntity]) {
+        let json: Data = try! JSONEncoder().encode(message)
+        postObject(json: json, endpoint: "upload-location-history")
     }
 }
