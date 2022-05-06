@@ -23,11 +23,12 @@ The server is also connected to a MariaDB database. To set the database, use the
 point to the correct connection URL for the database. 
 
 ## Phone application
+Before building, modify line `4` from [ConnectionService.swift](phone-app/ios/Runner/background/ConnectionService.swift), line `21` from [ConnectionService.java](phone-app/android/app/src/main/java/com/example/phone_app/background/ConnectionService.java) and lines `6-7` from [connection_service.dart](phone-app/lib/util/connection_service.dart) to point to the right server IP. 
 As in the case of the server, the first step is to build the three libraries for the phone's platform. After this, you need to link the binaries with CMake for Android or inside Xcode for iOS.
 
 ### Android
 After building the binaries, you need to:
- - Modify lines `24-26` from [Makefile](he-component/src/client/lattigo/go/Makefile) to point to the right paths
+ - Modify lines `24-26` from [Makefile](he-component/src/client/lattigo/go/Makefile) and line `7` from [go.mod](he-component/src/client/lattigo/go/go.mod) to point to the right paths
  - Run `make android` inside `he-component/src/client/lattigo/go`
  - Change lines `5, 6, 8, 9` from this [CMakeLists.txt](he-component/bridge/android/CMakeLists.txt) file to point to the binaries created for SEAL/SMKHE
  - Run the application
@@ -35,7 +36,7 @@ After building the binaries, you need to:
 ### iOS
 You will probably need a developer account for notifications to work.
 
- - Run `make ios` inside `he-component/src/client/lattigo/go`, creating the go library inside `he-component/src/client/lattigo/go/build`
+ - Modify line `7` from [go.mod](he-component/src/client/lattigo/go/go.mod) to point to the right path and run `make ios` inside `he-component/src/client/lattigo/go`, creating the go library inside `he-component/src/client/lattigo/go/build`
  - Inside Xcode, add the header and library search paths under `Search Paths` from `Build Settings`
  - Inside Xcode, under `Build Phases`, go to `Link Binary With Libraries` and all the three libraries' binaries
  - Run the application
@@ -44,7 +45,7 @@ You will probably need a developer account for notifications to work.
 HETracing using Firebase Cloud Messaging to send notifications from the server and the phone application uses the Google Maps API and Places API. To make the application work as expected, you will need:
  - A Google API key that can be used for Maps and Places. You need to copy this in: line `18` of [Android Manifest](phone-app/android/app/src/main/AndroidManifest.xml), line `7` of [google_places.dart](phone-app/lib/util/google_places.dart)
 and line `36` of [AppDelegate.swift](phone-app/ios/Runner/AppDelegate.swift)
- - For server, you need the FCM `json` file's path to be kept in environment variable `GOOGLE_APPLICATION_CREDENTIALS`
+ - For server, you need the FCM `json` file's path to be kept in environment variable `GOOGLE_APPLICATION_CREDENTIALS` and you need to specify the project id in line `20` of [FCMNotificationManager.java](backend-server/src/main/java/dissertation/backend/notification/FCMNotificationManager.java) 
  - For iOS, you need the FCM `GoogleService-Info.plist` placed in the root of the iOS project
  - For Android, add the FCM `google-services.json` to the `app` folder
 

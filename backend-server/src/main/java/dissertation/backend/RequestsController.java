@@ -54,7 +54,6 @@ public class RequestsController {
 
   @PostMapping("/upload-location-history")
   public String uploadLocationHistory(@RequestBody String jsonBody) {
-    System.out.println(jsonBody);
     LocationHistoryMessage[] locations = gson.fromJson(jsonBody, LocationHistoryMessage[].class);
     Controller.addNewLocationHistory(locations);
     return "Location history uploaded successfully";
